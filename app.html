@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="tr" data-theme="light" data-wallpaper="light">
 <head>
 <meta charset="UTF-8">
@@ -385,12 +385,31 @@ input, button, select, textarea { font-family: inherit; outline: none; }
     border-radius: 0;
     transform: none !important;            /* mobilde morph yok, doğrudan tam ekran */
   }
-  .set-side { display: none; }             /* sekme kenar çubuğu mobilde gizli */
-  .set-main { flex: 1; padding: 58px 16px 40px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
-  .set-main .set-panel { display: block !important; animation: none; }   /* tüm bölümler alt alta */
-  .set-main .set-panel + .set-panel { margin-top: 24px; padding-top: 24px; border-top: 1px solid var(--glass-border); }
-  .set-panel-title { font-size: 1.08rem; margin-bottom: 14px; }          /* bölüm başlığı = ayırıcı */
-  .modal-box.set-modal .modal-close { position: fixed; top: 12px; right: 12px; z-index: 6; }  /* tam ekranda erişilebilir kapat */
+  /* LİSTE GÖRÜNÜMÜ (kenar çubuğu = kategori listesi) */
+  .set-side {
+    display: flex; flex-direction: column; width: 100%; flex: 1;
+    border-right: none; border-bottom: none;
+    padding: 56px 12px 40px; gap: 4px; overflow-y: auto; -webkit-overflow-scrolling: touch;
+  }
+  .set-side-title { display: block; font-size: 1.5rem; font-weight: 800; padding: 2px 12px 14px; color: var(--text); }
+  .set-side-pill { display: none; }
+  .set-side-item {
+    display: flex; align-items: center; justify-content: space-between;
+    text-align: left; white-space: normal; padding: 16px 14px; border-radius: 14px; font-size: 1.02rem;
+  }
+  .set-side-item::after { content: '\203A'; font-size: 1.35rem; line-height: 1; color: var(--text-muted); margin-left: 10px; }
+  .set-main { display: none; }
+  .set-main .set-panel { display: none; }
+  .set-panel-title { font-size: 1.3rem; margin-bottom: 18px; }
+  /* DETAY GÖRÜNÜMÜ (kategori seçilince) */
+  .set-modal.set-detail .set-side { display: none; }
+  .set-modal.set-detail .set-main { display: block; flex: 1; padding: 58px 16px 40px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+  .set-modal.set-detail .set-panel.active { display: block; animation: none; }
+  /* GERİ + KAPAT */
+  .set-modal.set-detail .set-back { display: inline-flex; align-items: center; gap: 3px; position: fixed; top: 11px; left: 12px; z-index: 7;
+    background: var(--glass); border: 1px solid var(--glass-border); color: var(--text);
+    border-radius: 11px; padding: 7px 13px 7px 10px; font-size: 0.92rem; font-weight: 600; cursor: pointer; }
+  .modal-box.set-modal .modal-close { position: fixed; top: 12px; right: 12px; z-index: 7; }
 }
 /* duvar kağıdı okunabilirlik: dekoratif katmanı yumuşat (içerik net kalsın) */
 [data-wallpaper="aurora"] body::before, [data-wallpaper="ocean"] body::before, [data-wallpaper="sunset"] body::before { opacity: 0.5; }
@@ -547,7 +566,7 @@ aside.right-panel { position: sticky; top: 100px; height: fit-content; max-heigh
 .notif-btn:hover { transform: scale(1.08); box-shadow: 0 0 0 3px var(--accent-soft); border-color: var(--accent-strong); }
 .notif-btn.active { background: var(--accent-soft); border-color: var(--accent-strong); color: var(--accent); }
 .notif-badge { position: absolute; top: -3px; right: -3px; min-width: 16px; height: 16px; border-radius: 999px; background: var(--expense,#f87171); color: #fff; font-size: 0.6rem; font-weight: 800; display: flex; align-items: center; justify-content: center; padding: 0 3px; border: 2px solid var(--bg); pointer-events: none; }
-.notif-panel { position: absolute; top: 0; right: 0; width: 320px; background: linear-gradient(0deg, var(--glass-strong), var(--glass-strong)), var(--wp-bg); backdrop-filter: blur(24px) saturate(160%); -webkit-backdrop-filter: blur(24px) saturate(160%); border: 1px solid var(--glass-border-strong); border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.05); z-index: 9500; overflow: hidden; transform-origin: top right; will-change: width, height; }
+.notif-panel { position: fixed; top: 60px; right: 24px; width: 320px; background: linear-gradient(0deg, var(--glass-strong), var(--glass-strong)), var(--wp-bg); backdrop-filter: blur(24px) saturate(160%); -webkit-backdrop-filter: blur(24px) saturate(160%); border: 1px solid var(--glass-border-strong); border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.05); z-index: 9500; overflow: hidden; transform-origin: top right; will-change: width, height; }
 .notif-panel > * { transition: opacity 0.26s ease, transform 0.26s ease; }
 .notif-panel.np-collapsed > * { opacity: 0; transform: translateY(10px); }
 .notif-close { position: absolute; top: 6px; right: 6px; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--glass); border: 1px solid var(--glass-border); color: var(--text-muted); cursor: pointer; z-index: 6; transition: background 0.2s, color 0.2s; }
@@ -557,6 +576,19 @@ aside.right-panel { position: sticky; top: 100px; height: fit-content; max-heigh
 .notif-tab { padding: 7px 10px; border-radius: 8px; border: 1px solid transparent; background: none; color: var(--text-muted); font-size: 0.74rem; font-weight: 700; cursor: pointer; transition: color 0.2s, background 0.2s, border-color 0.2s; text-align: center; }
 .notif-tab.active { color: var(--accent); background: var(--accent-soft); border-color: var(--accent-strong); }
 .notif-body { max-height: 300px; overflow-y: auto; padding: 8px; scrollbar-width: thin; }
+/* MOBİL: üstteki zil gizli, bildirimler sol menüden tam ekran açılır */
+@media (max-width: 760px) {
+  .topnav-actions { display: none; }
+  .notif-panel {
+    position: fixed; inset: 0;
+    width: 100vw; max-width: 100vw; height: 100vh; height: 100dvh; max-height: none;
+    border-radius: 0;
+    flex-direction: column;
+  }
+  .notif-body { max-height: none; flex: 1; }
+  .notif-tabs { padding: 10px 12px 0; }
+  .notif-close { top: 12px; right: 12px; z-index: 5; }
+}
 .notif-item { padding: 10px 12px; border-radius: 10px; margin-bottom: 4px; background: var(--glass); border: 1px solid var(--glass-border); }
 .notif-item:last-child { margin-bottom: 0; }
 .notif-item-ver { display: inline-block; font-size: 0.63rem; font-weight: 800; background: var(--accent-soft); color: var(--accent); border-radius: 5px; padding: 1px 6px; margin-bottom: 5px; letter-spacing: 0.04em; }
@@ -895,6 +927,7 @@ input, textarea, select, [contenteditable="true"] { user-select: text !important
 .modal-box { background: var(--glass-strong); backdrop-filter: blur(24px) saturate(140%); -webkit-backdrop-filter: blur(24px) saturate(140%); border: 1px solid var(--glass-border-strong); border-radius: 20px; padding: 28px; max-width: 480px; width: 100%; max-height: 90vh; max-height: 90dvh; overflow-y: auto; box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5), var(--glass-inner); position: relative; transform: scale(0.86) translateY(24px); opacity: 0; transition: transform 0.5s cubic-bezier(0.34, 1.42, 0.4, 1), opacity 0.34s ease; will-change: transform, opacity; }
 .modal-bg.show .modal-box { transform: scale(1) translateY(0); opacity: 1; }
 .modal-box.wide { max-width: 720px; }
+.set-back { display: none; }
 .modal-close { position: absolute; top: 16px; right: 16px; width: 32px; height: 32px; border-radius: 50%; background: var(--glass); border: 1px solid var(--glass-border); color: var(--text-soft); cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
 .modal-close:hover { background: var(--glass-strong); color: var(--text); }
 .modal-title { font-size: 1.3rem; font-weight: 800; margin-bottom: 18px; color: var(--text); letter-spacing: -0.02em; }
@@ -1559,6 +1592,7 @@ body.hc-open #appLayout { position: relative !important; z-index: 9100 !importan
     <button class="nav-drawer-item" data-nav="finans" onclick="goTo('finans');closeNavDrawer()">İşlemler</button>
     <button class="nav-drawer-item" data-nav="takip" onclick="goTo('takip');closeNavDrawer()">Takip</button>
     <button class="nav-drawer-item" data-nav="yatirim" onclick="goTo('yatirim');closeNavDrawer()">Canlı</button>
+    <button class="nav-drawer-item" onclick="openNotifFromDrawer(event)">Bildirimler</button>
     <button class="nav-drawer-item" data-nav="ayarlar" onclick="goTo('ayarlar');closeNavDrawer()">Ayarlar</button>
   </aside>
 
@@ -2009,6 +2043,7 @@ body.hc-open #appLayout { position: relative !important; z-index: 9100 !importan
       <!-- AYARLAR POP-UP (sayfa değil, modal) -->
       <div class="modal-bg no-bg-blur" id="modalSettings" onclick="if(event.target===this)closeModal()">
         <div class="modal-box set-modal">
+          <button class="set-back" onclick="settingsBackToList()" aria-label="Geri">‹ Ayarlar</button>
           <button class="modal-close" onclick="closeModal()">✕</button>
           <aside class="set-side">
             <div class="set-side-pill" id="setSidePill"></div>
@@ -3283,9 +3318,10 @@ document.addEventListener('keydown', e => {
 
 document.addEventListener('click', e => {
   const wrap = document.getElementById('notifWrap');
-  if (wrap && !wrap.contains(e.target)) {
+  const panel = document.getElementById('notifPanel');
+  if (wrap && !wrap.contains(e.target) && (!panel || !panel.contains(e.target))) {
     closeNotifPanel();
-    document.getElementById('notifBtn').classList.remove('active');
+    const _b = document.getElementById('notifBtn'); if (_b) _b.classList.remove('active');
   }
 });
 
@@ -3293,6 +3329,12 @@ document.addEventListener('click', e => {
 // pop_up.html tarzı: panel zilden esneyerek büyür (boyut morph, scale değil)
 function _openNotifPanelMorph(panel) {
   const bell = document.getElementById('notifBtn');
+  const _br = bell ? bell.getBoundingClientRect() : null;
+  if (_br && window.innerWidth > 760) {
+    panel.style.top = _br.top + 'px';
+    panel.style.right = (window.innerWidth - _br.right) + 'px';
+    panel.style.left = 'auto'; panel.style.bottom = 'auto';
+  }
   const bw = bell ? bell.offsetWidth : 38;
   const bh = bell ? bell.offsetHeight : 38;
   // Doğal boyutu ölç (içerik zaten render edildi)
@@ -3331,6 +3373,18 @@ function closeNotifPanel() {
   if (!panel || panel.style.display === 'none' || panel.classList.contains('closing')) return;
   panel.classList.add('closing');
   const btn = document.getElementById('notifBtn'); if (btn) btn.classList.remove('active');
+  if (window.innerWidth <= 760) {
+    panel.style.transition = 'opacity 0.2s ease';
+    panel.style.opacity = '0';
+    clearTimeout(panel._npContentT); clearTimeout(panel._npT);
+    panel._npT = setTimeout(() => {
+      panel.style.display = 'none';
+      panel.classList.remove('closing', 'np-collapsed');
+      panel.style.transition = ''; panel.style.opacity = '';
+      panel.style.width = ''; panel.style.height = ''; panel.style.borderRadius = '';
+    }, 210);
+    return;
+  }
   // Mevcut boyutu dondur, içerik solsun
   const w = panel.offsetWidth, h = panel.offsetHeight;
   panel.style.transition = 'none';
@@ -3358,22 +3412,41 @@ function closeNotifPanel() {
   }, 350);
 }
 function toggleNotifPanel(e) {
-  e.stopPropagation();
+  if (e) e.stopPropagation();
   const panel = document.getElementById('notifPanel');
   const btn   = document.getElementById('notifBtn');
   const open  = panel.style.display !== 'none' && !panel.classList.contains('closing');
   if (open) { closeNotifPanel(); return; }
+  const mobile = window.innerWidth <= 760;
   panel.classList.remove('closing');
-  panel.style.display = 'block';
-  btn.classList.toggle('active', true);
-  if (true) {
-    const badge = document.getElementById('notifBadge');
-    if (badge) badge.style.display = 'none';
-    (S.appNotifs || []).forEach(n => n.read = true);
-    save();
-    renderAppNotifs();
+  panel.style.display = mobile ? 'flex' : 'block';
+  if (btn) btn.classList.toggle('active', true);
+  const badge = document.getElementById('notifBadge');
+  if (badge) badge.style.display = 'none';
+  (S.appNotifs || []).forEach(n => n.read = true);
+  save();
+  renderAppNotifs();
+  if (mobile) {
+    panel.classList.remove('np-collapsed');
+    panel.style.transition = 'none';
+    panel.style.width = ''; panel.style.height = ''; panel.style.borderRadius = '';
+    panel.style.top = ''; panel.style.right = ''; panel.style.left = ''; panel.style.bottom = '';
+    panel.style.opacity = '0';
+    void panel.offsetWidth;
+    panel.style.transition = 'opacity 0.24s ease';
+    panel.style.opacity = '1';
+  } else {
+    _openNotifPanelMorph(panel);
   }
-  _openNotifPanelMorph(panel); // pop_up.html tarzı esnek büyüme (içerik render edildikten SONRA ölç)
+}
+
+/* Sol menüden (drawer) bildirimleri aç — mobilde zil yok */
+function openNotifFromDrawer(e) {
+  if (e) e.stopPropagation();
+  if (typeof closeNavDrawer === 'function') closeNavDrawer();
+  const panel = document.getElementById('notifPanel');
+  if (panel && panel.style.display !== 'none' && !panel.classList.contains('closing')) return;
+  toggleNotifPanel();
 }
 
 function switchNotifTab(tab) {
@@ -4654,6 +4727,10 @@ function openSettings(tab) {
   document.querySelectorAll('.theme-card').forEach(c => c.classList.toggle('active', c.dataset.themeSet === S.theme));
   document.querySelectorAll('.wallpaper-card').forEach(c => c.classList.toggle('active', c.dataset.wpSet === S.wallpaper));
   setSettingsTab(tab && document.querySelector('#modalSettings .set-panel[data-panel="' + tab + '"]') ? tab : 'profil');
+  if (window.innerWidth <= 760) {
+    const _sm = document.querySelector('#modalSettings .set-modal');
+    if (_sm) _sm.classList.remove('set-detail');
+  }
 }
 
 function moveSidePill() {
@@ -4668,6 +4745,18 @@ function setSettingsTab(id) {
   document.querySelectorAll('#modalSettings .set-panel').forEach(pn => pn.classList.toggle('active', pn.dataset.panel === id));
   requestAnimationFrame(moveSidePill);
   if (id === 'gizlilik') { try { if (typeof renderKvkkSettings === 'function') renderKvkkSettings(); } catch (e) {} }
+  if (window.innerWidth <= 760) {
+    const _sm = document.querySelector('#modalSettings .set-modal');
+    if (_sm) _sm.classList.add('set-detail');
+    const _mn = document.querySelector('#modalSettings .set-main'); if (_mn) _mn.scrollTop = 0;
+  }
+}
+
+/* Mobil ayarlar: detaydan kategori listesine geri dön */
+function settingsBackToList() {
+  const _sm = document.querySelector('#modalSettings .set-modal');
+  if (_sm) _sm.classList.remove('set-detail');
+  const _sd = document.querySelector('#modalSettings .set-side'); if (_sd) _sd.scrollTop = 0;
 }
 
 function setWallpaper(w) {
@@ -4713,6 +4802,8 @@ function saveNotifications() {
 
 // Theme/wallpaper card click bağla
 window.addEventListener('DOMContentLoaded', () => {
+  const _np = document.getElementById('notifPanel');
+  if (_np && _np.parentElement !== document.body) document.body.appendChild(_np);
   document.querySelectorAll('.theme-card').forEach(c => {
     c.addEventListener('click', () => setTheme(c.dataset.themeSet));
   });
