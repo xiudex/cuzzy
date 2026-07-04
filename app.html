@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="tr" data-theme="light" data-wallpaper="light">
 <head>
 <meta charset="UTF-8">
@@ -1126,7 +1126,34 @@ input, textarea, select, [contenteditable="true"] { user-select: text !important
     .verify-badge.hidden { display: none; }
     .verify-badge-dot { width: 7px; height: 7px; border-radius: 50%; background: #f59e0b; box-shadow: 0 0 6px rgba(245,158,11,0.7); flex-shrink: 0; }
     @media (max-width: 760px) { .verify-badge-text { display: none; } .verify-badge { padding: 6px 9px; margin-left: 6px; } }
-    .customize-fab { position: fixed; bottom: 22px; right: 16px; z-index: 8000; display: flex; align-items: center; gap: 5px; padding: 8px 13px; border-radius: 18px; background: var(--glass-strong); border: 1px solid var(--glass-border); color: var(--text); font-size: 0.78rem; font-weight: 600; cursor: pointer; box-shadow: var(--glass-shadow); transition: transform 0.18s ease, box-shadow 0.18s ease; }
+    /* ═══ MOBİL ALT NAVBAR (1. Geçiş) ═══ */
+.mobile-bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 200; height: 62px; padding: 4px 4px calc(4px + env(safe-area-inset-bottom, 0px)); background: var(--glass-strong); backdrop-filter: blur(20px) saturate(160%); -webkit-backdrop-filter: blur(20px) saturate(160%); border-top: 1px solid var(--glass-border); align-items: stretch; justify-content: space-around; }
+.mbn-item { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; background: transparent; border: none; color: var(--text-muted); font-size: 0.64rem; font-weight: 600; letter-spacing: 0.01em; cursor: pointer; border-radius: 12px; padding: 4px 2px; transition: color 0.18s ease; -webkit-tap-highlight-color: transparent; }
+.mbn-item svg { width: 22px; height: 22px; stroke: currentColor; fill: none; stroke-width: 2; }
+.mbn-item.active { color: var(--accent); }
+.mbn-item:active { transform: scale(0.94); }
+body.modal-open { overflow: hidden; }
+.mobile-panel-actions { display: none; flex-direction: column; gap: 10px; margin: 4px 0 8px; }
+.mpa-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.mobile-panel-actions .btn { padding: 13px 12px; font-size: 0.92rem; }
+@media (max-width: 760px) {
+  .nav-burger { display: none !important; }
+  .nav-drawer, .nav-drawer-backdrop { display: none !important; }
+  .mobile-bottom-nav { display: flex; }
+  .app { padding-bottom: 80px; }
+  /* Panel sadeleştirme */
+  #budgetBanner { display: none !important; }
+  #page-home .home-grid { display: none !important; }
+  #page-home .card[data-wid="market"] { display: none !important; }
+  .mobile-panel-actions { display: flex; }
+  /* Büyük, orantılı çarpı — hiçbir şeyin altında/yarım kalmasın */
+  .notif-close { width: 44px; height: 44px; top: calc(14px + env(safe-area-inset-top, 0px)); right: 14px; z-index: 20; font-size: 1.3rem; }
+  .notif-close svg { width: 20px; height: 20px; }
+  .modal-close { width: 44px; height: 44px; font-size: 1.4rem; z-index: 12; }
+  .modal-close svg { width: 20px; height: 20px; }
+  .modal-box.set-modal .modal-close { top: calc(14px + env(safe-area-inset-top, 0px)); right: 14px; z-index: 30; }
+}
+.customize-fab { position: fixed; bottom: 22px; right: 16px; z-index: 8000; display: flex; align-items: center; gap: 5px; padding: 8px 13px; border-radius: 18px; background: var(--glass-strong); border: 1px solid var(--glass-border); color: var(--text); font-size: 0.78rem; font-weight: 600; cursor: pointer; box-shadow: var(--glass-shadow); transition: transform 0.18s ease, box-shadow 0.18s ease; }
 .customize-fab:hover { transform: scale(1.05); box-shadow: 0 6px 28px rgba(0,0,0,0.4); }
 @media (max-width: 760px) { .customize-fab { display: none; } }
 .support-fab { position: fixed; bottom: 24px; right: 24px; z-index: 8000; width: 48px; height: 48px; border-radius: 50%; background: var(--accent); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; box-shadow: 0 4px 20px rgba(0,0,0,0.35), 0 0 0 0 var(--accent-glow); transition: transform 0.2s, box-shadow 0.2s; }
@@ -1564,6 +1591,25 @@ body.hc-open #appLayout { position: relative !important; z-index: 9100 !importan
     <button class="nav-drawer-item" data-nav="ayarlar" onclick="goTo('ayarlar');closeNavDrawer()">Ayarlar</button>
   </aside>
 
+  <!-- ═══ MOBİL ALT NAVBAR ═══ -->
+  <nav class="mobile-bottom-nav" id="mobileBottomNav" aria-label="Mobil menü">
+    <button class="mbn-item active" data-nav="home" onclick="goTo('home')" aria-label="Panel">
+      <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Panel</span>
+    </button>
+    <button class="mbn-item" data-nav="finans" onclick="goTo('finans')" aria-label="İşlemler">
+      <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg><span>İşlemler</span>
+    </button>
+    <button class="mbn-item" data-nav="takip" onclick="goTo('takip')" aria-label="Takip">
+      <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>Takip</span>
+    </button>
+    <button class="mbn-item" onclick="openMobileNotif(event)" aria-label="Bildirimler">
+      <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span>Bildirim</span>
+    </button>
+    <button class="mbn-item" data-nav="ayarlar" onclick="goTo('ayarlar')" aria-label="Ayarlar">
+      <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Ayarlar</span>
+    </button>
+  </nav>
+
   <!-- ALT NAVİGASYON -->
   <nav class="subnav" id="subnav"></nav>
 
@@ -1621,6 +1667,15 @@ body.hc-open #appLayout { position: relative !important; z-index: 9100 !importan
             <span class="budget-chip-label">kullanılan</span>
             <span class="budget-chip" id="budgetChip">—</span>
           </div>
+        </div>
+
+        <!-- ═══ MOBİL PANEL AKSİYON ÇUBUĞU ═══ -->
+        <div class="mobile-panel-actions" id="mobilePanelActions">
+          <div class="mpa-row">
+            <button class="btn btn-primary" onclick="showModal('modalQuickAdd')">Hızlı işlem</button>
+            <button class="btn btn-primary" onclick="openMultiTx()">Çoklu işlem</button>
+          </div>
+          <button class="btn btn-block" onclick="showModal('modalNote')">Not ekle</button>
         </div>
 
         <!-- Eşit kartlar: Hızlı işlem | Hedefler | Hesap özeti / Not | Tekrarlayan & Borç | Çoklu işlem -->
@@ -2042,7 +2097,7 @@ body.hc-open #appLayout { position: relative !important; z-index: 9100 !importan
             <button class="set-side-item active" data-set="profil" onclick="setSettingsTab('profil')">Profil</button>
             <button class="set-side-item" data-set="gorunum" onclick="setSettingsTab('gorunum')">Görünüm</button>
             <button class="set-side-item" data-set="guvenlik" onclick="setSettingsTab('guvenlik')">Güvenlik ve veri</button>
-            <button class="set-side-item" data-set="bildirim" onclick="setSettingsTab('bildirim')">Bildirimler</button>
+            <button class="set-side-item" data-set="bildirim" onclick="setSettingsTab('bildirim')">Bildirim tercihleri</button>
             <button class="set-side-item" data-set="disaaktar" onclick="setSettingsTab('disaaktar')">Dışa aktar</button>
             <button class="set-side-item" data-set="gizlilik" onclick="setSettingsTab('gizlilik')">Gizlilik</button>
                   <button class="set-side-item" data-set="destek" onclick="setSettingsTab('destek')">Destek</button>
@@ -2126,7 +2181,7 @@ body.hc-open #appLayout { position: relative !important; z-index: 9100 !importan
 
             <!-- BİLDİRİMLER -->
             <div class="set-panel" data-panel="bildirim">
-              <div class="set-panel-title">Bildirimler</div>
+              <div class="set-panel-title">Bildirim tercihleri</div>
               <div class="set-group">
                 <div class="set-group-title">Uygulama bildirimleri</div>
                 <div class="set-row"><div class="set-row-main"><div class="set-row-label">Gelir bildirimleri</div></div><input type="checkbox" id="notifIncome" onchange="saveNotifications()"></div>
@@ -2556,7 +2611,31 @@ body.hc-open #appLayout { position: relative !important; z-index: 9100 !importan
 </div>
 
 <!-- MEMNUNİYET ANKETİ MODALI -->
-<div class="modal-bg" id="modalUpdateNotice" style="z-index:12000" onclick="if(event.target===this)dismissUpdateNotice()">
+<div class="modal-bg" id="modalQuickAdd" onclick="if(event.target===this)closeModal('modalQuickAdd')">
+        <div class="modal-box" style="max-width:420px">
+          <button class="modal-close" onclick="closeModal('modalQuickAdd')">✕</button>
+          <div class="modal-title" style="margin-bottom:14px">Hızlı işlem ekle</div>
+          <div id="mqaHost"></div>
+        </div>
+      </div>
+
+      <div class="modal-bg" id="modalNote" onclick="if(event.target===this)closeModal('modalNote')">
+        <div class="modal-box" style="max-width:420px">
+          <button class="modal-close" onclick="closeModal('modalNote')">✕</button>
+          <div class="modal-title" style="margin-bottom:14px">Not</div>
+          <div id="mnoteHost"></div>
+        </div>
+      </div>
+
+      <div class="modal-bg" id="modalMobileNotice" style="z-index:13000" onclick="if(event.target===this)closeModal('modalMobileNotice')">
+        <div class="modal-box" style="max-width:400px">
+          <div class="modal-title" style="margin-bottom:6px">Mobil cihaz algılandı</div>
+          <div style="font-size:0.9rem;line-height:1.7;color:var(--text-soft);margin:6px 0 20px">Cüzzy şu an masaüstü için tam optimize edilmiştir. Mobilde bazı özellikler (canlı piyasa, panel özelleştirme, tanıtım turu, çoklu grafik görünümü) sınırlıdır. Tam deneyim için bilgisayardan girebilir ya da cihazını yatay çevirebilirsin.</div>
+          <button class="btn btn-primary btn-block" onclick="closeModal('modalMobileNotice')">Anladım</button>
+        </div>
+      </div>
+
+      <div class="modal-bg" id="modalUpdateNotice" style="z-index:12000" onclick="if(event.target===this)dismissUpdateNotice()">
         <div class="modal-box" style="max-width:440px">
           <div class="notif-item-ver" style="display:inline-block;margin-bottom:8px">v3.8.2</div>
           <div class="modal-title" style="margin-bottom:4px">Güncelleme Notları ve Yenilikler</div>
@@ -3404,11 +3483,13 @@ function showModal(id) {
   const m = (typeof id === 'string') ? document.getElementById(id) : id;
   if (!m || m.classList.contains('show')) return;
   springOpenModal(m);
+  document.body.classList.add('modal-open');
   if (id === 'modalWatchlist') { try { populateWatchlistSymbols(); renderWatchlistCurrent(); } catch (e) {} }
   if (id === 'modalProfile') { try { renderProfileModal(); } catch (e) {} }
 }
 
 function closeModal(id) {
+  setTimeout(() => { if (!document.querySelector('.modal-bg.show')) document.body.classList.remove('modal-open'); }, 420);
   if (id && typeof id === 'string') { _closeModalAnim(document.getElementById(id)); return; }
   const open = Array.prototype.slice.call(document.querySelectorAll('.modal-bg.show'));
   if (open.length <= 1) { open.forEach(_closeModalAnim); return; }
@@ -3769,6 +3850,8 @@ function enterApp() {
     } else {
       setTimeout(_postNotice, 700);
     }
+    setTimeout(maybeShowMobileNotice, 600);
+    setTimeout(_setupMobilePanel, 300);
   };
   // Zorunlu KVKK onayı verilmemişse önce KVKK kapısı (gecikmesiz, etkileşim boşluğu olmasın).
   if (S.kvkkConsent !== KVKK_VERSION) {
@@ -3840,6 +3923,30 @@ function saveNow() {
     });
 }
 
+function isMobileView() { try { return window.matchMedia('(max-width: 760px)').matches; } catch (e) { return window.innerWidth <= 760; } }
+let _mobileNoticeShown = false;
+let _mobilePanelSetup = false;
+function _setupMobilePanel() {
+  if (_mobilePanelSetup || !isMobileView()) return;
+  _mobilePanelSetup = true;
+  try {
+    const qa = document.querySelector('.quick-add[data-wid="quickadd"]');
+    const qaHost = document.getElementById('mqaHost');
+    if (qa && qaHost && qa.parentElement !== qaHost) qaHost.appendChild(qa);
+    const note = document.querySelector('.sticky-note[data-wid="note"]');
+    const noteHost = document.getElementById('mnoteHost');
+    if (note && noteHost && note.parentElement !== noteHost) noteHost.appendChild(note);
+  } catch (e) {}
+}
+function maybeShowMobileNotice() {
+  if (_mobileNoticeShown || !isMobileView()) return;
+  _mobileNoticeShown = true;
+  try { showModal('modalMobileNotice'); } catch (e) {}
+}
+function openMobileNotif(e) {
+  try { if (typeof openNotifFromDrawer === 'function') openNotifFromDrawer(e); else toggleNotifPanel(e); }
+  catch (err) { try { toggleNotifPanel(e); } catch (_) {} }
+}
 let _updateNoticeShown = false;
 function maybeShowUpdateNotice() {
   if (_updateNoticeShown || !S || S.lastUpdateSeen === 'v3.8.2') return;
@@ -4273,6 +4380,7 @@ function goTo(page, sub) {
   document.querySelectorAll('.topnav-item').forEach(i => {
     i.classList.toggle('active', i.dataset.nav === page);
   });
+  document.querySelectorAll('.mbn-item').forEach(i => i.classList.toggle('active', i.dataset.nav === page));
   // Aktif pill'i kaydır
   if (typeof updateTopnavPill === 'function') updateTopnavPill();
 
@@ -8016,6 +8124,7 @@ function isMobileDevice() {
 let tourManualStart = false;
 
 function startTour(manual) {
+  if (isMobileView()) { try { toast('Tanıtım turu mobilde kullanılamaz'); } catch (e) {} return; }
   tourManualStart = manual === true;
   // Mobilde tur açma — sessizce tamamlanmış say
   if (isMobileDevice()) {
