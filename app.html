@@ -1,0 +1,1550 @@
+﻿<!DOCTYPE html>
+<html lang="tr" data-theme="light" data-wallpaper="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5">
+<meta name="description" content="Cüzzy — kişisel finans yönetimi, yatırım takibi ve canlı piyasa">
+<meta name="theme-color" content="#f5f5f7">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta http-equiv="X-Frame-Options" content="DENY">
+<meta http-equiv="Permissions-Policy" content="geolocation=(), microphone=(), camera=(), payment=(), usb=()">
+<meta http-equiv="Content-Security-Policy" content="
+  default-src 'self';
+  script-src 'self' 'unsafe-inline' https://www.gstatic.com https://cdn.jsdelivr.net;
+  style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+  font-src 'self' https://fonts.gstatic.com data:;
+  img-src 'self' data: blob: https:;
+  connect-src 'self'
+    https://*.googleapis.com https://*.firebaseio.com wss://*.firebaseio.com
+    https://*.cloudfunctions.net https://api.emailjs.com
+    https://api.coingecko.com https://open.er-api.com https://api.exchangerate-api.com
+    https://query1.finance.yahoo.com https://query2.finance.yahoo.com
+    https://api.allorigins.win https://corsproxy.io https://api.codetabs.com
+    http://localhost:* http://127.0.0.1:*;
+  frame-src 'self' https://*.firebaseapp.com;
+  object-src 'none';
+  base-uri 'self';
+  form-action 'self';
+">
+<title>Cüzzy — Finans</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js"></script>
+<script src="js/00-config.js"></script>
+<link rel="stylesheet" href="css/base.css">
+<link rel="stylesheet" href="css/layout.css">
+<link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+<!-- ═══════════════════════════════════════════════════════════════════
+     SPLASH SCREEN
+     ═══════════════════════════════════════════════════════════════════ -->
+<div class="splash" id="splash">
+  <div class="splash-text">cüzzy</div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     EMAIL VERIFY SCREEN
+     ═══════════════════════════════════════════════════════════════════ -->
+
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     TIMEOUT BAR & TOAST
+     ═══════════════════════════════════════════════════════════════════ -->
+<div class="timeout-bar" id="timeoutBar" style="width:100%"></div>
+<div class="toast" id="toast"></div>
+
+<!-- ═══ ÖZELLEŞTİR BUTONU (sağ alt) ═══ -->
+<button class="customize-fab" onclick="openHomeCustomizer()" aria-label="Paneli özelleştir"><span>Özelleştir</span></button>
+<button class="support-fab" style="display:none" aria-label="kullanılmıyor">
+  
+  <span class="fab-tooltip">Destek & İletişim</span>
+</button>
+
+<!-- ═══ DESTEK MODALI ═══ -->
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     ANA UYGULAMA
+     ═══════════════════════════════════════════════════════════════════ -->
+<div class="app" id="app">
+
+  <!-- ÜST NAVİGASYON -->
+  <nav class="topnav">
+    <button class="nav-burger" id="navBurger" onclick="toggleNavDrawer()" aria-label="Menü" title="Menü">
+      <span></span><span></span><span></span>
+    </button>
+    <button class="topnav-logo" onclick="goTo('home');refreshApp();window.scrollTo({top:0,behavior:'smooth'})" title="Panele dön">
+      <span class="topnav-logo-text">cüzzy</span>
+    </button>
+    <div class="topnav-pill-bg" id="topnavPillBg"></div>
+    <button class="topnav-item active" data-nav="home" onclick="goTo('home')"><span>Panel</span></button>
+    <button class="topnav-item" data-nav="finans" onclick="goTo('finans')"><span>İşlemler</span></button>
+    <button class="topnav-item" data-nav="takip" onclick="goTo('takip')"><span>Takip</span></button>
+    <button class="topnav-item" data-nav="yatirim" onclick="goTo('yatirim')"><span>Canlı</span></button>
+    <div class="topnav-actions">
+      <!-- BİLDİRİM PANELI -->
+      <div class="notif-wrap" id="notifWrap">
+        <button class="notif-btn" id="notifBtn" onclick="toggleNotifPanel(event)" title="Bildirimler">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span class="notif-badge" id="notifBadge" style="display:none">0</span>
+        </button>
+        <div class="notif-panel" id="notifPanel" style="display:none">
+          <button class="notif-close" onclick="closeNotifPanel()" title="Kapat" aria-label="Bildirimleri kapat"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+          <div class="notif-panel-hdr">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>Bildirimler
+          </div>
+          <div class="notif-tabs">
+            <button class="notif-tab active" id="ntab-surum" onclick="switchNotifTab('surum')">Sürüm Notları</button>
+            <button class="notif-tab" id="ntab-bildirim" onclick="switchNotifTab('bildirim')">Uygulama</button>
+          </div>
+          <div class="notif-body" id="notifBodySurum">
+            <div class="notif-item">
+              <div class="notif-item-ver">v3.9.2</div>
+              <div class="notif-item-title">Mobil İyileştirmeler</div>
+              <div class="notif-item-body">• Mobil iyileştirmeler ve çeşitli arayüz güncellemesi.</div>
+              <div class="notif-item-date">Beta</div>
+            </div>
+            <div class="notif-item">
+              <div class="notif-item-ver">v3.8.2</div>
+              <div class="notif-item-title">Güncelleme Notları ve Yenilikler</div>
+              <div class="notif-item-body">• E-posta değiştirme aktif hale getirildi.<br>• PIN sistemi tamamen kaldırıldı.<br>• Zaman aşımı aktif hale getirildi.<br>• İçe/dışa aktarma özelliği eklendi.<br>• EFT kategorileri eklendi.<br>• Çeşitli arayüz iyileştirmeleri ve düzeltmeleri yapıldı.<br>• Güvenlik açıkları giderildi.</div>
+              <div class="notif-item-date">Beta</div>
+            </div>
+            <div class="notif-item">
+              <div class="notif-item-ver">v3.3.1</div>
+              <div class="notif-item-title">Hata Düzeltmeleri ve Yenilikler</div>
+              <div class="notif-item-body"><br>• Çeşitli arayüz iyileştirmeleri ve düzeltmeler.<br>• Takip eklendi.<br></div>
+              <div class="notif-item-date"></div>
+            </div>
+            <div class="notif-item">
+              <div class="notif-item-ver">v3.1.1</div>
+              <div class="notif-item-title">Hata Düzeltmeleri ve Yenilikler</div>
+              <div class="notif-item-body">• Çeşitli arayüz iyileştirmeleri ve düzeltmeler.<br>• Dışarı Aktar güvenli hale getirildi.</div>
+              <div class="notif-item-date"></div>
+            </div>
+            <div class="notif-item">
+              <div class="notif-item-ver">v3.0.0</div>
+              <div class="notif-item-title">Arayüz Güncellemesi</div>
+              <div class="notif-item-body">• Tüm menü baştan düzenlendi.<br>• Nabvar sadeleştirildi.<br>• Kullanım kolaylığı arttırıldı.<br>• Özelleştiirlebilir Panel eklendi.<br>• Yapışkan not eklendi.<br>• Bölümler arası geçiş daha akıcı hale getirildi.<br>• Performans ve optimizasyon arttırıldı.<br>• Yeni animasyonlar eklendi.<br>• Tema renkleri güncellendi.</div>
+              <div class="notif-item-date"></div>
+            </div>
+            <div class="notif-item">
+              <div class="notif-item-ver">v2.40.16</div>
+              <div class="notif-item-title">Hata Düzeltmeleri ve yenilikler</div>
+              <div class="notif-item-body">• Mobil uyumu düzenlendi.<br>• app menüsü düzenlendi.<br>• Bildirim hataları giderildi.<br>• Otomatik özetler eklendi.<br>• KVKK metni güncellendi.<br>• Text hataları giderildi.</div>
+              <div class="notif-item-date">Beta</div>
+            </div>
+            <div class="notif-item">
+              <div class="notif-item-ver">v2.35.15</div>
+              <div class="notif-item-title">Hata Düzeltmeleri ve yenilikler</div>
+              <div class="notif-item-body">• Çoklu işlem özelliği eklendi.<br>• Ekstre okuma hataları giderildi.<br>• reklamlar tamamen kaldırıldı.</div>
+              <div class="notif-item-date">Beta</div>
+            </div>
+            <div class="notif-item">
+              <div class="notif-item-ver">v2.34.14</div>
+              <div class="notif-item-title">Hata Düzeltmeleri</div>
+              <div class="notif-item-body"><br>Ekstre yükleme yenilendi ve aktif edildi.<br>Tanıtım turu yeniden aktif edildi.<br>Giriş yeniden düzenlendi.</div>
+              <div class="notif-item-date">Beta</div>
+            </div>
+            <div class="notif-item">
+              <div class="notif-item-ver">v2.31.11</div>
+              <div class="notif-item-title">Hata Düzeltmeleri</div>
+              <div class="notif-item-body">Reklam planı normalize hatası giderildi.<br>Her veri yenilemesinde reklam alanlarının yanlış açılması düzeltildi.<br>Performans iyileştiremeleri yapıldı.</div>
+              <div class="notif-item-date">Beta</div>
+            </div>
+            <div class="notif-item">
+              <div class="notif-item-ver">v2.31.9</div>
+              <div class="notif-item-title">Güncelleme Notları</div>
+              <div class="notif-item-body">Duvar kağıtları eklendi.<br>Renk Teması eklendi.<br>App içi şifre değiştirme eklendi.<br>aktif bildirimler eklendi.<br>Portföy kontrolü eklendi.<br>Tüm verileri silme işlemi eklendi.</div>
+              <div class="notif-item-date">Beta</div>
+            </div>
+            <div class="notif-item">
+              <div class="notif-item-ver">v2.26.9</div>
+              <div class="notif-item-title">Güncelleme Notları</div>
+              <div class="notif-item-body">Destek kısmı eklendi.<br>Renk sızması hataları giderildi.<br>Tanıtım turu geçici olarak kaldırıldı.</div>
+              <div class="notif-item-date">Beta</div>
+            </div>
+            <div class="notif-item">
+              <div class="notif-item-ver">v1.26.9</div>
+              <div class="notif-item-title">Güncelleme Notları</div>
+              <div class="notif-item-body">Hesabı tamamen silme işlemi eklendi.<br>Onay arayüzü düzenlendi.<br>Tüm ekleme ve silme işlemleri hataları giderildi.<br></div>
+              <div class="notif-item-date">Beta</div>
+            </div>
+            <div class="notif-item">
+              <div class="notif-item-ver">v1.25.8</div>
+              <div class="notif-item-title">Güncelleme Notları</div>
+              <div class="notif-item-body">3 kademeli reklam paketi eklendi<br>Reklam Panelleri eklendi.(Test aşamasında)<br>Güncelleme sonrası tek seferlik tanıtım turu eklendi.<br>Ayarlar'a girişte çıkan gezinme hatası giderildi.<br>Ekstre yükleme geçici olarak devre dışı.</div>
+              <div class="notif-item-date">Beta</div>
+            </div>
+            <div class="notif-item">
+              <div class="notif-item-ver">v0.22.8</div>
+              <div class="notif-item-title">Güncelleme Notları</div>
+              <div class="notif-item-body">Tutar limiti milyara yükseltildi.<br>Ekstre yüklemede ₺ / TL / TRY sembolü sorunu giderildi.<br>Ondalık virgüllü tutarlarda binlik nokta formatı düzeltildi.<br>Yüksek rakamlarda form reddi hatası giderildi.</div>
+              <div class="notif-item-date">Beta</div>
+            </div>
+            <div class="notif-item">
+              <div class="notif-item-ver">v0.22.4</div>
+              <div class="notif-item-title">Güncelleme Notları</div>
+              <div class="notif-item-body">Bildirim paneli ve uygulama bildirimleri eklendi.<br>Tüm tutar alanlarında Türkçe rakam yazı ipucu eklendi.<br>Yazarken otomatik binlik nokta formatlaması eklendi.<br>Piyasa durum rozeti eklendi.<br>PIN sıfırlandıktan sonra kaybolma hatası giderildi</div>
+              <div class="notif-item-date">Beta</div>
+            </div>
+            <div class="notif-item">
+              <div class="notif-item-ver">v0.18.3</div>
+              <div class="notif-item-title">Güncelleme Notları</div>
+              <div class="notif-item-body">2FA e-posta doğrulaması ile güvenli giriş eklendi.<br>Yeni PIN sistemi eklendi.<br>Mail e Doğrulama gönderilmeme sorunu çözüldü.<br>Mail e-posta gönderimi iyileştirildi.<br>Doğrulama kodu ekranı güncellendi.</div>
+              <div class="notif-item-date">Beta</div>
+            </div>
+            <div class="notif-item">
+              <div class="notif-item-ver">v0.14.2</div>
+              <div class="notif-item-title">Güncelleme Notları</div>
+              <div class="notif-item-body">Tekrarlayan işlemi eklendi.<br>Abonelik yönetimi eklendi.<br>Borç Takip sistemi eklendi.<br>Bütçe limiti ve uyarı sistemi eklendi.<br>Ekstre yükleme eklendi.<br>Gelir ve gider kategorilendirme sistemi düzeltildi.</div>
+              <div class="notif-item-date">Beta</div>
+            </div>
+            <div class="notif-item">
+              <div class="notif-item-ver">v0.9.1</div>
+              <div class="notif-item-title">Güncelleme Notları</div>
+              <div class="notif-item-body">Hedef ve tasarruf sistemi eklendi.<br>Canlı kur Sistemi eklendi.<br>Hızlı işlem ekleme paneli.<br>Grafik ile analiz eklendi.<br>Hata Düzeltmeleri yapıldı.</div>
+              <div class="notif-item-date">Beta</div>
+            </div>
+            <div class="notif-item">
+              <div class="notif-item-ver">v0.4.0</div>
+              <div class="notif-item-title">Güncelleme Notlar</div>
+              <div class="notif-item-body">Cüzzy yayına girdi.<br>Giriş &amp; kayıt sistemi.<br>Temel gelir ve gider yönetimi eklendi.<br>güvenli bulut senkronizasyonu eklendi.</div>
+              <div class="notif-item-date">Beta</div>
+            </div>
+          </div>
+          <div class="notif-body" id="notifBodyBildirim" style="display:none">
+            <div class="notif-empty">Henüz uygulama bildirimi yok.</div>
+          </div>
+        </div>
+      </div>
+      <button class="notif-btn" id="settingsBtn" onclick="openSettings()" title="Ayarlar" aria-label="Ayarlar">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+      </button>
+    </div>
+    <button class="verify-badge hidden" id="verifyBadge" onclick="resendEmailVerification()" title="E-postanı doğrulamak için tıkla — sana doğrulama bağlantısı gönderilir">
+      <span class="verify-badge-dot"></span><span class="verify-badge-text">E-postanı doğrula</span>
+    </button>
+  </nav>
+
+  <button class="btn btn-sm survey-fab" id="surveyNavBtn" onclick="openSurvey()" title="v3.8.2 güncellemesini değerlendir"><span class="survey-btn-label">v3.8.2 güncellemesini değerlendirin</span></button>
+
+  <!-- MOBİL MENÜ ÇEKMECESİ -->
+  <div class="nav-drawer-backdrop" id="navDrawerBackdrop" onclick="closeNavDrawer()"></div>
+  <aside class="nav-drawer" id="navDrawer" aria-hidden="true">
+    <div class="nav-drawer-title">Menü</div>
+    <button class="nav-drawer-item" data-nav="home" onclick="goTo('home');closeNavDrawer()">Panel</button>
+    <button class="nav-drawer-item" data-nav="finans" onclick="goTo('finans');closeNavDrawer()">İşlemler</button>
+    <button class="nav-drawer-item" data-nav="takip" onclick="goTo('takip');closeNavDrawer()">Takip</button>
+    <button class="nav-drawer-item" data-nav="yatirim" onclick="goTo('yatirim');closeNavDrawer()">Canlı</button>
+    <button class="nav-drawer-item" onclick="openNotifFromDrawer(event)">Bildirimler</button>
+    <button class="nav-drawer-item" data-nav="ayarlar" onclick="goTo('ayarlar');closeNavDrawer()">Ayarlar</button>
+  </aside>
+
+  <!-- ═══ MOBİL ALT NAVBAR ═══ -->
+  <nav class="mobile-bottom-nav" id="mobileBottomNav" aria-label="Mobil menü">
+    <button class="mbn-item active" data-nav="home" onclick="goTo('home')" aria-label="Panel">
+      <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Panel</span>
+    </button>
+    <button class="mbn-item" data-nav="finans" onclick="goTo('finans')" aria-label="İşlemler">
+      <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg><span>İşlemler</span>
+    </button>
+    <button class="mbn-item" data-nav="takip" onclick="goTo('takip')" aria-label="Takip">
+      <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>Takip</span>
+    </button>
+    <button class="mbn-item" data-nav="bildirim" onclick="openMobileNotif(event)" aria-label="Bildirimler">
+      <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span>Bildirim</span>
+    </button>
+    <button class="mbn-item" data-nav="ayarlar" onclick="goTo('ayarlar')" aria-label="Ayarlar">
+      <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Ayarlar</span>
+    </button>
+  </nav>
+
+  <!-- ALT NAVİGASYON -->
+  <nav class="subnav" id="subnav"></nav>
+
+  <!-- ANA İÇERİK -->
+  <div class="app-layout no-subnav" id="appLayout">
+    <main id="appMain">
+
+      <!-- ═══ ANA PANEL ═══ -->
+      <section class="page active" id="page-home">
+        <div class="panel-brand" id="panelBrand">
+          <span class="panel-brand-name">cüzzy</span>
+          <div class="panel-brand-right">
+            <span class="panel-brand-date" id="panelDate"></span>
+            <button type="button" class="pb-eye" id="pbEye" onclick="toggleTxCensor()" title="Tutarları gizle" aria-label="Tutarları gizle"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+          </div>
+        </div>
+        <div class="page-header">
+          <div class="page-eyebrow" id="dashEyebrow">Bugün</div>
+          <h1 class="page-title">Merhaba, <em id="greetName">Kullanıcı</em></h1>
+          <p class="page-sub" id="dashSub">Bu ay finansal durumun bir bakışta.</p>
+        </div>
+
+        <!-- BİRLEŞİK ÖZET: gelir / gider / net + aylık bütçe (tek kart) -->
+        <div class="card summary-card" data-wid="summary">
+          <div class="summary-row">
+            <div class="summary-cell">
+              <div class="kpi-label">Bu ay gelir</div>
+              <div class="kpi-value" id="kpiIncome">₺0,00</div>
+              <div class="kpi-trend">Toplam <strong id="kpiIncomeTotal">₺0,00</strong></div>
+            </div>
+            <div class="summary-div"></div>
+            <div class="summary-cell">
+              <div class="kpi-label">Bu ay gider</div>
+              <div class="kpi-value" id="kpiExpense">₺0,00</div>
+              <div class="kpi-trend">Toplam <strong id="kpiExpenseTotal">₺0,00</strong></div>
+            </div>
+            <div class="summary-div"></div>
+            <div class="summary-cell">
+              <div class="kpi-label">Haftalık gelir</div>
+              <div class="kpi-value" id="kpiWeekIncome">₺0,00</div>
+              <div class="kpi-trend">Son 7 gün</div>
+            </div>
+            <div class="summary-div"></div>
+            <div class="summary-cell">
+              <div class="kpi-label">Haftalık gider</div>
+              <div class="kpi-value" id="kpiWeekExpense">₺0,00</div>
+              <div class="kpi-trend">Son 7 gün</div>
+            </div>
+            <div class="summary-div"></div>
+            <div class="summary-cell">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:6px">
+                <div class="kpi-label">Mevcut bakiye</div>
+                <button class="btn btn-sm" style="padding:3px 9px;font-size:0.68rem;flex:none" onclick="openBalanceModal()">Düzenle</button>
+              </div>
+              <div class="kpi-value" id="kpiCurrentBalance">₺0,00</div>
+              <div class="kpi-trend">Toplam <strong id="kpiCurBalTrend">—</strong></div>
+            </div>
+          </div>
+          <div class="summary-budget" id="budgetBanner">
+            <span class="summary-budget-label">Aylık bütçe</span>
+            <span class="budget-meta" id="budgetText">Bütçe belirlenmedi</span>
+            <span class="budget-chip-label">kullanılan</span>
+            <span class="budget-chip" id="budgetChip">—</span>
+          </div>
+        </div>
+
+
+        <!-- Eşit kartlar: Hızlı işlem | Hedefler | Hesap özeti / Not | Tekrarlayan & Borç | Çoklu işlem -->
+        <div class="home-grid">
+          <div class="quick-add home-cell" data-tour="quick-add" data-wid="quickadd">
+            <div class="quick-add-title">Hızlı işlem</div>
+            <input type="text" inputmode="numeric" id="qAmt" placeholder="Tutar (₺)">
+            <div class="num-word-hint" id="h-qAmt"></div>
+            <select id="qCat" style="width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--glass-border);background:var(--input-bg);color:var(--text);font-size:0.82rem;margin-bottom:8px">
+              <option value="Diğer">Diğer</option>
+              <option value="Market">Market</option>
+              <option value="Fatura">Fatura</option>
+              <option value="Kira">Kira</option>
+              <option value="Ulaşım">Ulaşım</option>
+              <option value="Yemek">Yemek</option>
+              <option value="Sağlık">Sağlık</option>
+              <option value="Eğlence">Eğlence</option>
+              <option value="Eğitim">Eğitim</option>
+              <option value="Maaş">Maaş</option>
+              <option value="Yatırım">Yatırım</option>
+              <option value="EFT - Para Gönderimi">EFT - Para Gönderimi</option>
+              <option value="EFT - Para Alımı">EFT - Para Alımı</option>
+            </select>
+            <input type="date" id="qDate" style="width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--glass-border);background:var(--input-bg);color:var(--text);font-size:0.82rem;margin-bottom:8px;box-sizing:border-box">
+            <input type="text" id="qDesc" placeholder="Açıklama (opsiyonel)">
+            <div class="quick-add-actions">
+              <button class="btn btn-sm btn-income" onclick="quickAdd('income')">+ Gelir</button>
+              <button class="btn btn-sm btn-expense" onclick="quickAdd('expense')">- Gider</button>
+            </div>
+          </div>
+
+          <div class="home-col-card home-cell" data-wid="goals">
+            <div class="card-title">
+              <span class="card-title-text">Hedefler</span>
+              <div style="display:flex;gap:6px">
+                <button class="btn btn-sm btn-primary" onclick="showModal('modalGoal')">+ Ekle</button>
+                <button class="btn btn-sm btn-ghost" onclick="goTo('finans','hedefler')">Yönet →</button>
+              </div>
+            </div>
+            <div id="dashGoals"><div class="empty-state">Henüz hedef yok</div></div>
+          </div>
+
+          <div class="home-col-card home-cell" data-wid="account">
+            <div class="card-title"><span class="card-title-text">Hesap özeti</span></div>
+            <div class="acct-summary" id="acctSummary"><div class="empty-state">—</div></div>
+          </div>
+
+          <div class="sticky-note home-cell" data-wid="note">
+            <div class="sticky-note-label">Not</div>
+            <textarea id="stickyNote" class="sticky-note-area" placeholder="Kısa bir not bırak…" oninput="onStickyInput(this)"></textarea>
+          </div>
+
+          <div class="home-col-card home-cell" data-wid="recurring">
+            <div class="card-title"><span class="card-title-text">Tekrarlayan & Borç</span></div>
+            <p class="shortcut-desc">Düzenli ödemeleri ve borçlarını yönet.</p>
+            <button class="btn btn-primary btn-sm shortcut-btn" onclick="openRecurringModal()">+ Tekrarlayan ekle</button>
+          </div>
+
+          <div class="home-col-card home-cell" data-wid="multi">
+            <div class="card-title"><span class="card-title-text">Çoklu işlem</span></div>
+            <p class="shortcut-desc">Birden çok işlemi tek seferde ekle.</p>
+            <button class="btn btn-primary btn-sm shortcut-btn" onclick="openMultiTx()">Çoklu işlem</button>
+          </div>
+        </div>
+
+        <!-- CANLI PİYASA (büyük + 12 takip) -->
+        <div class="card" data-wid="market">
+          <div class="mkt-status" id="mktStatus1"><span class="mkt-dot loading" id="mktDot1"></span><span id="mktText1">Yükleniyor</span></div>
+          <div class="card-title">
+            <span class="card-title-text">Canlı piyasa</span>
+            <div style="display:flex;gap:8px;align-items:center">
+              <span class="mkt-hint"></span>
+              <button class="btn btn-sm btn-ghost" onclick="showModal('modalWatchlist')">Takip</button>
+              <button class="btn btn-sm btn-ghost" onclick="goTo('yatirim','piyasa')">Detay →</button>
+            </div>
+          </div>
+          <div class="mini-market-grid big" id="dashMiniMarkets"></div>
+        </div>
+
+        <!-- ═══ MOBİL PANEL AKSİYON ÇUBUĞU ═══ -->
+        <div class="mobile-panel-actions" id="mobilePanelActions">
+          <div class="mpa-row">
+            <button class="btn btn-primary" onclick="_setupMobilePanel();showModal('modalQuickAdd')">Hızlı işlem</button>
+            <button class="btn btn-primary" onclick="openMultiTx()">Çoklu işlem</button>
+          </div>
+          <button class="btn btn-block" onclick="_setupMobilePanel();showModal('modalNote')">Not ekle</button>
+        </div>
+
+        <!-- SON HAREKETLER (piyasanın altında) -->
+        <div class="card" data-wid="recent">
+          <div class="card-title">
+            <span class="card-title-text">Son hareketler</span>
+            <button type="button" class="btn btn-sm btn-ghost tx-eye-desk" onclick="toggleTxCensor()" title="Tutarları gizle" aria-label="Tutarları gizle"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
+            <button class="btn btn-sm btn-ghost" onclick="openAllTx()">Tümünü gör →</button>
+          </div>
+          <div class="dash-tx-filters" id="dashTxFilters">
+            <button type="button" class="dtf-btn active" data-f="all" onclick="setDashTxFilter('all')">Tümü</button>
+            <button type="button" class="dtf-btn" data-f="income" onclick="setDashTxFilter('income')">Gelir</button>
+            <button type="button" class="dtf-btn" data-f="expense" onclick="setDashTxFilter('expense')">Gider</button>
+            <span class="dtf-sep"></span>
+            <button type="button" class="dtf-btn active" data-r="all" onclick="setDashTxRange('all')">Tüm zamanlar</button>
+            <button type="button" class="dtf-btn" data-r="month" onclick="setDashTxRange('month')">Bu ay</button>
+            <button type="button" class="dtf-btn" data-r="week" onclick="setDashTxRange('week')">Son 7 gün</button>
+          </div>
+          <div class="tx-list" id="dashRecentTx">
+            <div class="empty-state">Henüz işlem yok. Hızlı işlemden ekleyebilirsin.</div>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ═══ FİNANS ═══ -->
+      <section class="page" id="page-finans">
+        <div class="fin-layout">
+          <div class="fin-grid">
+
+            <div class="card fin-card" id="finans-islemler">
+              <div class="card-title fin-ch"><span class="card-title-text">İşlem ekle</span><button class="btn btn-sm fin-sec-btn" onclick="showModal('modalTxHistory')">Geçmiş<span class="fin-arr"> →</span></button><button type="button" class="btn btn-primary btn-sm fin-open-mob" onclick="openFinSec('finans-islemler')">Ekle</button></div>
+              <div class="form-grid">
+                <div class="type-toggle"><div class="toggle-slider"></div>
+                  <button class="t-btn active income" id="txTypeIncome" onclick="setTxType('income')">↗ Gelir</button>
+                  <button class="t-btn expense" id="txTypeExpense" onclick="setTxType('expense')">↘ Gider</button>
+                </div>
+                <div class="form-row">
+                  <div class="field"><label>Açıklama</label><input id="txDesc" placeholder="Örn: Market"></div>
+                  <div class="field"><label>Tutar (₺)</label><input type="text" inputmode="numeric" id="txAmt" placeholder="0,00"><div class="num-word-hint" id="h-txAmt"></div></div>
+                </div>
+                <div class="form-row">
+                  <div class="field"><label>Kategori</label>
+                    <select id="txCat">
+                      <option value="Diğer">Diğer</option>
+                      <option value="Market">Market</option>
+                      <option value="Fatura">Fatura</option>
+                      <option value="Kira">Kira</option>
+                      <option value="Ulaşım">Ulaşım</option>
+                      <option value="Yemek">Yemek</option>
+                      <option value="Sağlık">Sağlık</option>
+                      <option value="Eğlence">Eğlence</option>
+                      <option value="Eğitim">Eğitim</option>
+                      <option value="Maaş">Maaş</option>
+                      <option value="Yatırım">Yatırım</option>
+                      <option value="EFT - Para Gönderimi">EFT - Para Gönderimi</option>
+                      <option value="EFT - Para Alımı">EFT - Para Alımı</option>
+                    </select>
+                  </div>
+                  <div class="field"><label>Tarih</label><input type="date" id="txDate"></div>
+                </div>
+                <input type="hidden" id="txNote" value="">
+                <button class="btn btn-primary btn-block" onclick="addTx()">Ekle</button>
+                <button class="btn btn-block btn-sm" style="margin-top:8px" onclick="openMultiTx()">+ Çoklu işlem ekle</button>
+              </div>
+            </div>
+
+            <div class="card fin-card" id="finans-tekrarlayan">
+              <div class="card-title fin-ch"><span class="card-title-text">Tekrarlayan gelir gider</span><button class="btn btn-sm fin-sec-btn" onclick="showModal('modalRecList')">Aktif<span class="fin-arr"> →</span></button><button type="button" class="btn btn-primary btn-sm fin-open-mob" onclick="openFinSec('finans-tekrarlayan')">Ekle</button></div>
+              <div class="form-grid">
+                <div class="type-toggle"><div class="toggle-slider"></div>
+                  <button class="t-btn active income" id="recTypeIncome" onclick="setRecType('income')">↗ Gelir</button>
+                  <button class="t-btn expense" id="recTypeExpense" onclick="setRecType('expense')">↘ Gider</button>
+                </div>
+                <div class="field"><label>Açıklama</label><input id="recDesc" placeholder="Örn: Kira"></div>
+                <div class="form-row">
+                  <div class="field"><label>Tutar (₺)</label><input type="text" inputmode="numeric" id="recAmt"><div class="num-word-hint" id="h-recAmt"></div></div>
+                  <div class="field"><label>Her ayın</label>
+                    <div class="subday-wrap">
+                      <input type="number" id="recDay" min="1" max="31" placeholder="1-31" inputmode="numeric" value="1">
+                      <button type="button" class="subday-cal" onclick="toggleDayPicker(event,'recDay','recDayPop')" aria-label="Gün seç" title="Gün seç">▾</button>
+                      <div class="subday-pop" id="recDayPop"></div>
+                    </div>
+                    <div class="sub-day-note">Seçtiğin günde her ay tutar otomatik işlenir (gelir ya da gider).</div>
+                  </div>
+                </div>
+                <button class="btn btn-primary btn-block" onclick="addRecurring()">Ekle</button>
+              </div>
+            </div>
+
+            <div class="card fin-card" id="finans-borc">
+              <div class="card-title fin-ch"><span class="card-title-text">Borç / taksit</span><button class="btn btn-sm fin-sec-btn" onclick="showModal('modalDebtList')">Liste<span class="fin-arr"> →</span></button><button type="button" class="btn btn-primary btn-sm fin-open-mob" onclick="openFinSec('finans-borc')">Ekle</button></div>
+              <div class="form-grid">
+                <div class="field"><label>Başlık</label><input id="debtName" placeholder="Örn: Kredi kartı"></div>
+                <div class="form-row">
+                  <div class="field"><label>Tutar (₺)</label><input type="text" inputmode="numeric" id="debtAmt"><div class="num-word-hint" id="h-debtAmt"></div></div>
+                  <div class="field"><label>Son ödeme</label><input type="date" id="debtDue"></div>
+                </div>
+                <div class="field"><label>Tür</label>
+                  <select id="debtType">
+                    <option>Kredi Kartı</option>
+                    <option>Taksit</option>
+                    <option>Kredi</option>
+                    <option>Borç</option>
+                  </select>
+                </div>
+                <button class="btn btn-primary btn-block" onclick="addDebt()">Ekle</button>
+              </div>
+            </div>
+
+            <div class="card fin-card" id="finans-abonelik">
+              <div class="card-title fin-ch"><span class="card-title-text">Abonelikler</span><button class="btn btn-sm fin-sec-btn" onclick="showModal('modalSubList')">Liste<span class="fin-arr"> →</span></button><button type="button" class="btn btn-primary btn-sm fin-open-mob" onclick="openFinSec('finans-abonelik')">Ekle</button></div>
+              <div class="form-grid">
+                <div class="field"><label>Servis</label><input id="subName" placeholder="Örn: Spotify"></div>
+                <div class="form-row">
+                  <div class="field"><label>Aylık (₺)</label><input type="text" inputmode="numeric" id="subAmt"><div class="num-word-hint" id="h-subAmt"></div></div>
+                  <div class="field"><label>Yenilenme günü</label>
+                    <div class="subday-wrap">
+                      <input type="number" id="subDay" min="1" max="31" placeholder="1-31" inputmode="numeric">
+                      <button type="button" class="subday-cal" onclick="toggleSubDayPicker(event)" aria-label="Gün seç" title="Gün seç">▾</button>
+                      <div class="subday-pop" id="subDayPop"></div>
+                    </div>
+                    <div class="sub-day-note">Seçtiğin günde her ay tutar otomatik gider olarak yazılır.</div>
+                  </div>
+                </div>
+                <button class="btn btn-primary btn-block" onclick="addSubscription()">Ekle</button>
+              </div>
+            </div>
+
+            <div class="card fin-card" id="finans-hedefler">
+              <div class="card-title fin-ch"><span class="card-title-text">Hedefler</span><button type="button" class="btn btn-sm fin-sec-btn fin-open-mob" onclick="openFinSec('finans-hedefler')">Liste</button><button class="btn btn-primary btn-sm fin-goal-desk" onclick="showModal('modalGoal')">+ Yeni</button><button type="button" class="btn btn-primary btn-sm fin-open-mob" onclick="showModal('modalGoal')">Ekle</button></div>
+              <div id="goalList" style="max-height:300px;overflow-y:auto;display:flex;flex-direction:column;gap:10px"><div class="empty-state">Henüz hedef yok</div></div>
+            </div>
+
+            <div class="card fin-card" id="finans-ekstre">
+              <div class="card-title fin-ch"><span class="card-title-text">Ekstre yükle</span><button class="btn btn-sm fin-sec-btn" onclick="showModal('modalUploadHist')">Geçmiş<span class="fin-arr"> →</span></button><button type="button" class="btn btn-primary btn-sm fin-open-mob" onclick="openFinSec('finans-ekstre')">Ekle</button></div>
+              <div class="upload-zone" id="uploadZone">
+                <input type="file" id="uploadFileInput" accept=".csv,.txt,.xlsx,.xls,.pdf" onchange="handleFileUpload(event)" style="display:none;">
+                <label for="uploadFileInput" style="display:block;cursor:pointer;">
+                  <div class="uz-icon"></div>
+                  <div class="uz-text" style="font-size:0.92rem;">Ekstre dosyanı seç</div>
+                  <div class="uz-sub">CSV, TXT, Excel veya PDF</div>
+                </label>
+              </div>
+              <div style="margin-top:12px;font-size:0.74rem;line-height:1.6;color:var(--text-soft);">
+                <div style="font-weight:700;color:var(--text);margin-bottom:3px;">Tam destekli bankalar</div>
+                <div style="margin-bottom:10px;">Papara · Halkbank · Yapı Kredi · <a href="javascript:void(0)" onclick="openSettings('destek')" style="color:var(--accent);text-decoration:none;font-weight:600;">bankanı eklet</a></div>
+                <div style="padding-top:10px;border-top:1px solid var(--glass-border);color:var(--text-muted);"> İşlem açıklamaları alınmaz; ekstreniz yalnızca cihazınızda işlenir, sunucuya gönderilmez.</div>
+              </div>
+            </div>
+
+          </div>
+
+          <div class="ad-placeholder horizontal" style="margin-top:14px">
+            <div class="ad-placeholder-icon"></div>
+            <div>
+              <div class="ad-placeholder-label">Finans reklam alanı</div>
+              <div class="ad-placeholder-meta">728 × 90 — banner</div>
+            </div>
+          </div>
+        </div>
+            </section>
+
+      <!-- ═══ TAKİP ═══ -->
+      <section class="page" id="page-takip">
+        <div class="takip-grid3">
+          <div class="card" id="tk-saatlik">
+            <div class="card-title"><span class="card-title-text">Bakiye trendi · Saatlik</span><span class="card-sub2">son 24 saat</span><button type="button" class="btn btn-primary btn-sm tk-open-mob" onclick="openTkSec('tk-saatlik')">Görüntüle</button></div>
+            <div class="chart-box"><canvas class="chart-canvas" id="balanceChart"></canvas></div>
+          </div>
+          <div class="card" id="tk-gunluk">
+            <div class="card-title"><span class="card-title-text">Bakiye trendi · Günlük</span><span class="card-sub2">son 7 gün</span><button type="button" class="btn btn-primary btn-sm tk-open-mob" onclick="openTkSec('tk-gunluk')">Görüntüle</button></div>
+            <div class="chart-box"><canvas class="chart-canvas" id="tkWeekly"></canvas></div>
+          </div>
+          <div class="card" id="tk-aylik">
+            <div class="card-title"><span class="card-title-text">Bakiye trendi · Aylık</span><span class="card-sub2">son 30 gün</span><button type="button" class="btn btn-primary btn-sm tk-open-mob" onclick="openTkSec('tk-aylik')">Görüntüle</button></div>
+            <div class="chart-box"><canvas class="chart-canvas" id="tkMonthly"></canvas></div>
+          </div>
+        </div>
+
+        <div class="takip-grid2">
+          <div class="card" id="tk-yillik">
+            <div class="card-title"><span class="card-title-text" id="tkYearLbl">Yıllık trend</span><span class="card-sub2">aylık gelir/gider</span><button type="button" class="btn btn-primary btn-sm tk-open-mob" onclick="openTkSec('tk-yillik')">Görüntüle</button></div>
+            <div class="chart-box"><canvas class="chart-canvas" id="tkYearly"></canvas></div>
+          </div>
+          <div class="card" id="tk-kategori">
+            <div class="card-title"><span class="card-title-text">Kategori dağılımı</span><button type="button" class="btn btn-primary btn-sm tk-open-mob" onclick="openTkSec('tk-kategori')">Görüntüle</button></div>
+            <div class="donut-wrap" id="categoryDonut"><div class="empty-state" style="width:100%">Veri yok</div></div>
+          </div>
+        </div>
+
+        <div class="ad-placeholder horizontal mt-16">
+          <div class="ad-placeholder-icon"></div>
+          <div>
+            <div class="ad-placeholder-label">Takip reklam alanı</div>
+            <div class="ad-placeholder-meta">728 × 90 — banner</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ YATIRIM ═══ -->
+      <section class="page" id="page-yatirim">
+
+        <!-- BİRLEŞİK DEĞER KARTI (home summary-card deseni) -->
+        <div class="card summary-card">
+          <div class="summary-row">
+            <div class="summary-cell">
+              <div class="kpi-label">Cüzdan değeri</div>
+              <div class="kpi-value" id="invTotalVal">₺0</div>
+              <div class="kpi-trend">Toplam portföy</div>
+            </div>
+            <div class="summary-div"></div>
+            <div class="summary-cell">
+              <div class="kpi-label">Kâr / Zarar</div>
+              <div class="kpi-value" id="invTotalPnl">+₺0</div>
+              <div class="kpi-trend">Canlı fiyatla</div>
+            </div>
+            <div class="summary-div"></div>
+            <div class="summary-cell">
+              <div class="kpi-label">Varlık sayısı</div>
+              <div class="kpi-value" id="invCount">0</div>
+              <div class="kpi-trend">Açık pozisyon</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- POZİSYONLAR -->
+        <div class="row-between" style="margin:18px 0 14px">
+          <div class="page-eyebrow" style="margin-bottom:0">Pozisyonlar</div>
+          <button class="btn btn-primary btn-sm" onclick="showModal('modalInvest')">+ Yeni yatırım</button>
+        </div>
+        <div class="card">
+          <div id="investList"><div class="empty-state">Yatırım eklenmedi</div></div>
+        </div>
+
+        <!-- REKLAM ALANI — Portföy -->
+        <div class="ad-placeholder" id="adInvestment" style="margin:16px 0">
+          <div class="ad-placeholder-icon"></div>
+          <div class="ad-placeholder-label">Yatırım reklam alanı</div>
+          <div class="ad-placeholder-meta">728 × 90</div>
+        </div>
+
+        <!-- CANLI PİYASA (Detay → buraya kaydırır) -->
+        <div class="row-between" id="yatirim-piyasa" style="margin:18px 0 14px">
+          <div class="page-eyebrow" style="margin-bottom:0">Canlı piyasa</div>
+          <span style="font-size:0.7rem;color:var(--text-muted);font-weight:600;letter-spacing:0.05em" id="marketLastUpdate">—</span>
+        </div>
+        <div class="card">
+          <div class="mkt-status" id="mktStatus2"><span class="mkt-dot loading" id="mktDot2"></span><span id="mktText2">Yükleniyor</span></div>
+          <div class="market-controls">
+            <div class="market-tabs" id="marketCategoryTabs">
+              <button class="market-cat-btn active" data-cat="all" onclick="setMarketCategory('all')">Tümü</button>
+              <button class="market-cat-btn" data-cat="forex" onclick="setMarketCategory('forex')">Döviz</button>
+              <button class="market-cat-btn" data-cat="crypto" onclick="setMarketCategory('crypto')">Kripto</button>
+              <button class="market-cat-btn" data-cat="bist" onclick="setMarketCategory('bist')">BIST</button>
+            </div>
+            <input class="search-input" id="marketSearchInput" placeholder="Sembol veya isim ara..." onkeyup="renderMarketPage()" style="margin:0">
+          </div>
+          <div class="market-grid" id="marketGridPage">
+            <div class="empty-state">Yükleniyor...</div>
+          </div>
+        </div>
+
+        <!-- REKLAM ALANI — Piyasa -->
+        <div class="ad-placeholder horizontal mt-16">
+          <div class="ad-placeholder-icon"></div>
+          <div>
+            <div class="ad-placeholder-label">Piyasa reklam alanı</div>
+            <div class="ad-placeholder-meta">728 × 90 — banner</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ═══ AYARLAR ═══ -->
+      <div class="modal-bg no-bg-blur" id="modalCustomizerNA" style="z-index:11000" onclick="if(event.target===this)closeModal()">
+        <div class="modal-box" style="max-width:400px;text-align:center">
+          <button class="modal-close" onclick="closeModal()">✕</button>
+          <div style="font-size:2.4rem;margin-bottom:12px"></div>
+          <h3 style="margin:0 0 10px;font-size:1.15rem;color:var(--text)">Bu cihazda kullanılamıyor</h3>
+          <p class="text-soft" style="font-size:0.9rem;line-height:1.65;margin:0">Panel özelleştirici sürükle bırak gerektirir; en boy oranınız uyumlu olmayabilir. Lütfen geniş ekranlı bir masaüstü/dizüstü cihaz kullanın.</p>
+        </div>
+      </div>
+
+
+
+      <div class="modal-bg no-bg-blur" id="modalBudget" style="z-index:11000" onclick="if(event.target===this)closeModal()">
+        <div class="modal-box" style="max-width:380px">
+          <button class="modal-close" onclick="closeModal()">✕</button>
+          <h3 style="margin:0 0 16px;font-size:1.12rem;color:var(--text)">Aylık bütçe</h3>
+          <label class="set-row-label" style="display:block;margin-bottom:6px">Aylık bütçe limiti (₺)</label>
+          <input type="text" inputmode="numeric" id="setBudget" placeholder="Örn: 25000" class="set-input" style="width:100%;max-width:100%">
+          <div class="num-word-hint" id="h-setBudget" style="padding:6px 2px 0"></div>
+          <label class="set-row-label" style="display:block;margin:16px 0 6px">Uyarı eşiği (%)</label>
+          <input type="number" id="setBudgetWarn" min="50" max="100" placeholder="80" class="set-input" style="width:100%;max-width:100%">
+          <button class="btn btn-primary" style="width:100%;margin-top:18px" onclick="saveBudget();closeModal()">Kaydet</button>
+        </div>
+      </div>
+
+      <div class="modal-bg no-bg-blur" id="modalChangeName" style="z-index:11000" onclick="if(event.target===this)closeModal()">
+        <div class="modal-box" style="max-width:380px">
+          <button class="modal-close" onclick="closeModal()">✕</button>
+          <h3 style="margin:0 0 6px;font-size:1.12rem;color:var(--text)">İsmi değiştir</h3>
+          <p class="text-soft" style="font-size:0.84rem;margin:0 0 16px">Uygulamada görünecek adın.</p>
+          <input id="setName" oninput="updateName()" class="set-input" style="width:100%;max-width:100%" placeholder="Adın">
+          <button class="btn btn-primary" style="width:100%;margin-top:16px" onclick="saveName()">Kaydet</button>
+        </div>
+      </div>
+
+      <!-- AYARLAR POP-UP (sayfa değil, modal) -->
+            <div class="modal-bg no-bg-blur" id="modalExportData" style="z-index:11000" onclick="if(event.target===this)closeModal()">
+        <div class="modal-box" style="max-width:420px">
+          <button class="modal-close" onclick="closeModal()">✕</button>
+          <div class="modal-title">Verileri dışa aktar</div>
+          <p class="text-soft" style="font-size:0.84rem;margin:0 0 14px;line-height:1.5">Bir parola belirle. İçeri aktarırken aynı parola gerekir; kod parolasız açılamaz.</p>
+          <div class="field"><label>Parola</label><input type="password" id="expPass" placeholder="En az 4 karakter" autocomplete="off"></div>
+          <button class="btn btn-primary btn-block" style="margin-top:12px" onclick="exportDataCode()">Şifreli kod oluştur</button>
+          <div id="exportCodeWrap" style="display:none;margin-top:14px">
+            <label style="font-size:0.8rem;color:var(--text-soft)">Kodun (kopyala ve sakla):</label>
+            <textarea id="exportCodeArea" readonly rows="5" style="margin-top:6px;width:100%;font-family:monospace;font-size:0.72rem;padding:10px;border-radius:10px;border:1px solid var(--glass-border);background:var(--glass);color:var(--text);resize:vertical;user-select:text;-webkit-user-select:text"></textarea>
+            <button class="btn btn-sm btn-block" style="margin-top:6px" onclick="copyExportCode()">Kopyala</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-bg no-bg-blur" id="modalImportData" style="z-index:11000" onclick="if(event.target===this)closeModal()">
+        <div class="modal-box" style="max-width:420px">
+          <button class="modal-close" onclick="closeModal()">✕</button>
+          <div class="modal-title">Verileri içeri aktar</div>
+          <p class="text-soft" style="font-size:0.84rem;margin:0 0 14px;line-height:1.5">Başka Cüzzy hesabından aldığın kodu yapıştır ve parolasını gir. Mevcut tüm verilerinin yerine geçer.</p>
+          <div class="field"><label>Kod</label><textarea id="importCodeArea" rows="5" placeholder="CUZZY1-..." style="width:100%;font-family:monospace;font-size:0.72rem;padding:10px;border-radius:10px;border:1px solid var(--glass-border);background:var(--glass);color:var(--text);resize:vertical;user-select:text;-webkit-user-select:text"></textarea></div>
+          <div class="field" style="margin-top:10px"><label>Parola</label><input type="password" id="impPass" placeholder="Dışa aktarma parolası" autocomplete="off"></div>
+          <button class="btn btn-primary btn-block" style="margin-top:12px" onclick="importDataCode()">İçeri aktar</button>
+        </div>
+      </div>
+
+      <div class="modal-bg no-bg-blur" id="modalSettings" onclick="if(event.target===this)closeModal()">
+        <div class="modal-box set-modal">
+          <button class="set-back" onclick="settingsBackToList()" aria-label="Geri">‹ Ayarlar</button>
+          <button class="modal-close" onclick="closeModal()">✕</button>
+          <aside class="set-side">
+            <div class="set-side-pill" id="setSidePill"></div>
+            <div class="set-side-title">Ayarlar</div>
+            <button class="set-side-item active" data-set="profil" onclick="setSettingsTab('profil')">Profil</button>
+            <button class="set-side-item" data-set="gorunum" onclick="setSettingsTab('gorunum')">Görünüm</button>
+            <button class="set-side-item" data-set="guvenlik" onclick="setSettingsTab('guvenlik')">Güvenlik ve veri</button>
+            <button class="set-side-item" data-set="bildirim" onclick="setSettingsTab('bildirim')">Bildirim tercihleri</button>
+            <button class="set-side-item" data-set="disaaktar" onclick="setSettingsTab('disaaktar')">Dışa aktar</button>
+            <button class="set-side-item" data-set="gizlilik" onclick="setSettingsTab('gizlilik')">Gizlilik</button>
+                  <button class="set-side-item" data-set="destek" onclick="setSettingsTab('destek')">Destek</button>
+            <div class="set-side-foot" id="setExtraFoot">
+              <div class="set-side-div"></div>
+              <div class="set-side-foot-label">Diğer gerekenler</div>
+              <button class="set-side-x" id="setVerifyRow" onclick="resendEmailVerification()">E-postanı doğrula</button>
+              <button class="set-side-x" id="setSurveyRow" onclick="openSurvey()">v3.8.3 güncellemesini değerlendir</button>
+            </div>
+          </aside>
+          <div class="set-main">
+
+            <!-- PROFİL -->
+            <div class="set-panel active" data-panel="profil">
+              <div class="set-panel-title">Profil</div>
+              <div class="set-profile-id">
+                <div class="set-profile-av" id="setProfileAv">K</div>
+                <div class="set-profile-meta"><div class="set-profile-name" id="setProfileName">Kullanıcı</div><div class="set-profile-mail" id="setProfileMail"></div></div>
+              </div>
+              <div class="set-group">
+                <div class="set-group-title">Hesap bilgileri</div>
+                <div class="set-row"><div class="set-row-main"><div class="set-row-label">İsim</div><div class="set-row-sub" id="profNameLbl">—</div></div><button class="btn btn-sm" onclick="openNameChange()">Değiştir</button></div>
+                <div class="set-row"><div class="set-row-main"><div class="set-row-label">E-posta</div><div class="set-row-sub">Güvenlik kısmından değiştirilir</div></div><input id="setEmail" disabled class="set-input"></div>
+              </div>
+              <div class="set-group">
+                <div class="set-group-title">Oturum</div>
+                <div class="set-row"><div class="set-row-main"><div class="set-row-label">Oturumu kapat</div><div class="set-row-sub">Verilerin bulutta saklanır, tekrar girişte devam edersin.</div></div><button class="btn btn-sm" onclick="logOut()">Çıkış</button></div>
+              </div>
+            </div>
+
+            <!-- GÖRÜNÜM -->
+            <div class="set-panel" data-panel="gorunum">
+              <div class="set-panel-title">Görünüm</div>
+              <div class="set-group">
+                <div class="set-group-title">Tema</div>
+                <div class="set-row col"><div class="set-row-main"><div class="set-row-label">Renk teması</div></div>
+                  <div class="theme-pick">
+                    <button class="theme-card tc-light" data-theme-set="light" onclick="setTheme('light')" aria-label="Beyaz"><span class="tc-name">Beyaz</span></button>
+                    <button class="theme-card tc-black" data-theme-set="black" onclick="setTheme('black')" aria-label="Siyah"><span class="tc-name">Siyah</span></button>
+                  </div>
+                </div>
+                <div class="set-row col"><div class="set-row-main"><div class="set-row-label">Duvar kağıdı</div><div class="set-row-sub">Çok Yakında.</div></div></div>
+              </div>
+              <div class="set-divider"></div>
+              <div class="set-group">
+                <div class="set-sub-head">Gelişmiş görünüm</div>
+                <div class="set-row"><div class="set-row-main"><div class="set-row-label">Tanıtım turu</div><div class="set-row-sub">Temel özellikleri adım adım gezdirir.</div></div><button class="btn btn-sm" onclick="closeModal();startTour()">Başlat</button></div>
+              </div>
+            </div>
+
+            <!-- GÜVENLİK VE VERİ -->
+            <div class="set-panel" data-panel="guvenlik">
+              <div class="set-panel-title">Güvenlik ve veri</div>
+              <div class="set-group">
+                <div class="set-group-title">Zaman kilidi</div>
+                <div class="set-row">
+                  <div class="set-row-main">
+                    <div class="set-row-label" style="font-size:1.02rem;font-weight:600">Hareketsizlikte oturumu kapat</div>
+                    <div class="set-row-sub">Seçilen süre boyunca işlem yapılmazsa güvenlik için otomatik çıkış yapılır.</div>
+                  </div>
+                  <select id="autoLogoutSelect" onchange="setAutoLogoutPref(this.value)" style="padding:5px 8px;border-radius:9px;border:1px solid var(--glass-border);background:var(--glass);color:var(--text);font-size:0.78rem;cursor:pointer;max-width:118px">
+                    <option value="0">Kapalı</option>
+                    <option value="5">5 dakika</option>
+                    <option value="15">15 dakika</option>
+                    <option value="30">30 dakika</option>
+                    <option value="45">45 dakika</option>
+                    <option value="60">1 saat</option>
+                  </select>
+                </div>
+              </div>
+              <div class="set-group">
+                <div class="set-group-title">Hesap güvenliği</div>
+                <div class="set-row"><div class="set-row-main"><div class="set-row-label">Şifre değiştir</div><div class="set-row-sub">Hesap parolanı güncelle.</div></div><button class="btn btn-sm" onclick="showModal('modalChangePass')">Değiştir</button></div>
+                <div class="set-row"><div class="set-row-main"><div class="set-row-label">E-postayı değiştir</div><div class="set-row-sub">Giriş e-postanı güncelle (doğrulama gerekir).</div></div><button class="btn btn-sm" onclick="showModal('modalChangeEmail')">Değiştir</button></div>
+              </div>
+              <div class="set-divider"></div>
+              <div class="set-group">
+                <div class="set-group-title">Bütçe</div>
+                <div class="set-row"><div class="set-row-main"><div class="set-row-label">Aylık bütçe</div><div class="set-row-sub">Limit ve uyarı eşiği.</div></div><button class="btn btn-sm" onclick="openBudgetModal()">Ayarla</button></div>
+              </div>
+              <div class="set-group">
+                <div class="set-group-title">Hesabını veya verilerini sil</div>
+                <div class="set-row"><div class="set-row-main"><div class="set-row-label">Tüm verileri sil</div><div class="set-row-sub">Geri alınamaz. Önce JSON yedek al.</div></div><button class="btn btn-sm btn-danger" onclick="clearAllData()">Sil</button></div>
+                <div class="set-row"><div class="set-row-main"><div class="set-row-label">Hesabı sil</div><div class="set-row-sub">Hesabın ve tüm verilerin kalıcı olarak silinir.</div></div><button class="btn btn-sm btn-danger" onclick="showModal('modalDeleteAcc')">Sil</button></div>
+              </div>
+            </div>
+
+            <!-- BİLDİRİMLER -->
+            <div class="set-panel" data-panel="bildirim">
+              <div class="set-panel-title">Bildirim tercihleri</div>
+              <div class="set-group">
+                <div class="set-group-title">Uygulama bildirimleri</div>
+                <div class="set-row"><div class="set-row-main"><div class="set-row-label">Gelir bildirimleri</div></div><input type="checkbox" id="notifIncome" onchange="saveNotifications()"></div>
+                <div class="set-row"><div class="set-row-main"><div class="set-row-label">Gider bildirimleri</div></div><input type="checkbox" id="notifExpense" onchange="saveNotifications()"></div>
+                <div class="set-row"><div class="set-row-main"><div class="set-row-label">Hedef bildirimleri</div></div><input type="checkbox" id="notifGoals" onchange="saveNotifications()"></div>
+              </div>
+            </div>
+
+            <!-- DIŞA AKTAR -->
+            <div class="set-panel" data-panel="disaaktar">
+              <div class="set-panel-title">Dışa aktar</div>
+              <div class="set-group">
+                <div class="set-group-title">Hesap taşıma — şifreli kod</div>
+                <div class="set-row">
+                  <div class="set-row-main">
+                    <div class="set-row-label">Dışa aktar</div>
+                    <div class="set-row-sub">Tüm verilerini parolayla şifreli bir koda çevirir. Kod bu hesaba özeldir.</div>
+                  </div>
+                  <button class="btn btn-sm" onclick="openExportData()">Aç</button>
+                </div>
+                <div class="set-divider"></div>
+                <div class="set-row">
+                  <div class="set-row-main">
+                    <div class="set-row-label">İçeri aktar</div>
+                    <div class="set-row-sub">Başka hesaptan aldığın kodu ve parolasını girerek verileri geri yükler.</div>
+                  </div>
+                  <button class="btn btn-sm" onclick="openImportData()">Aç</button>
+                </div>
+              </div>
+              <div class="set-group">
+                <div class="set-group-title">Yedek & rapor</div>
+                <div class="set-row"><div class="set-row-main"><div class="set-row-label">CSV indir</div></div><button class="btn btn-sm" onclick="exportCSV()">İndir</button></div>
+                <div class="set-row"><div class="set-row-main"><div class="set-row-label">JSON yedek</div></div><button class="btn btn-sm" onclick="exportJSON()">İndir</button></div>
+                <div class="set-row"><div class="set-row-main"><div class="set-row-label">PDF rapor</div></div><button class="btn btn-sm" onclick="exportPDF()">İndir</button></div>
+              </div>
+            </div>
+
+            <!-- GİZLİLİK -->
+            <div class="set-panel" data-panel="gizlilik">
+              <div class="set-panel-title">Gizlilik</div>
+              <div class="set-group">
+                <div class="set-group-title">KVKK & Gizlilik</div>
+                <div id="kvkkSettingsBody" style="padding:18px 0"></div>
+              </div>
+            </div>
+            <div class="set-panel" data-panel="destek">
+              <div class="set-panel-title">Destek & İletişim</div>
+              <div class="set-group">
+    <p class="text-soft" style="font-size:0.83rem;margin-bottom:16px;line-height:1.5">Bir hata mı buldun, önerimiz mi var? Bize ilet.</p>
+
+    <div class="form-grid">
+      <div class="field">
+        <label>Kategori</label>
+        <div class="support-cat" id="supportCatBtns">
+          <button class="support-cat-btn active" data-cat="Hata Bildirimi" onclick="selectSupportCat(this)"> Hata</button>
+          <button class="support-cat-btn" data-cat="Öneri" onclick="selectSupportCat(this)"> Öneri</button>
+          <button class="support-cat-btn" data-cat="Şikayet" onclick="selectSupportCat(this)"> Şikayet</button>
+          <button class="support-cat-btn" data-cat="Diğer" onclick="selectSupportCat(this)"> Diğer</button>
+        </div>
+      </div>
+      <div class="field">
+        <label>Konu</label>
+        <input type="text" id="supportSubject" maxlength="80" placeholder="Kısaca konuyu belirt" oninput="updateSupportChar('supportSubject','supportSubjectChar',80)">
+        <div class="support-char" id="supportSubjectChar">0 / 80</div>
+      </div>
+      <div class="field">
+        <label>Açıklama</label>
+        <textarea id="supportMessage" maxlength="800" rows="5" placeholder="Detaylı açıkla, ne kadar net olursa o kadar hızlı çözebiliriz." style="resize:vertical" oninput="updateSupportChar('supportMessage','supportMessageChar',800)"></textarea>
+        <div class="support-char" id="supportMessageChar">0 / 800</div>
+      </div>
+      <button class="btn btn-primary btn-block" id="supportSendBtn" onclick="sendSupportEmail()">Gönder</button>
+    </div>
+    <p class="text-soft" style="font-size:0.75rem;margin-top:12px;text-align:center">veya doğrudan yaz: <a href="mailto:cuzzyapp@gmail.com" style="color:var(--accent)">cuzzyapp@gmail.com</a>
+    </p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- ═══════════════ SAĞ PANEL ═══════════════ -->
+
+
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     MODALLAR
+     ═══════════════════════════════════════════════════════════════════ -->
+
+<div class="modal-bg" id="modalEditTx" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-title">İşlemi düzenle</div>
+    <div class="form-grid">
+      <div class="type-toggle"><div class="toggle-slider"></div>
+        <button class="t-btn active income" id="editTxTypeIncome" onclick="setEditTxType('income')">↗ Gelir</button>
+        <button class="t-btn expense" id="editTxTypeExpense" onclick="setEditTxType('expense')">↘ Gider</button>
+      </div>
+      <div class="field"><label>Açıklama</label><input id="editTxDesc" placeholder="Örn: Market"></div>
+      <div class="form-row">
+        <div class="field"><label>Tutar (₺)</label><input type="text" inputmode="numeric" id="editTxAmt" placeholder="0,00"></div>
+        <div class="field"><label>Kategori</label>
+          <select id="editTxCat">
+            <option value="Diğer">Diğer</option>
+            <option value="Market">Market</option>
+            <option value="Fatura">Fatura</option>
+            <option value="Kira">Kira</option>
+            <option value="Ulaşım">Ulaşım</option>
+            <option value="Yemek">Yemek</option>
+            <option value="Sağlık">Sağlık</option>
+            <option value="Eğlence">Eğlence</option>
+            <option value="Eğitim">Eğitim</option>
+            <option value="Maaş">Maaş</option>
+            <option value="Yatırım">Yatırım</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="field"><label>Tarih</label><input type="date" id="editTxDate"></div>
+        <div class="field"><label>Not (opsiyonel)</label><input id="editTxNote" placeholder="Detay"></div>
+      </div>
+      <input type="hidden" id="editTxId">
+      <button class="btn btn-primary btn-block" onclick="saveEditTx()">Kaydet</button>
+    </div>
+  </div>
+</div>
+
+  <div class="modal-bg" id="modalRecList" onclick="if(event.target===this)closeModal()">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <div class="modal-title">Aktif tekrarlayanlar</div>
+      <div id="recList" style="max-height:60vh;overflow-y:auto;margin-top:8px"><div class="empty-state">Yok</div></div>
+    </div>
+  </div>
+
+  <div class="modal-bg" id="modalDebtList" onclick="if(event.target===this)closeModal()">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <div class="modal-title">Borç / taksit</div>
+      <div class="planner-list" id="debtList" style="max-height:60vh;overflow-y:auto;margin-top:8px"></div>
+    </div>
+  </div>
+
+  <div class="modal-bg" id="modalSubList" onclick="if(event.target===this)closeModal()">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <div class="modal-title">Abonelikler</div>
+      <div class="planner-list" id="subList" style="max-height:60vh;overflow-y:auto;margin-top:8px"></div>
+    </div>
+  </div>
+
+  <div class="modal-bg" id="modalUploadHist" onclick="if(event.target===this)closeModal()">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <div class="modal-title">Geçmiş yüklemeler</div>
+      <p class="text-muted" style="font-size:0.72rem;line-height:1.5;margin:4px 0 8px">Ekstre kayıtları <b>7 gün</b> sonra otomatik silinir; cihazında veya tarayıcında kalıcı tutulmaz.</p>
+      <div id="uploadHistory" style="max-height:52vh;overflow-y:auto;margin-top:8px"><div class="empty-state">Henüz yüklenmedi</div></div>
+      <p class="text-soft" style="font-size:0.82rem;margin:14px 0 10px;line-height:1.5">Ekstre yüklemeden, birden fazla işlemi elle ve hızlıca tek seferde de ekleyebilirsin.</p>
+      <button class="btn btn-primary btn-sm" onclick="openMultiTx()">+ Çoklu işlem ekle</button>
+    </div>
+  </div>
+
+  <div class="modal-bg" id="modalBalance" onclick="if(event.target===this)closeModal()">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <div class="modal-title">Mevcut bakiye</div>
+      <p class="text-soft" style="font-size:0.86rem;line-height:1.65;margin-bottom:18px">Elindeki toplam parayı (banka + nakit) buraya gir. Bu, başlangıç noktan olur: <b style="color:var(--text)">gelirlerin üstüne eklenir</b>, <b style="color:var(--text)">giderlerin (maaş, abonelik, harcama…) buradan düşülür</b>. Böylece üstteki kart her zaman güncel paranı gösterir.</p>
+      <div class="field"><label>Mevcut bakiye (₺)</label><input type="text" inputmode="numeric" id="baseBalanceInput" placeholder="0,00"><div class="num-word-hint" id="h-baseBalanceInput"></div></div>
+      <button class="btn btn-primary btn-block" onclick="saveBaseBalance()" style="margin-top:14px">Kaydet</button>
+    </div>
+  </div>
+
+  <div class="modal-bg" id="modalTxHistory" onclick="if(event.target===this)closeModal()">
+    <div class="modal-box">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <div class="modal-title"> İşlem geçmişi</div>
+      <div class="filter-row">
+        <button class="btn btn-sm active" data-filter="all" onclick="setTxFilter('all', this)">Tümü</button>
+        <button class="btn btn-sm" data-filter="income" onclick="setTxFilter('income', this)">Gelir</button>
+        <button class="btn btn-sm" data-filter="expense" onclick="setTxFilter('expense', this)">Gider</button>
+      </div>
+      <div class="tx-list" id="txList" style="max-height:58vh;overflow-y:auto;margin-top:8px"><div class="empty-state">İşlem yok</div></div>
+    </div>
+  </div>
+
+<div class="modal-bg" id="modalGoal" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-title"> Yeni hedef</div>
+    <div class="form-grid">
+      <div class="field"><label>Hedef adı</label><input id="goalName" placeholder="Örn: Araba"></div>
+      <div class="form-row">
+        <div class="field"><label>Hedef tutar (₺)</label><input type="text" inputmode="numeric" id="goalTarget"><div class="num-word-hint" id="h-goalTarget"></div></div>
+        <div class="field"><label>Mevcut (₺)</label><input type="text" inputmode="numeric" id="goalCurrent" value="0"><div class="num-word-hint" id="h-goalCurrent"></div></div>
+      </div>
+      <div class="field"><label>Hedef tarihi (opsiyonel)</label><input type="date" id="goalDate"></div>
+      <button class="btn btn-primary btn-block" onclick="addGoal()">Ekle</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="modalInvest" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-title"> Yatırım ekle</div>
+    <div class="form-grid">
+      <div class="type-toggle"><div class="toggle-slider"></div>
+        <button class="t-btn active income" id="invModeLive" onclick="setInvMode('live')">Canlı piyasa</button>
+        <button class="t-btn expense" id="invModeManual" onclick="setInvMode('manual')">Manuel</button>
+      </div>
+      <div class="field"><label>Yatırım adı</label><input id="invName" placeholder="Örn: Uzun vade"></div>
+
+      <div id="invFieldsLive">
+        <div class="form-row">
+          <div class="field"><label>Tür</label>
+            <select id="invLiveType" onchange="populateInvSymbols()">
+              <option value="Kripto">Kripto</option>
+              <option value="Hisse"> BIST</option>
+            </select>
+          </div>
+          <div class="field"><label>Sembol</label><select id="invLiveSymbol"></select></div>
+        </div>
+        <div class="form-row">
+          <div class="field"><label>Adet</label><input type="number" id="invQty" step="any"></div>
+          <div class="field"><label>Alış fiyatı (birim)</label><input type="text" inputmode="numeric" id="invBuyPrice"><div class="num-word-hint" id="h-invBuyPrice"></div></div>
+        </div>
+      </div>
+
+      <div id="invFieldsManual" style="display:none">
+        <div class="form-row">
+          <div class="field"><label>Tür</label>
+            <select id="invManualType">
+              <option>Altın</option>
+              <option>Döviz</option>
+              <option>Fon</option>
+              <option>Birikim</option>
+              <option>Diğer</option>
+            </select>
+          </div>
+          <div class="field"><label>Toplam tutar (₺)</label><input type="text" inputmode="numeric" id="invManualAmount"><div class="num-word-hint" id="h-invManualAmount"></div></div>
+        </div>
+      </div>
+
+      <div class="field"><label>Not (opsiyonel)</label><input id="invNote"></div>
+      <button class="btn btn-primary btn-block" onclick="addInvestment()">Kaydet</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="modalChangeEmail" style="z-index:11000" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-title">E-postayı değiştir</div>
+    <div class="form-grid">
+      <div class="field"><label>Yeni e-posta</label><input type="email" id="ceEmail" autocomplete="email" placeholder="yeni@ornek.com" maxlength="120"></div>
+      <div class="field"><label>Mevcut şifre</label><input type="password" id="cePass" autocomplete="current-password" maxlength="200"></div>
+      <div class="sub-day-note" style="margin-top:2px">Güvenlik için mevcut şifren gerekir. Yeni adrese doğrulama bağlantısı gönderilir; bağlantıya tıklayınca e-postan güncellenir. O ana kadar eski adresle giriş yapmaya devam edersin.</div>
+      <button class="btn btn-primary btn-block" onclick="changeEmail()">Doğrulama gönder</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="modalChangePass" style="z-index:11000" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-title"> Şifre değiştir</div>
+    <div class="form-grid">
+      <div class="field"><label>Mevcut şifre</label><input type="password" id="cpOld" autocomplete="current-password" maxlength="200"></div>
+      <div class="field"><label>Yeni şifre</label><input type="password" id="cpNew" autocomplete="new-password" maxlength="200"></div>
+      <div class="field"><label>Yeni şifre (tekrar)</label><input type="password" id="cpNew2" autocomplete="new-password" maxlength="200"></div>
+      <button class="btn btn-primary btn-block" onclick="changePassword()">Kaydet</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="modalDeleteAcc" style="z-index:11000" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-title"> Hesabı sil</div>
+    <p class="text-soft" style="font-size:0.86rem;line-height:1.5;margin-bottom:14px">Tüm verilerin <strong style="color:var(--expense)">kalıcı olarak</strong> silinecek. Bu işlem geri alınamaz.
+    </p>
+    <div class="form-grid">
+      <div class="field"><label>Şifrenizi girin</label><input type="password" id="delPass" autocomplete="current-password" maxlength="200"></div>
+      <button class="btn btn-danger btn-block" onclick="deleteAccount()">Hesabı kalıcı olarak sil</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ EVRENSEL ONAY MODALI ═══ -->
+<div class="modal-bg" id="modalConfirm" style="z-index:12000" onclick="if(event.target===this)_confirmCancel()">
+  <div class="modal-box" style="max-width:380px;text-align:center">
+    <div class="modal-title" id="confirmTitle" style="margin-bottom:10px"></div>
+    <p class="text-soft" id="confirmMsg" style="font-size:0.87rem;line-height:1.55;margin-bottom:22px"></p>
+    <div style="display:flex;gap:10px;justify-content:center">
+      <button class="btn btn-ghost" onclick="_confirmCancel()">Vazgeç</button>
+      <button class="btn" id="confirmOkBtn" onclick="_confirmOk()">Onayla</button>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal-bg" id="modalUploadPreview" style="z-index:11000" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box wide">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-title"> Ekstre önizleme</div>
+    <div class="text-soft" style="font-size:0.76rem;margin:2px 0 10px;color:var(--text-muted);line-height:1.5"> IBAN, ad-soyad, telefon ve referans gibi kişisel veriler, kaydedilmeden önce açıklamadan otomatik olarak maskelenir.</div>
+    <div id="colMapper" class="form-row" style="margin:12px 0"></div>
+    <button class="btn btn-sm" onclick="reparseUpload()"> Yeniden eşleştir</button>
+    <div class="preview-scroll">
+      <table class="preview-table">
+        <thead id="previewHead"></thead>
+        <tbody id="previewBody"></tbody>
+      </table>
+    </div>
+    <div class="row-flex mt-16">
+      <button class="btn" style="flex:1" onclick="closeModal()">İptal</button>
+      <button class="btn btn-primary" style="flex:1" onclick="showImportWarn()">İçe aktar</button>
+    </div>
+    <div id="importWarn" style="display:none;margin-top:14px;padding:14px;border:1px solid var(--glass-border);border-radius:12px;background:var(--glass)">
+      <div style="font-weight:700;color:var(--text);margin-bottom:8px">Bu ekstre verilerine işlenecek</div>
+      <p class="text-soft" style="font-size:0.84rem;line-height:1.6;margin-bottom:10px">Onaylarsan ekstredeki işlemler kalıcı olarak eklenir ve şunlara yansır:</p>
+      <ul style="font-size:0.84rem;color:var(--text-soft);line-height:1.7;margin:0 0 12px;padding-left:18px">
+        <li>İşlemler listesi (gelir / gider)</li>
+        <li>Bu ay gelir · gider · net özeti</li>
+        <li>Takip grafikleri (günlük / haftalık / aylık / yıllık)</li>
+        <li>Kategori dağılımı</li>
+      </ul>
+      <p class="text-soft" style="font-size:0.8rem;margin-bottom:12px">Mevcut bakiyen <b style="color:var(--text)">değişmez</b> — onu yalnızca sen elle ayarlarsın.</p>
+      <div class="row-flex">
+        <button class="btn" style="flex:1" onclick="hideImportWarn()">Vazgeç</button>
+        <button class="btn btn-primary" style="flex:1" onclick="confirmUploadImport()">Onayla, içe aktar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="modalMultiTx" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box wide">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-title">Çoklu işlem ekle</div>
+    <p class="text-soft" style="font-size:0.82rem;margin-bottom:14px;line-height:1.5">Birden fazla işlemi tek seferde ekle. Boş satırlar yok sayılır; aynı işlem zaten varsa otomatik atlanır.
+    </p>
+    <div class="multi-head">
+      <span>Tür</span><span>Tutar ₺</span><span>Açıklama</span><span>Kategori</span><span>Tarih</span><span></span>
+    </div>
+    <div id="multiTxRows"></div>
+    <button class="btn btn-sm" style="margin-top:6px" onclick="addMultiRow()">+ Satır ekle</button>
+    <div class="row-flex mt-16">
+      <button class="btn" style="flex:1" onclick="closeModal()">İptal</button>
+      <button class="btn btn-primary" style="flex:1" onclick="commitMultiTx()">Tümünü ekle</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="modalWatchlist" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box wide">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-title"> Takip listesi</div>
+    <p class="text-soft" style="font-size:0.85rem;margin-bottom:18px;line-height:1.5">Üst panelde sürekli görmek istediğin döviz, kripto veya hisseleri ekle.
+      <strong style="color:var(--text)">En fazla 18</strong> takip ekleyebilirsin.
+    </p>
+
+    <div class="wl-layout">
+      <!-- SOL: takip ekle -->
+      <div class="wl-add">
+        <div class="eyebrow" style="margin-bottom:10px">+ Yeni takip</div>
+        <div class="form-grid">
+          <div class="field">
+            <label>Tür</label>
+            <select id="wlType" onchange="var _ws=document.getElementById('wlSearch');if(_ws)_ws.value='';populateWatchlistSymbols()">
+              <option value="forex"> Döviz</option>
+              <option value="crypto">Kripto</option>
+              <option value="bist"> BIST hissesi</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Ara</label>
+            <input type="text" id="wlSearch" placeholder="Sembol veya isim ara..." oninput="populateWatchlistSymbols()" autocomplete="off">
+          </div>
+          <div class="field">
+            <label>Sembol</label>
+            <select id="wlSymbol" size="6" style="height:auto"></select>
+          </div>
+          <button class="btn btn-primary btn-block" onclick="addToWatchlist()">+ Listeye ekle</button>
+        </div>
+      </div>
+
+      <!-- SAĞ: mevcut liste -->
+      <div class="wl-current">
+        <div class="eyebrow" style="margin-bottom:10px"><span id="wlCountLabel">Mevcut takipler</span></div>
+        <div id="watchlistCurrent" class="wl-list"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROFİL MODALI -->
+<div class="modal-bg no-bg-blur" id="modalProfile" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box profile-box profile-box-v2">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+
+    <div class="profile-hero">
+      <div class="profile-avatar-xl" id="profileAvatarLarge">K</div>
+      <div class="profile-name" id="profileNameDisplay">Kullanıcı</div>
+      <div class="profile-email" id="profileEmailDisplay">—</div>
+    </div>
+
+    <div class="profile-stats-card">
+      <div class="pf-stat"><div class="pf-stat-val" id="profileStatTx">0</div><div class="pf-stat-lbl">İşlem</div></div>
+      <div class="pf-sep"></div>
+      <div class="pf-stat"><div class="pf-stat-val" id="profileStatGoal">0</div><div class="pf-stat-lbl">Hedef</div></div>
+      <div class="pf-sep"></div>
+      <div class="pf-stat"><div class="pf-stat-val" id="profileStatInv">0</div><div class="pf-stat-lbl">Yatırım</div></div>
+    </div>
+
+    <div class="profile-menu">
+      <button class="profile-menu-row" onclick="closeModal();goTo('ayarlar','profil')"><span>Profil ayarları</span><span class="pm-chev">›</span></button>
+      <button class="profile-menu-row" onclick="closeModal();goTo('ayarlar','guvenlik')"><span>Güvenlik</span><span class="pm-chev">›</span></button>
+    </div>
+
+    <button class="btn btn-block profile-logout" onclick="logOut()">Oturumu kapat</button>
+  </div>
+</div>
+
+<!-- MEMNUNİYET ANKETİ MODALI -->
+<div class="modal-bg" id="modalQuickAdd" onclick="if(event.target===this)closeModal('modalQuickAdd')">
+        <div class="modal-box" style="max-width:420px">
+          <button class="modal-close" onclick="closeModal('modalQuickAdd')">✕</button>
+          <div class="modal-title" style="margin-bottom:14px">Hızlı işlem ekle</div>
+          <div id="mqaHost"></div>
+        </div>
+      </div>
+
+      <div class="modal-bg" id="modalNote" onclick="if(event.target===this)closeModal('modalNote')">
+        <div class="modal-box" style="max-width:420px">
+          <button class="modal-close" onclick="closeModal('modalNote')">✕</button>
+          <div class="modal-title" style="margin-bottom:14px">Not</div>
+          <div id="mnoteHost"></div>
+        </div>
+      </div>
+
+      <div class="modal-bg" id="modalFinSec" onclick="if(event.target===this)closeFinSec()">
+        <div class="modal-box" style="max-width:460px">
+          <button class="modal-close" onclick="closeFinSec()">✕</button>
+          <div class="modal-title" id="finSecTitle" style="margin-bottom:14px"></div>
+          <div class="fin-sec-host" id="finSecHost-islemler"></div>
+          <div class="fin-sec-host" id="finSecHost-tekrarlayan"></div>
+          <div class="fin-sec-host" id="finSecHost-borc"></div>
+          <div class="fin-sec-host" id="finSecHost-abonelik"></div>
+          <div class="fin-sec-host" id="finSecHost-hedefler"></div>
+          <div class="fin-sec-host" id="finSecHost-ekstre"></div>
+        </div>
+      </div>
+
+      <div class="modal-bg" id="modalTkSec" onclick="if(event.target===this)closeTkSec()">
+        <div class="modal-box" style="max-width:520px">
+          <button class="modal-close" onclick="closeTkSec()">✕</button>
+          <div class="modal-title" id="tkSecTitle" style="margin-bottom:14px"></div>
+          <div id="tkSecHost"></div>
+        </div>
+      </div>
+
+      <div class="modal-bg" id="modalMobileNotice" style="z-index:13000" onclick="if(event.target===this)closeModal('modalMobileNotice')">
+        <div class="modal-box" style="max-width:400px">
+          <div class="modal-title" style="margin-bottom:6px">Mobil cihaz algılandı</div>
+          <div style="font-size:0.9rem;line-height:1.7;color:var(--text-soft);margin:6px 0 20px">Cüzzy şu an masaüstü için tam optimize edilmiştir. Mobilde bazı özellikler (canlı piyasa, panel özelleştirme, tanıtım turu, çoklu grafik görünümü) sınırlıdır. Tam deneyim için bilgisayardan girebilir ya da cihazını yatay çevirebilirsin.</div>
+          <button class="btn btn-primary btn-block" onclick="closeModal('modalMobileNotice')">Anladım</button>
+        </div>
+      </div>
+
+      <div class="modal-bg" id="modalUpdateNotice" style="z-index:12000" onclick="if(event.target===this)dismissUpdateNotice()">
+        <div class="modal-box" style="max-width:440px">
+          <div class="notif-item-ver" style="display:inline-block;margin-bottom:8px">v3.10.3</div>
+          <div class="modal-title" style="margin-bottom:4px">Güncelleme Notları ve Yenilikler</div>
+          <div style="font-size:0.9rem;line-height:2;color:var(--text-soft);margin:8px 0 20px">• Mobil iyileştirmeler ve çeşitli arayüz güncellemesi.</div>
+          <button class="btn btn-primary btn-block" onclick="dismissUpdateNotice()">Tamam</button>
+        </div>
+      </div>
+
+      <div class="modal-bg" id="modalSurvey" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-title">Güncellemeyi Değerlendir</div>
+    <div id="surveyProgress" class="text-muted" style="font-size:0.74rem;font-weight:700;letter-spacing:0.04em;margin-bottom:8px"></div>
+    <div id="surveyQText" style="font-size:1rem;font-weight:700;color:var(--text);line-height:1.5;margin-bottom:16px"></div>
+    <div class="survey-rating" id="surveyRating"></div>
+    <div class="survey-scale"><span>1 · Çok kötü</span><span>10 · Mükemmel</span></div>
+    <div class="field" style="margin-top:16px">
+      <label>Özgür fikrinizi belirtin (opsiyonel)</label>
+      <textarea id="surveyText" rows="3" maxlength="500" placeholder="Bu konuda görüşünü yazabilirsin..." style="resize:vertical"></textarea>
+    </div>
+    <div class="row-flex" style="margin-top:18px;justify-content:space-between">
+      <button class="btn btn-ghost" id="surveyPrev" onclick="surveyPrev()">← Geri</button>
+      <button class="btn btn-primary" id="surveyNext" onclick="surveyNext()">İleri →</button>
+    </div>
+    <p class="text-muted" style="font-size:0.72rem;line-height:1.6;margin-top:16px;text-align:center">Göndermek istediğiniz anket yalnızca destek bölümüne iletilir. Hesap, işlem veya finansal verilerinizin hiçbiri bu ankete eklenmez; herhangi bir veriniz başka bir yere aktarılmaz.
+    </p>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     ONBOARDING TUR (10 adım)
+     ═══════════════════════════════════════════════════════════════════ -->
+
+<!-- ═══ WHAT'S NEW POPUP ═══ -->
+<div class="modal-bg" id="modalRecurring" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-title">Tekrarlayan ekle</div>
+    <div class="type-toggle" style="margin-bottom:12px"><div class="toggle-slider"></div>
+      <button class="t-btn active income" id="mRecTypeIncome" onclick="mSetRecType('income')">Gelir</button>
+      <button class="t-btn expense" id="mRecTypeExpense" onclick="mSetRecType('expense')">Gider</button>
+    </div>
+    <div class="field"><label>Açıklama</label><input id="mRecDesc" placeholder="Örn: Kira"></div>
+    <div class="form-row">
+      <div class="field"><label>Tutar (₺)</label><input type="text" inputmode="numeric" id="mRecAmt"></div>
+      <div class="field"><label>Her ayın</label>
+        <div class="subday-wrap">
+          <input type="number" id="mRecDay" min="1" max="31" placeholder="1-31" inputmode="numeric" value="1">
+          <button type="button" class="subday-cal" onclick="toggleDayPicker(event,'mRecDay','mRecDayPop')" aria-label="Gün seç" title="Gün seç">▾</button>
+          <div class="subday-pop" id="mRecDayPop"></div>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-primary btn-block" style="margin-top:14px" onclick="addRecurringQuick()">+ Ekle</button>
+  </div>
+</div>
+
+<div class="modal-bg" id="modalAllTx" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box wide">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-title">Tüm hareketler</div>
+    <div class="tx-list" id="allTxList" style="max-height:62vh;overflow-y:auto;margin-top:8px"></div>
+  </div>
+</div>
+
+<div class="wn-overlay" id="wnOverlay">
+  <div class="wn-box">
+    <div class="wn-track" id="wnTrack">
+
+      <!-- 1 -->
+      <div class="wn-slide">
+        <div class="wn-slide-icon"></div>
+        <div class="wn-slide-badge">Arayüz güncellemesi · v2.36.0</div>
+        <div class="wn-slide-title">Yepyeni Görünüm</div>
+        <ul class="wn-list">
+          <li data-dot="•">Beyaz, siyah ve gece yarısı temaları — varsayılan artık Apple beyazı.</li>
+          <li data-dot="•">Apple mavisi butonlar, yeşil gelir / kırmızı gider.</li>
+          <li data-dot="•">Sade, şeffaf tasarım; emojiler ve gereksiz renkler temizlendi.</li>
+        </ul>
+      </div>
+      <!-- 2 -->
+      <div class="wn-slide">
+        <div class="wn-slide-icon"></div>
+        <div class="wn-slide-badge">Panel</div>
+        <div class="wn-slide-title">Tek Bakışta Özet</div>
+        <ul class="wn-list">
+          <li data-dot="•">Gelir, gider ve net bakiye tek kartta birleşti.</li>
+          <li data-dot="•">Aylık bütçe hemen altında, sade bir satır olarak.</li>
+          <li data-dot="•">Sayılar artık kalın ve daha okunaklı.</li>
+        </ul>
+      </div>
+      <!-- 3 -->
+      <div class="wn-slide">
+        <div class="wn-slide-icon"></div>
+        <div class="wn-slide-badge">Panel</div>
+        <div class="wn-slide-title">Daha Geniş, Daha Sade</div>
+        <ul class="wn-list">
+          <li data-dot="•">Sağ panel kaldırıldı, ana panel ekrana yayıldı.</li>
+          <li data-dot="•">Hızlı işlem, Hedefler ve Hesap özeti yan yana.</li>
+          <li data-dot="•">Yapışkan not eklendi; tüm reklamlar kaldırıldı.</li>
+        </ul>
+      </div>
+      <!-- 4 -->
+      <div class="wn-slide">
+        <div class="wn-slide-icon"></div>
+        <div class="wn-slide-badge">Yatırım</div>
+        <div class="wn-slide-title">Canlı Piyasa</div>
+        <ul class="wn-list">
+          <li data-dot="•">Piyasa kartı büyütüldü.</li>
+          <li data-dot="•">12 sembole kadar takip ekleyebilirsin.</li>
+          <li data-dot="•">Son hareketler piyasanın hemen altında.</li>
+        </ul>
+      </div>
+
+
+    </div>
+    <div class="wn-dots" id="wnDots"></div>
+    <div class="wn-footer">
+      <button class="wn-skip" id="wnSkip" onclick="closeWhatsNew()">Atla</button>
+      <button class="btn btn-primary" id="wnNext" onclick="nextWhatsNew()">Devam →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ BETA BİLGİLENDİRME (açılışta) ═══ -->
+<div class="wn-overlay" id="betaOverlay">
+  <div style="max-width:380px;width:calc(100vw - 40px);background:var(--glass-strong);backdrop-filter:blur(32px) saturate(180%);-webkit-backdrop-filter:blur(32px) saturate(180%);border:1px solid var(--glass-border-strong);border-radius:22px;padding:28px 24px;box-shadow:0 24px 60px rgba(0,0,0,0.5);text-align:center;">
+    <div style="font-size:2.4rem;margin-bottom:10px;"></div>
+    <div style="font-size:1.15rem;font-weight:800;margin-bottom:10px;">Cüzzy Beta Sürümü</div>
+    <div style="font-size:0.88rem;color:var(--text-soft);line-height:1.6;margin-bottom:20px;">Cüzzy şu an <b>beta</b> aşamasında; zaman zaman hatalarla karşılaşabilirsin. Bir sorun fark edersen sağ alttaki <b>destek</b> bölümünden bize bildirirsen çok yardımcı olursun. 
+    </div>
+    <label for="betaDontShow" style="display:flex;align-items:center;justify-content:center;gap:8px;font-size:0.82rem;color:var(--text-muted);cursor:pointer;margin-bottom:18px;user-select:none;">
+      <input type="checkbox" id="betaDontShow" style="width:16px;height:16px;cursor:pointer;accent-color:var(--accent);">Bir daha gösterme
+    </label>
+    <div style="display:flex;gap:10px;">
+      <button class="btn btn-ghost" style="flex:1;" onclick="closeBetaNotice()">Kapat</button>
+      <button class="btn btn-primary" style="flex:1;" onclick="betaGoSupport()">Destek</button>
+    </div>
+  </div>
+</div>
+
+<div class="wn-overlay" id="kvkkGateOverlay">
+  <div class="kvkk-gate-box">
+    <div class="kvkk-gate-head">
+      <div class="kvkk-gate-title" id="kvkkGateTitle"> KVKK Aydınlatma Metni</div>
+      <div class="kvkk-gate-sub" id="kvkkGateSub">Devam etmeden önce lütfen aşağıdaki metni okuyun. Metni sonuna kadar kaydırınca onay kutusu etkinleşir.</div>
+      <div class="kvkk-update-banner" id="kvkkUpdateBanner" style="display:none"> Metin güncellendi — aşağıda <b>Güncellendi</b> etiketli ve altı çizili bölümleri inceleyin.</div>
+    </div>
+    <div class="kvkk-scroll" id="kvkkGateScroll">
+      <div id="kvkkGateText"></div>
+    </div>
+    <div class="kvkk-gate-foot">
+      <div class="kvkk-scroll-hint" id="kvkkScrollHint">↓ Onaylamak için metni sonuna kadar okuyun</div>
+      <label for="kvkkGateCheck" style="display:flex;align-items:flex-start;gap:8px;font-size:0.82rem;color:var(--text);cursor:pointer;margin-bottom:12px;user-select:none;">
+        <input type="checkbox" id="kvkkGateCheck" disabled onchange="kvkkCheckToggle()" style="width:16px;height:16px;margin-top:2px;cursor:pointer;accent-color:var(--accent);flex-shrink:0;">
+        <span>Yukarıdaki KVKK Aydınlatma Metni'ni <b>okudum, bilgilendim</b>.</span>
+      </label>
+      <button class="btn btn-primary btn-block" id="kvkkGateBtn" disabled onclick="acceptKvkk()">Okudum, bilgilendim · Devam et</button>
+    </div>
+  </div>
+</div>
+
+<div class="tour-overlay" id="tourOverlay"></div>
+<div class="tour-spotlight" id="tourSpotlight" style="display:none"></div>
+<div class="tour-card" id="tourCard" style="display:none">
+  <div class="tour-step" id="tourStepLabel">1 / 10</div>
+  <div class="tour-title" id="tourTitle"></div>
+  <div class="tour-text" id="tourText"></div>
+  <div class="tour-actions">
+    <div class="tour-progress" id="tourProgress"></div>
+    <div class="tour-btns">
+      <button class="btn btn-sm btn-ghost" onclick="skipTour()">Atla</button>
+      <button class="btn btn-sm" id="tourPrev" onclick="prevTourStep()">Geri</button>
+      <button class="btn btn-sm btn-primary" id="tourNext" onclick="nextTourStep()">İleri</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/core.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/nav.js"></script>
+<script src="js/finans.js"></script>
+<script src="js/render.js"></script>
+<script src="js/piyasa.js"></script>
+<script src="js/takip.js"></script>
+<script src="js/dosya.js"></script>
+<script src="js/hesap.js"></script>
+<script src="js/panel.js"></script>
+
+<!-- POPUP 1: ONARIM TAMAMLANDI (bir kerelik) -->
+<div class="pin-notice-overlay hidden" id="repairNoticeOverlay">
+  <div class="pin-notice-card">
+    <div class="pin-notice-icon"></div>
+    <div class="pin-notice-title">Onarım Tamamlandı</div>
+    <div class="pin-notice-body">PIN sıfırlama sistemi <strong>artık aktif</strong>.<br><br>PIN'inizi unuttuğunuzda kilit ekranındaki <em>"PIN'i unuttum"</em> bağlantısından e-postanıza 6 haneli <strong>PIN Sıfırlama</strong> kodu gönderebilirsiniz. Ardından PIN'inizi sıfırlayabilir veya tamamen kaldırabilirsiniz.
+    </div>
+    <button class="btn btn-primary" onclick="dismissRepairNotice()">Devam →</button>
+  </div>
+</div>
+
+<!-- POPUP 2: GÜVENLİK ÖZELLİKLERİ AKTİF (bir kerelik) -->
+<div class="pin-notice-overlay hidden" id="featuresNoticeOverlay">
+  <div class="pin-notice-card">
+    <div class="pin-notice-icon"></div>
+    <div class="pin-notice-title">Güvenlik Özellikleri Aktif</div>
+    <div class="pin-notice-body">
+      <strong>E-posta doğrulama:</strong> Yeni hesap oluştururken e-postanıza 6 haneli doğrulama kodu gönderilir.<br><br>
+      <strong>2 adımlı giriş:</strong> Her girişte şifrenizin yanı sıra e-postanıza güvenlik kodu gönderilir; şifreniz ele geçirilse bile hesabınız korunur.<br><br>
+      <strong>PIN sıfırlama:</strong> PIN'inizi unuttuğunuzda e-posta yoluyla sıfırlayabilir veya kaldırabilirsiniz.
+    </div>
+    <button class="btn btn-primary" onclick="dismissFeaturesNotice()">Harika, Anladım </button>
+  </div>
+</div>
+
+<script src="js/finjump.js"></script>
+</body>
+</html>
