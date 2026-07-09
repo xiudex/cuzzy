@@ -372,9 +372,22 @@ function updateTopnavPill() {
   }
 }
 
+function updateMbnPill() {
+  const pill = document.getElementById('mbnPillBg');
+  if (!pill) return;
+  const active = document.querySelector('.mbn-item.active');
+  if (!active) { pill.classList.remove('ready'); return; }
+  pill.style.transform = `translateX(${active.offsetLeft}px)`;
+  pill.style.width = active.offsetWidth + 'px';
+  if (!pill.classList.contains('ready')) {
+    requestAnimationFrame(() => pill.classList.add('ready'));
+  }
+}
+
 window.addEventListener('resize', () => {
   updateTopnavPill();
   updateSubnavPill();
+  updateMbnPill();
 });
 
 /* ═══ Sayfa yenileme ═══ */
