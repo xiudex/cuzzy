@@ -75,6 +75,7 @@ function enterApp() {
   renderKvkkSettings();
   // Pill konumunu hazırla
   setTimeout(updateTopnavPill, 100);
+  setTimeout(function () { try { if (typeof updateMbnPill === 'function') updateMbnPill(); } catch (e) {} }, 100);
   updateVerifyBadge();
 
   // Açılış akışı: önce BETA bilgilendirmesi (kalıcı kapatılmadıysa her açılışta),
@@ -198,7 +199,7 @@ function openFinSec(cardId) {
 }
 function closeFinSec() {
   _finRestoreAll();
-  try { closeModal('modalFinSec'); } catch (e) {}
+  try { _hideModalInstant('modalFinSec'); } catch (e) {}
 }
 try {
   var _finMq = window.matchMedia('(max-width: 760px)');
@@ -212,6 +213,7 @@ function maybeShowMobileNotice() {
   try { showModal('modalMobileNotice'); } catch (e) {}
 }
 function openMobileNotif(e) {
+  try { closeQuickMenu(); } catch (x) {}
   try { if (typeof openNotifFromDrawer === 'function') openNotifFromDrawer(e); else toggleNotifPanel(e); }
   catch (err) { try { toggleNotifPanel(e); } catch (_) {} }
 }
