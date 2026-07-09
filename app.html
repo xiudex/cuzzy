@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="tr" data-theme="light" data-wallpaper="light">
 <head>
 <meta charset="UTF-8">
@@ -91,142 +91,9 @@
     <button class="topnav-item" data-nav="takip" onclick="goTo('takip')"><span>Takip</span></button>
     <button class="topnav-item" data-nav="yatirim" onclick="goTo('yatirim')"><span>Canlı</span></button>
     <div class="topnav-actions">
-      <!-- BİLDİRİM PANELI -->
-      <div class="notif-wrap" id="notifWrap">
-        <button class="notif-btn" id="notifBtn" onclick="toggleNotifPanel(event)" title="Bildirimler">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-          <span class="notif-badge" id="notifBadge" style="display:none">0</span>
-        </button>
-        <div class="notif-panel" id="notifPanel" style="display:none">
-          <button class="notif-close" onclick="closeNotifPanel()" title="Kapat" aria-label="Bildirimleri kapat"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
-          <div class="notif-panel-hdr">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>Bildirimler
-          </div>
-          <div class="notif-tabs">
-            <button class="notif-tab active" id="ntab-surum" onclick="switchNotifTab('surum')">Sürüm Notları</button>
-            <button class="notif-tab" id="ntab-bildirim" onclick="switchNotifTab('bildirim')">Uygulama</button>
-          </div>
-          <div class="notif-body" id="notifBodySurum">
-            <div class="notif-item">
-              <div class="notif-item-ver">v3.9.2</div>
-              <div class="notif-item-title">Mobil İyileştirmeler</div>
-              <div class="notif-item-body">• Mobil iyileştirmeler ve çeşitli arayüz güncellemesi.</div>
-              <div class="notif-item-date">Beta</div>
-            </div>
-            <div class="notif-item">
-              <div class="notif-item-ver">v3.8.2</div>
-              <div class="notif-item-title">Güncelleme Notları ve Yenilikler</div>
-              <div class="notif-item-body">• E-posta değiştirme aktif hale getirildi.<br>• PIN sistemi tamamen kaldırıldı.<br>• Zaman aşımı aktif hale getirildi.<br>• İçe/dışa aktarma özelliği eklendi.<br>• EFT kategorileri eklendi.<br>• Çeşitli arayüz iyileştirmeleri ve düzeltmeleri yapıldı.<br>• Güvenlik açıkları giderildi.</div>
-              <div class="notif-item-date">Beta</div>
-            </div>
-            <div class="notif-item">
-              <div class="notif-item-ver">v3.3.1</div>
-              <div class="notif-item-title">Hata Düzeltmeleri ve Yenilikler</div>
-              <div class="notif-item-body"><br>• Çeşitli arayüz iyileştirmeleri ve düzeltmeler.<br>• Takip eklendi.<br></div>
-              <div class="notif-item-date"></div>
-            </div>
-            <div class="notif-item">
-              <div class="notif-item-ver">v3.1.1</div>
-              <div class="notif-item-title">Hata Düzeltmeleri ve Yenilikler</div>
-              <div class="notif-item-body">• Çeşitli arayüz iyileştirmeleri ve düzeltmeler.<br>• Dışarı Aktar güvenli hale getirildi.</div>
-              <div class="notif-item-date"></div>
-            </div>
-            <div class="notif-item">
-              <div class="notif-item-ver">v3.0.0</div>
-              <div class="notif-item-title">Arayüz Güncellemesi</div>
-              <div class="notif-item-body">• Tüm menü baştan düzenlendi.<br>• Nabvar sadeleştirildi.<br>• Kullanım kolaylığı arttırıldı.<br>• Özelleştiirlebilir Panel eklendi.<br>• Yapışkan not eklendi.<br>• Bölümler arası geçiş daha akıcı hale getirildi.<br>• Performans ve optimizasyon arttırıldı.<br>• Yeni animasyonlar eklendi.<br>• Tema renkleri güncellendi.</div>
-              <div class="notif-item-date"></div>
-            </div>
-            <div class="notif-item">
-              <div class="notif-item-ver">v2.40.16</div>
-              <div class="notif-item-title">Hata Düzeltmeleri ve yenilikler</div>
-              <div class="notif-item-body">• Mobil uyumu düzenlendi.<br>• app menüsü düzenlendi.<br>• Bildirim hataları giderildi.<br>• Otomatik özetler eklendi.<br>• KVKK metni güncellendi.<br>• Text hataları giderildi.</div>
-              <div class="notif-item-date">Beta</div>
-            </div>
-            <div class="notif-item">
-              <div class="notif-item-ver">v2.35.15</div>
-              <div class="notif-item-title">Hata Düzeltmeleri ve yenilikler</div>
-              <div class="notif-item-body">• Çoklu işlem özelliği eklendi.<br>• Ekstre okuma hataları giderildi.<br>• reklamlar tamamen kaldırıldı.</div>
-              <div class="notif-item-date">Beta</div>
-            </div>
-            <div class="notif-item">
-              <div class="notif-item-ver">v2.34.14</div>
-              <div class="notif-item-title">Hata Düzeltmeleri</div>
-              <div class="notif-item-body"><br>Ekstre yükleme yenilendi ve aktif edildi.<br>Tanıtım turu yeniden aktif edildi.<br>Giriş yeniden düzenlendi.</div>
-              <div class="notif-item-date">Beta</div>
-            </div>
-            <div class="notif-item">
-              <div class="notif-item-ver">v2.31.11</div>
-              <div class="notif-item-title">Hata Düzeltmeleri</div>
-              <div class="notif-item-body">Reklam planı normalize hatası giderildi.<br>Her veri yenilemesinde reklam alanlarının yanlış açılması düzeltildi.<br>Performans iyileştiremeleri yapıldı.</div>
-              <div class="notif-item-date">Beta</div>
-            </div>
-            <div class="notif-item">
-              <div class="notif-item-ver">v2.31.9</div>
-              <div class="notif-item-title">Güncelleme Notları</div>
-              <div class="notif-item-body">Duvar kağıtları eklendi.<br>Renk Teması eklendi.<br>App içi şifre değiştirme eklendi.<br>aktif bildirimler eklendi.<br>Portföy kontrolü eklendi.<br>Tüm verileri silme işlemi eklendi.</div>
-              <div class="notif-item-date">Beta</div>
-            </div>
-            <div class="notif-item">
-              <div class="notif-item-ver">v2.26.9</div>
-              <div class="notif-item-title">Güncelleme Notları</div>
-              <div class="notif-item-body">Destek kısmı eklendi.<br>Renk sızması hataları giderildi.<br>Tanıtım turu geçici olarak kaldırıldı.</div>
-              <div class="notif-item-date">Beta</div>
-            </div>
-            <div class="notif-item">
-              <div class="notif-item-ver">v1.26.9</div>
-              <div class="notif-item-title">Güncelleme Notları</div>
-              <div class="notif-item-body">Hesabı tamamen silme işlemi eklendi.<br>Onay arayüzü düzenlendi.<br>Tüm ekleme ve silme işlemleri hataları giderildi.<br></div>
-              <div class="notif-item-date">Beta</div>
-            </div>
-            <div class="notif-item">
-              <div class="notif-item-ver">v1.25.8</div>
-              <div class="notif-item-title">Güncelleme Notları</div>
-              <div class="notif-item-body">3 kademeli reklam paketi eklendi<br>Reklam Panelleri eklendi.(Test aşamasında)<br>Güncelleme sonrası tek seferlik tanıtım turu eklendi.<br>Ayarlar'a girişte çıkan gezinme hatası giderildi.<br>Ekstre yükleme geçici olarak devre dışı.</div>
-              <div class="notif-item-date">Beta</div>
-            </div>
-            <div class="notif-item">
-              <div class="notif-item-ver">v0.22.8</div>
-              <div class="notif-item-title">Güncelleme Notları</div>
-              <div class="notif-item-body">Tutar limiti milyara yükseltildi.<br>Ekstre yüklemede ₺ / TL / TRY sembolü sorunu giderildi.<br>Ondalık virgüllü tutarlarda binlik nokta formatı düzeltildi.<br>Yüksek rakamlarda form reddi hatası giderildi.</div>
-              <div class="notif-item-date">Beta</div>
-            </div>
-            <div class="notif-item">
-              <div class="notif-item-ver">v0.22.4</div>
-              <div class="notif-item-title">Güncelleme Notları</div>
-              <div class="notif-item-body">Bildirim paneli ve uygulama bildirimleri eklendi.<br>Tüm tutar alanlarında Türkçe rakam yazı ipucu eklendi.<br>Yazarken otomatik binlik nokta formatlaması eklendi.<br>Piyasa durum rozeti eklendi.<br>PIN sıfırlandıktan sonra kaybolma hatası giderildi</div>
-              <div class="notif-item-date">Beta</div>
-            </div>
-            <div class="notif-item">
-              <div class="notif-item-ver">v0.18.3</div>
-              <div class="notif-item-title">Güncelleme Notları</div>
-              <div class="notif-item-body">2FA e-posta doğrulaması ile güvenli giriş eklendi.<br>Yeni PIN sistemi eklendi.<br>Mail e Doğrulama gönderilmeme sorunu çözüldü.<br>Mail e-posta gönderimi iyileştirildi.<br>Doğrulama kodu ekranı güncellendi.</div>
-              <div class="notif-item-date">Beta</div>
-            </div>
-            <div class="notif-item">
-              <div class="notif-item-ver">v0.14.2</div>
-              <div class="notif-item-title">Güncelleme Notları</div>
-              <div class="notif-item-body">Tekrarlayan işlemi eklendi.<br>Abonelik yönetimi eklendi.<br>Borç Takip sistemi eklendi.<br>Bütçe limiti ve uyarı sistemi eklendi.<br>Ekstre yükleme eklendi.<br>Gelir ve gider kategorilendirme sistemi düzeltildi.</div>
-              <div class="notif-item-date">Beta</div>
-            </div>
-            <div class="notif-item">
-              <div class="notif-item-ver">v0.9.1</div>
-              <div class="notif-item-title">Güncelleme Notları</div>
-              <div class="notif-item-body">Hedef ve tasarruf sistemi eklendi.<br>Canlı kur Sistemi eklendi.<br>Hızlı işlem ekleme paneli.<br>Grafik ile analiz eklendi.<br>Hata Düzeltmeleri yapıldı.</div>
-              <div class="notif-item-date">Beta</div>
-            </div>
-            <div class="notif-item">
-              <div class="notif-item-ver">v0.4.0</div>
-              <div class="notif-item-title">Güncelleme Notlar</div>
-              <div class="notif-item-body">Cüzzy yayına girdi.<br>Giriş &amp; kayıt sistemi.<br>Temel gelir ve gider yönetimi eklendi.<br>güvenli bulut senkronizasyonu eklendi.</div>
-              <div class="notif-item-date">Beta</div>
-            </div>
-          </div>
-          <div class="notif-body" id="notifBodyBildirim" style="display:none">
-            <div class="notif-empty">Henüz uygulama bildirimi yok.</div>
-          </div>
-        </div>
-      </div>
+      <button type="button" class="notif-btn tx-eye-desk" id="pbEyeDesk" onclick="toggleTxCensor()" title="Tutarları gizle" aria-label="Tutarları gizle">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+      </button>
       <button class="notif-btn" id="settingsBtn" onclick="openSettings()" title="Ayarlar" aria-label="Ayarlar">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
       </button>
@@ -246,28 +113,56 @@
     <button class="nav-drawer-item" data-nav="finans" onclick="goTo('finans');closeNavDrawer()">İşlemler</button>
     <button class="nav-drawer-item" data-nav="takip" onclick="goTo('takip');closeNavDrawer()">Takip</button>
     <button class="nav-drawer-item" data-nav="yatirim" onclick="goTo('yatirim');closeNavDrawer()">Canlı</button>
-    <button class="nav-drawer-item" onclick="openNotifFromDrawer(event)">Bildirimler</button>
     <button class="nav-drawer-item" data-nav="ayarlar" onclick="goTo('ayarlar');closeNavDrawer()">Ayarlar</button>
   </aside>
 
   <!-- ═══ MOBİL ALT NAVBAR ═══ -->
   <nav class="mobile-bottom-nav" id="mobileBottomNav" aria-label="Mobil menü">
+    <div class="mbn-pill-bg" id="mbnPillBg"></div>
     <button class="mbn-item active" data-nav="home" onclick="goTo('home')" aria-label="Panel">
       <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Panel</span>
     </button>
-    <button class="mbn-item" data-nav="finans" onclick="goTo('finans')" aria-label="İşlemler">
-      <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg><span>İşlemler</span>
-    </button>
     <button class="mbn-item" data-nav="takip" onclick="goTo('takip')" aria-label="Takip">
       <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>Takip</span>
-    </button>
-    <button class="mbn-item" data-nav="bildirim" onclick="openMobileNotif(event)" aria-label="Bildirimler">
-      <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><span>Bildirim</span>
     </button>
     <button class="mbn-item" data-nav="ayarlar" onclick="goTo('ayarlar')" aria-label="Ayarlar">
       <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Ayarlar</span>
     </button>
   </nav>
+
+  <!-- ═══ MOBİL HIZLI İŞLEM (+) MENÜSÜ ═══ -->
+  <button class="qm-fab" id="qmFab" onclick="event.preventDefault();event.stopPropagation();toggleQuickMenu()" aria-label="Hızlı işlem menüsü" aria-expanded="false">
+    <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+  </button>
+  <div class="qm-backdrop" id="qmBackdrop" onclick="closeQuickMenu()">
+    <div class="qm-hint" id="qmHint">Kapatmak için boş bir alana dokunun</div>
+  </div>
+  <div class="qm-sheet" id="qmSheet" role="menu" aria-label="Hızlı işlem menüsü">
+    <button type="button" class="qm-item" role="menuitem" onclick="qmAction(function(){_setupMobilePanel();showModal('modalQuickAdd')})">
+      <span class="qm-item-ic qm-c-add">＋</span><span>İşlem ekle</span>
+    </button>
+    <button type="button" class="qm-item" role="menuitem" onclick="qmAction(openMultiTx)">
+      <span class="qm-item-ic qm-c-multi">≡</span><span>Çoklu işlem</span>
+    </button>
+    <button type="button" class="qm-item" role="menuitem" onclick="qmAction(openRecurringModal)">
+      <span class="qm-item-ic qm-c-rec">↻</span><span>Tekrarlayan gelir gider</span>
+    </button>
+    <button type="button" class="qm-item" role="menuitem" onclick="qmAction(function(){openFinSec('finans-borc')})">
+      <span class="qm-item-ic qm-c-debt">%</span><span>Borç / taksit</span>
+    </button>
+    <button type="button" class="qm-item" role="menuitem" onclick="qmAction(function(){openFinSec('finans-abonelik')})">
+      <span class="qm-item-ic qm-c-sub">↺</span><span>Abonelikler</span>
+    </button>
+    <button type="button" class="qm-item" role="menuitem" onclick="qmAction(function(){showModal('modalGoal')})">
+      <span class="qm-item-ic qm-c-goal">◎</span><span>Hedefler</span>
+    </button>
+    <button type="button" class="qm-item" role="menuitem" onclick="qmAction(function(){_setupMobilePanel();showModal('modalNote')})">
+      <span class="qm-item-ic qm-c-note">✎</span><span>Not ekle</span>
+    </button>
+    <button type="button" class="qm-item" role="menuitem" onclick="qmAction(function(){openFinSec('finans-ekstre')})">
+      <span class="qm-item-ic qm-c-file">⇧</span><span>Ekstre yükle</span>
+    </button>
+  </div>
 
   <!-- ALT NAVİGASYON -->
   <nav class="subnav" id="subnav"></nav>
@@ -413,20 +308,10 @@
           <div class="mini-market-grid big" id="dashMiniMarkets"></div>
         </div>
 
-        <!-- ═══ MOBİL PANEL AKSİYON ÇUBUĞU ═══ -->
-        <div class="mobile-panel-actions" id="mobilePanelActions">
-          <div class="mpa-row">
-            <button class="btn btn-primary" onclick="_setupMobilePanel();showModal('modalQuickAdd')">Hızlı işlem</button>
-            <button class="btn btn-primary" onclick="openMultiTx()">Çoklu işlem</button>
-          </div>
-          <button class="btn btn-block" onclick="_setupMobilePanel();showModal('modalNote')">Not ekle</button>
-        </div>
-
         <!-- SON HAREKETLER (piyasanın altında) -->
         <div class="card" data-wid="recent">
           <div class="card-title">
             <span class="card-title-text">Son hareketler</span>
-            <button type="button" class="btn btn-sm btn-ghost tx-eye-desk" onclick="toggleTxCensor()" title="Tutarları gizle" aria-label="Tutarları gizle"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button>
             <button class="btn btn-sm btn-ghost" onclick="openAllTx()">Tümünü gör →</button>
           </div>
           <div class="dash-tx-filters" id="dashTxFilters">
@@ -769,6 +654,7 @@
             <button class="set-side-item" data-set="disaaktar" onclick="setSettingsTab('disaaktar')">Dışa aktar</button>
             <button class="set-side-item" data-set="gizlilik" onclick="setSettingsTab('gizlilik')">Gizlilik</button>
                   <button class="set-side-item" data-set="destek" onclick="setSettingsTab('destek')">Destek</button>
+                  <button class="set-side-item" data-set="yamanotlari" onclick="setSettingsTab('yamanotlari')">Yama Notları</button>
             <div class="set-side-foot" id="setExtraFoot">
               <div class="set-side-div"></div>
               <div class="set-side-foot-label">Diğer gerekenler</div>
@@ -933,6 +819,128 @@
               </div>
             </div>
 
+            <div class="set-panel" data-panel="yamanotlari">
+              <div class="set-panel-title">Yama Notları</div>
+              <div class="set-group">
+                <div class="notif-body" id="settingsChangelogBody" style="max-height:60vh;overflow-y:auto;padding-right:4px">
+            <div class="notif-item">
+              <div class="notif-item-ver">v3.9.2</div>
+              <div class="notif-item-title">Mobil İyileştirmeler</div>
+              <div class="notif-item-body">• Mobil iyileştirmeler ve çeşitli arayüz güncellemesi.</div>
+              <div class="notif-item-date">Beta</div>
+            </div>
+            <div class="notif-item">
+              <div class="notif-item-ver">v3.8.2</div>
+              <div class="notif-item-title">Güncelleme Notları ve Yenilikler</div>
+              <div class="notif-item-body">• E-posta değiştirme aktif hale getirildi.<br>• PIN sistemi tamamen kaldırıldı.<br>• Zaman aşımı aktif hale getirildi.<br>• İçe/dışa aktarma özelliği eklendi.<br>• EFT kategorileri eklendi.<br>• Çeşitli arayüz iyileştirmeleri ve düzeltmeleri yapıldı.<br>• Güvenlik açıkları giderildi.</div>
+              <div class="notif-item-date">Beta</div>
+            </div>
+            <div class="notif-item">
+              <div class="notif-item-ver">v3.3.1</div>
+              <div class="notif-item-title">Hata Düzeltmeleri ve Yenilikler</div>
+              <div class="notif-item-body"><br>• Çeşitli arayüz iyileştirmeleri ve düzeltmeler.<br>• Takip eklendi.<br></div>
+              <div class="notif-item-date"></div>
+            </div>
+            <div class="notif-item">
+              <div class="notif-item-ver">v3.1.1</div>
+              <div class="notif-item-title">Hata Düzeltmeleri ve Yenilikler</div>
+              <div class="notif-item-body">• Çeşitli arayüz iyileştirmeleri ve düzeltmeler.<br>• Dışarı Aktar güvenli hale getirildi.</div>
+              <div class="notif-item-date"></div>
+            </div>
+            <div class="notif-item">
+              <div class="notif-item-ver">v3.0.0</div>
+              <div class="notif-item-title">Arayüz Güncellemesi</div>
+              <div class="notif-item-body">• Tüm menü baştan düzenlendi.<br>• Nabvar sadeleştirildi.<br>• Kullanım kolaylığı arttırıldı.<br>• Özelleştiirlebilir Panel eklendi.<br>• Yapışkan not eklendi.<br>• Bölümler arası geçiş daha akıcı hale getirildi.<br>• Performans ve optimizasyon arttırıldı.<br>• Yeni animasyonlar eklendi.<br>• Tema renkleri güncellendi.</div>
+              <div class="notif-item-date"></div>
+            </div>
+            <div class="notif-item">
+              <div class="notif-item-ver">v2.40.16</div>
+              <div class="notif-item-title">Hata Düzeltmeleri ve yenilikler</div>
+              <div class="notif-item-body">• Mobil uyumu düzenlendi.<br>• app menüsü düzenlendi.<br>• Bildirim hataları giderildi.<br>• Otomatik özetler eklendi.<br>• KVKK metni güncellendi.<br>• Text hataları giderildi.</div>
+              <div class="notif-item-date">Beta</div>
+            </div>
+            <div class="notif-item">
+              <div class="notif-item-ver">v2.35.15</div>
+              <div class="notif-item-title">Hata Düzeltmeleri ve yenilikler</div>
+              <div class="notif-item-body">• Çoklu işlem özelliği eklendi.<br>• Ekstre okuma hataları giderildi.<br>• reklamlar tamamen kaldırıldı.</div>
+              <div class="notif-item-date">Beta</div>
+            </div>
+            <div class="notif-item">
+              <div class="notif-item-ver">v2.34.14</div>
+              <div class="notif-item-title">Hata Düzeltmeleri</div>
+              <div class="notif-item-body"><br>Ekstre yükleme yenilendi ve aktif edildi.<br>Tanıtım turu yeniden aktif edildi.<br>Giriş yeniden düzenlendi.</div>
+              <div class="notif-item-date">Beta</div>
+            </div>
+            <div class="notif-item">
+              <div class="notif-item-ver">v2.31.11</div>
+              <div class="notif-item-title">Hata Düzeltmeleri</div>
+              <div class="notif-item-body">Reklam planı normalize hatası giderildi.<br>Her veri yenilemesinde reklam alanlarının yanlış açılması düzeltildi.<br>Performans iyileştiremeleri yapıldı.</div>
+              <div class="notif-item-date">Beta</div>
+            </div>
+            <div class="notif-item">
+              <div class="notif-item-ver">v2.31.9</div>
+              <div class="notif-item-title">Güncelleme Notları</div>
+              <div class="notif-item-body">Duvar kağıtları eklendi.<br>Renk Teması eklendi.<br>App içi şifre değiştirme eklendi.<br>aktif bildirimler eklendi.<br>Portföy kontrolü eklendi.<br>Tüm verileri silme işlemi eklendi.</div>
+              <div class="notif-item-date">Beta</div>
+            </div>
+            <div class="notif-item">
+              <div class="notif-item-ver">v2.26.9</div>
+              <div class="notif-item-title">Güncelleme Notları</div>
+              <div class="notif-item-body">Destek kısmı eklendi.<br>Renk sızması hataları giderildi.<br>Tanıtım turu geçici olarak kaldırıldı.</div>
+              <div class="notif-item-date">Beta</div>
+            </div>
+            <div class="notif-item">
+              <div class="notif-item-ver">v1.26.9</div>
+              <div class="notif-item-title">Güncelleme Notları</div>
+              <div class="notif-item-body">Hesabı tamamen silme işlemi eklendi.<br>Onay arayüzü düzenlendi.<br>Tüm ekleme ve silme işlemleri hataları giderildi.<br></div>
+              <div class="notif-item-date">Beta</div>
+            </div>
+            <div class="notif-item">
+              <div class="notif-item-ver">v1.25.8</div>
+              <div class="notif-item-title">Güncelleme Notları</div>
+              <div class="notif-item-body">3 kademeli reklam paketi eklendi<br>Reklam Panelleri eklendi.(Test aşamasında)<br>Güncelleme sonrası tek seferlik tanıtım turu eklendi.<br>Ayarlar'a girişte çıkan gezinme hatası giderildi.<br>Ekstre yükleme geçici olarak devre dışı.</div>
+              <div class="notif-item-date">Beta</div>
+            </div>
+            <div class="notif-item">
+              <div class="notif-item-ver">v0.22.8</div>
+              <div class="notif-item-title">Güncelleme Notları</div>
+              <div class="notif-item-body">Tutar limiti milyara yükseltildi.<br>Ekstre yüklemede ₺ / TL / TRY sembolü sorunu giderildi.<br>Ondalık virgüllü tutarlarda binlik nokta formatı düzeltildi.<br>Yüksek rakamlarda form reddi hatası giderildi.</div>
+              <div class="notif-item-date">Beta</div>
+            </div>
+            <div class="notif-item">
+              <div class="notif-item-ver">v0.22.4</div>
+              <div class="notif-item-title">Güncelleme Notları</div>
+              <div class="notif-item-body">Bildirim paneli ve uygulama bildirimleri eklendi.<br>Tüm tutar alanlarında Türkçe rakam yazı ipucu eklendi.<br>Yazarken otomatik binlik nokta formatlaması eklendi.<br>Piyasa durum rozeti eklendi.<br>PIN sıfırlandıktan sonra kaybolma hatası giderildi</div>
+              <div class="notif-item-date">Beta</div>
+            </div>
+            <div class="notif-item">
+              <div class="notif-item-ver">v0.18.3</div>
+              <div class="notif-item-title">Güncelleme Notları</div>
+              <div class="notif-item-body">2FA e-posta doğrulaması ile güvenli giriş eklendi.<br>Yeni PIN sistemi eklendi.<br>Mail e Doğrulama gönderilmeme sorunu çözüldü.<br>Mail e-posta gönderimi iyileştirildi.<br>Doğrulama kodu ekranı güncellendi.</div>
+              <div class="notif-item-date">Beta</div>
+            </div>
+            <div class="notif-item">
+              <div class="notif-item-ver">v0.14.2</div>
+              <div class="notif-item-title">Güncelleme Notları</div>
+              <div class="notif-item-body">Tekrarlayan işlemi eklendi.<br>Abonelik yönetimi eklendi.<br>Borç Takip sistemi eklendi.<br>Bütçe limiti ve uyarı sistemi eklendi.<br>Ekstre yükleme eklendi.<br>Gelir ve gider kategorilendirme sistemi düzeltildi.</div>
+              <div class="notif-item-date">Beta</div>
+            </div>
+            <div class="notif-item">
+              <div class="notif-item-ver">v0.9.1</div>
+              <div class="notif-item-title">Güncelleme Notları</div>
+              <div class="notif-item-body">Hedef ve tasarruf sistemi eklendi.<br>Canlı kur Sistemi eklendi.<br>Hızlı işlem ekleme paneli.<br>Grafik ile analiz eklendi.<br>Hata Düzeltmeleri yapıldı.</div>
+              <div class="notif-item-date">Beta</div>
+            </div>
+            <div class="notif-item">
+              <div class="notif-item-ver">v0.4.0</div>
+              <div class="notif-item-title">Güncelleme Notlar</div>
+              <div class="notif-item-body">Cüzzy yayına girdi.<br>Giriş &amp; kayıt sistemi.<br>Temel gelir ve gider yönetimi eklendi.<br>güvenli bulut senkronizasyonu eklendi.</div>
+              <div class="notif-item-date">Beta</div>
+            </div>
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>
@@ -1045,9 +1053,9 @@
     </div>
   </div>
 
-<div class="modal-bg" id="modalGoal" onclick="if(event.target===this)closeModal()">
+<div class="modal-bg" id="modalGoal" onclick="if(event.target===this)_hideModalInstant('modalGoal')">
   <div class="modal-box">
-    <button class="modal-close" onclick="closeModal()">✕</button>
+    <button class="modal-close" onclick="_hideModalInstant('modalGoal')">✕</button>
     <div class="modal-title"> Yeni hedef</div>
     <div class="form-grid">
       <div class="field"><label>Hedef adı</label><input id="goalName" placeholder="Örn: Araba"></div>
@@ -1196,9 +1204,9 @@
   </div>
 </div>
 
-<div class="modal-bg" id="modalMultiTx" onclick="if(event.target===this)closeModal()">
+<div class="modal-bg" id="modalMultiTx" onclick="if(event.target===this)_hideModalInstant('modalMultiTx')">
   <div class="modal-box wide">
-    <button class="modal-close" onclick="closeModal()">✕</button>
+    <button class="modal-close" onclick="_hideModalInstant('modalMultiTx')">✕</button>
     <div class="modal-title">Çoklu işlem ekle</div>
     <p class="text-soft" style="font-size:0.82rem;margin-bottom:14px;line-height:1.5">Birden fazla işlemi tek seferde ekle. Boş satırlar yok sayılır; aynı işlem zaten varsa otomatik atlanır.
     </p>
@@ -1285,17 +1293,17 @@
 </div>
 
 <!-- MEMNUNİYET ANKETİ MODALI -->
-<div class="modal-bg" id="modalQuickAdd" onclick="if(event.target===this)closeModal('modalQuickAdd')">
+<div class="modal-bg" id="modalQuickAdd" onclick="if(event.target===this)_hideModalInstant('modalQuickAdd')">
         <div class="modal-box" style="max-width:420px">
-          <button class="modal-close" onclick="closeModal('modalQuickAdd')">✕</button>
+          <button class="modal-close" onclick="_hideModalInstant('modalQuickAdd')">✕</button>
           <div class="modal-title" style="margin-bottom:14px">Hızlı işlem ekle</div>
           <div id="mqaHost"></div>
         </div>
       </div>
 
-      <div class="modal-bg" id="modalNote" onclick="if(event.target===this)closeModal('modalNote')">
+      <div class="modal-bg" id="modalNote" onclick="if(event.target===this)_hideModalInstant('modalNote')">
         <div class="modal-box" style="max-width:420px">
-          <button class="modal-close" onclick="closeModal('modalNote')">✕</button>
+          <button class="modal-close" onclick="_hideModalInstant('modalNote')">✕</button>
           <div class="modal-title" style="margin-bottom:14px">Not</div>
           <div id="mnoteHost"></div>
         </div>
@@ -1365,9 +1373,9 @@
      ═══════════════════════════════════════════════════════════════════ -->
 
 <!-- ═══ WHAT'S NEW POPUP ═══ -->
-<div class="modal-bg" id="modalRecurring" onclick="if(event.target===this)closeModal()">
+<div class="modal-bg" id="modalRecurring" onclick="if(event.target===this)_hideModalInstant('modalRecurring')">
   <div class="modal-box">
-    <button class="modal-close" onclick="closeModal()">✕</button>
+    <button class="modal-close" onclick="_hideModalInstant('modalRecurring')">✕</button>
     <div class="modal-title">Tekrarlayan ekle</div>
     <div class="type-toggle" style="margin-bottom:12px"><div class="toggle-slider"></div>
       <button class="t-btn active income" id="mRecTypeIncome" onclick="mSetRecType('income')">Gelir</button>
