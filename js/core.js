@@ -708,7 +708,7 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
     closeModal();
     closeNotifPanel();
-    document.getElementById('notifBtn').classList.remove('active');
+    const _nb = document.getElementById('notifBtn'); if (_nb) _nb.classList.remove('active');
   }
 });
 
@@ -789,6 +789,7 @@ function closeNotifPanel() {
 function toggleNotifPanel(e) {
   if (e) e.stopPropagation();
   const panel = document.getElementById('notifPanel');
+  if (!panel) return;
   const btn   = document.getElementById('notifBtn');
   const open  = panel.style.display !== 'none' && !panel.classList.contains('closing');
   if (open) { closeNotifPanel(); return; }
@@ -914,15 +915,10 @@ function checkPeriodicSummaries() {
   if (changed) save();
 }
 
-/* Ayarlardaki bildirim tercihlerine göre uygulama bildirimi üretir.
-   kind: 'income' | 'expense' | 'goals' | 'general' (general her zaman gösterilir) */
+/* Bildirim zili/paneli kaldırıldı (yama notları artık Ayarlar > Destek altında statik).
+   Mevcut notify() çağrı yerlerine dokunulmadı, fonksiyon artık sessizce hiçbir şey yapmıyor. */
 function notify(kind, title, body) {
-  const n = S.notifications || {};
-  if (n.income === false && n.expense === false && n.goals === false) return;
-  if (kind === 'income'  && n.income  === false) return;
-  if (kind === 'expense' && n.expense === false) return;
-  if (kind === 'goals'   && n.goals   === false) return;
-  pushAppNotif(title, body);
+  return;
 }
 
 function pushAppNotif(title, body) {
