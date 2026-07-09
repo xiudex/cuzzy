@@ -39,10 +39,115 @@ function toggleNavDrawer() {
   if (d && d.classList.contains('open')) closeNavDrawer(); else openNavDrawer();
 }
 
+/* ── MOBİL HIZLI İŞLEM (+) MENÜSÜ ── */
+function openQuickMenu() {
+  const fab = document.getElementById('qmFab');
+  const bg = document.getElementById('qmBackdrop');
+  const sheet = document.getElementById('qmSheet');
+  const hint = document.getElementById('qmHint');
+  if (fab) { fab.classList.add('qm-hidden'); fab.setAttribute('aria-expanded', 'true'); }
+  if (bg) bg.classList.add('show');
+  if (sheet) sheet.classList.add('show');
+  if (hint) hint.classList.add('show');
+}
+function closeQuickMenu() {
+  const fab = document.getElementById('qmFab');
+  const bg = document.getElementById('qmBackdrop');
+  const sheet = document.getElementById('qmSheet');
+  const hint = document.getElementById('qmHint');
+  if (fab) { fab.classList.remove('qm-hidden'); fab.setAttribute('aria-expanded', 'false'); }
+  if (bg) bg.classList.remove('show');
+  if (sheet) sheet.classList.remove('show');
+  if (hint) hint.classList.remove('show');
+}
+function toggleQuickMenu() {
+  const sheet = document.getElementById('qmSheet');
+  if (sheet && sheet.classList.contains('show')) closeQuickMenu(); else openQuickMenu();
+}
+function qmAction(fn) {
+  closeQuickMenu();
+  try { if (typeof fn === 'function') fn(); } catch (e) {}
+}
+try {
+  var _qmMq = window.matchMedia('(max-width: 760px)');
+  var _qmMqH = function (e) { if (!e.matches) { try { closeQuickMenu(); } catch (x) {} } };
+  if (_qmMq.addEventListener) _qmMq.addEventListener('change', _qmMqH);
+  else if (_qmMq.addListener) _qmMq.addListener(_qmMqH);
+} catch (e) {}
+
+/* ── Alt navbar: basılı tut + sürükle + bıraktığın sekmeyi aç ── */
+(function () {
+  var _mbnNav = document.getElementById('mobileBottomNav');
+  var _mbnPill = document.getElementById('mbnPillBg');
+  if (!_mbnNav || !_mbnPill) return;
+  var _mbnDragging = false, _mbnMoved = false, _mbnStartX = 0, _mbnStartY = 0;
+
+  function _mbnItems() { return Array.prototype.slice.call(_mbnNav.querySelectorAll('.mbn-item')); }
+
+  function _mbnItemAt(clientX) {
+    var items = _mbnItems();
+    if (!items.length) return null;
+    var first = items[0].getBoundingClientRect();
+    var last = items[items.length - 1].getBoundingClientRect();
+    var x = Math.max(first.left, Math.min(last.right - 1, clientX));
+    for (var i = 0; i < items.length; i++) {
+      var r = items[i].getBoundingClientRect();
+      if (x >= r.left && x < r.right) return items[i];
+    }
+    return items[items.length - 1];
+  }
+
+  function _mbnFreeFollow(clientX) {
+    var items = _mbnItems();
+    if (!items.length) return;
+    var navRect = _mbnNav.getBoundingClientRect();
+    var w = items[0].getBoundingClientRect().width;
+    var relX = clientX - navRect.left - w / 2;
+    relX = Math.max(4, Math.min(relX, navRect.width - w - 4));
+    _mbnPill.style.transform = 'translateX(' + relX + 'px)';
+    _mbnPill.style.width = w + 'px';
+  }
+
+  function _mbnOnMove(e) {
+    if (!_mbnDragging) return;
+    var dx = Math.abs(e.clientX - _mbnStartX), dy = Math.abs(e.clientY - _mbnStartY);
+    if (!_mbnMoved && (dx > 10 || dy > 10)) { _mbnMoved = true; _mbnPill.classList.add('dragging'); }
+    if (_mbnMoved) { e.preventDefault(); _mbnFreeFollow(e.clientX); }
+  }
+
+  function _mbnOnUp(e) {
+    if (!_mbnDragging) return;
+    _mbnDragging = false;
+    _mbnPill.classList.remove('dragging');
+    document.removeEventListener('pointermove', _mbnOnMove);
+    document.removeEventListener('pointerup', _mbnOnUp);
+    document.removeEventListener('pointercancel', _mbnOnUp);
+    if (_mbnMoved) {
+      var it = _mbnItemAt(e.clientX);
+      if (it) it.click();
+    }
+    _mbnMoved = false;
+  }
+
+  _mbnNav.addEventListener('pointerdown', function (e) {
+    if (!e.target.closest('.mbn-item')) return;
+    _mbnDragging = true; _mbnMoved = false;
+    _mbnStartX = e.clientX; _mbnStartY = e.clientY;
+    document.addEventListener('pointermove', _mbnOnMove, { passive: false });
+    document.addEventListener('pointerup', _mbnOnUp);
+    document.addEventListener('pointercancel', _mbnOnUp);
+  });
+})();
+
 function goTo(page, sub) {
-  if (page === 'ayarlar') { var _wn = (function () { var p = document.getElementById('notifPanel'); return !!(p && p.style.display !== 'none'); })(); try { _hideNotifInstant(); } catch (e) {} if (_wn) { try { _instantShow = true; } catch (e) {} } try { document.querySelectorAll('.mbn-item').forEach(function (i) { i.classList.toggle('active', i.dataset.nav === 'ayarlar'); }); } catch (e) {} openSettings(sub); return; }
+  if (page === 'ayarlar') { var _wn = (function () { var p = document.getElementById('notifPanel'); return !!(p && p.style.display !== 'none'); })(); try { _hideNotifInstant(); } catch (e) {} if (_wn) { try { _instantShow = true; } catch (e) {} } try { document.querySelectorAll('.mbn-item').forEach(function (i) { i.classList.toggle('active', i.dataset.nav === 'ayarlar'); }); } catch (e) {} openSettings(sub); requestAnimationFrame(function () { try { if (typeof updateMbnPill === 'function') updateMbnPill(); } catch (e) {} }); return; }
   try { closeNotifPanel(); } catch (e) {}
   try { closeModal('modalSettings'); } catch (e) {}
+  try { closeQuickMenu(); } catch (e) {}
+  try {
+    const _fab = document.getElementById('qmFab');
+    if (_fab) _fab.style.display = (page === 'home') ? '' : 'none';
+  } catch (e) {}
   // Plan erişim kontrolü
   const blocked = PLAN_BLOCKED[S.adPlan || 'many'] || [];
   if (blocked.includes(page)) {
@@ -68,8 +173,10 @@ function goTo(page, sub) {
     i.classList.toggle('active', i.dataset.nav === page);
   });
   document.querySelectorAll('.mbn-item').forEach(i => i.classList.toggle('active', i.dataset.nav === page));
-  // Aktif pill'i kaydır
-  if (typeof updateTopnavPill === 'function') updateTopnavPill();
+  requestAnimationFrame(function () {
+    if (typeof updateMbnPill === 'function') updateMbnPill();
+    if (typeof updateTopnavPill === 'function') updateTopnavPill();
+  });
 
   const subnavEl = document.getElementById('subnav');
   const layoutEl = document.getElementById('appLayout');
@@ -229,6 +336,7 @@ function saveName() {
 
 function openSettings(tab) {
   showModal('modalSettings');
+  try { var _ms = document.getElementById('modalSettings'); if (_ms) _ms.style.zIndex = ''; } catch (e) {}
   try { updateSettingsExtra(); } catch (e) {}
   var name = (S.profile && S.profile.name) || 'Kullanıcı';
   var av = document.getElementById('setProfileAv'), nm = document.getElementById('setProfileName'), ml = document.getElementById('setProfileMail');
