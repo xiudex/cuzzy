@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="tr" data-theme="light" data-wallpaper="light">
 <head>
 <meta charset="UTF-8">
@@ -30,7 +30,7 @@
 <title>Cüzzy — Finans</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
@@ -67,7 +67,7 @@
 <button class="customize-fab" onclick="openHomeCustomizer()" aria-label="Paneli özelleştir"><span>Özelleştir</span></button>
 <button class="support-fab" style="display:none" aria-label="kullanılmıyor">
   
-  <span class="fab-tooltip">Destek & İletişim</span>
+  <span class="fab-tooltip">Destek &amp; İletişim</span>
 </button>
 
 <!-- ═══ DESTEK MODALI ═══ -->
@@ -88,7 +88,6 @@
     <div class="topnav-pill-bg" id="topnavPillBg"></div>
     <button class="topnav-item active" data-nav="home" onclick="goTo('home')"><span>Panel</span></button>
     <button class="topnav-item" data-nav="finans" onclick="goTo('finans')"><span>İşlemler</span></button>
-    <button class="topnav-item" data-nav="takip" onclick="goTo('takip')"><span>Takip</span></button>
     <button class="topnav-item" data-nav="yatirim" onclick="goTo('yatirim')"><span>Canlı</span></button>
     <div class="topnav-actions">
       <button type="button" class="notif-btn tx-eye-desk" id="pbEyeDesk" onclick="toggleTxCensor()" title="Tutarları gizle" aria-label="Tutarları gizle">
@@ -111,7 +110,6 @@
     <div class="nav-drawer-title">Menü</div>
     <button class="nav-drawer-item" data-nav="home" onclick="goTo('home');closeNavDrawer()">Panel</button>
     <button class="nav-drawer-item" data-nav="finans" onclick="goTo('finans');closeNavDrawer()">İşlemler</button>
-    <button class="nav-drawer-item" data-nav="takip" onclick="goTo('takip');closeNavDrawer()">Takip</button>
     <button class="nav-drawer-item" data-nav="yatirim" onclick="goTo('yatirim');closeNavDrawer()">Canlı</button>
     <button class="nav-drawer-item" data-nav="ayarlar" onclick="goTo('ayarlar');closeNavDrawer()">Ayarlar</button>
   </aside>
@@ -121,9 +119,6 @@
     <div class="mbn-pill-bg" id="mbnPillBg"></div>
     <button class="mbn-item active" data-nav="home" onclick="goTo('home')" aria-label="Panel">
       <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>Panel</span>
-    </button>
-    <button class="mbn-item" data-nav="takip" onclick="goTo('takip')" aria-label="Takip">
-      <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>Takip</span>
     </button>
     <button class="mbn-item" data-nav="ayarlar" onclick="goTo('ayarlar')" aria-label="Ayarlar">
       <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg><span>Ayarlar</span>
@@ -138,7 +133,7 @@
     <div class="qm-hint" id="qmHint">Kapatmak için boş bir alana dokunun</div>
   </div>
   <div class="qm-sheet" id="qmSheet" role="menu" aria-label="Hızlı işlem menüsü">
-    <button type="button" class="qm-item" role="menuitem" onclick="qmAction(function(){_setupMobilePanel();showModal('modalQuickAdd')})">
+    <button type="button" class="qm-item" role="menuitem" onclick="qmAction(function(){_setupMobilePanel();var _d=document.getElementById('qmqaDate');if(_d&amp;&amp;!_d.value)_d.value=todayStr();showModal('modalQuickAdd')})">
       <span class="qm-item-ic qm-c-add">＋</span><span>İşlem ekle</span>
     </button>
     <button type="button" class="qm-item" role="menuitem" onclick="qmAction(openMultiTx)">
@@ -212,15 +207,6 @@
               <div class="kpi-value" id="kpiWeekExpense">₺0,00</div>
               <div class="kpi-trend">Son 7 gün</div>
             </div>
-            <div class="summary-div"></div>
-            <div class="summary-cell">
-              <div style="display:flex;align-items:center;justify-content:space-between;gap:6px">
-                <div class="kpi-label">Mevcut bakiye</div>
-                <button class="btn btn-sm" style="padding:3px 9px;font-size:0.68rem;flex:none" onclick="openBalanceModal()">Düzenle</button>
-              </div>
-              <div class="kpi-value" id="kpiCurrentBalance">₺0,00</div>
-              <div class="kpi-trend">Toplam <strong id="kpiCurBalTrend">—</strong></div>
-            </div>
           </div>
           <div class="summary-budget" id="budgetBanner">
             <span class="summary-budget-label">Aylık bütçe</span>
@@ -231,7 +217,7 @@
         </div>
 
 
-        <!-- Eşit kartlar: Hızlı işlem | Hedefler | Hesap özeti / Not | Tekrarlayan & Borç | Çoklu işlem -->
+        <!-- Eşit kartlar: Hızlı işlem | Hedefler | Hesap özeti / Not | Tekrarlayan &amp; Borç | Çoklu işlem -->
         <div class="home-grid">
           <div class="quick-add home-cell" data-tour="quick-add" data-wid="quickadd">
             <div class="quick-add-title">Hızlı işlem</div>
@@ -272,8 +258,15 @@
           </div>
 
           <div class="home-col-card home-cell" data-wid="account">
-            <div class="card-title"><span class="card-title-text">Hesap özeti</span></div>
+            <div class="card-title">
+              <span class="card-title-text">Hesap özeti</span>
+              <button type="button" class="btn btn-sm btn-ghost pnl-cat-desk-btn" onclick="openTkSec('tk-kategori')">Kategori dağılımı</button>
+            </div>
             <div class="acct-summary" id="acctSummary"><div class="empty-state">—</div></div>
+            <div class="pnl-cat-wrap" id="pnlCatWrap">
+              <div class="pnl-cat-title">Kategori dağılımı</div>
+              <div class="donut-wrap" id="panelCategoryDonut"></div>
+            </div>
           </div>
 
           <div class="sticky-note home-cell" data-wid="note">
@@ -282,7 +275,7 @@
           </div>
 
           <div class="home-col-card home-cell" data-wid="recurring">
-            <div class="card-title"><span class="card-title-text">Tekrarlayan & Borç</span></div>
+            <div class="card-title"><span class="card-title-text">Tekrarlayan &amp; Borç</span></div>
             <p class="shortcut-desc">Düzenli ödemeleri ve borçlarını yönet.</p>
             <button class="btn btn-primary btn-sm shortcut-btn" onclick="openRecurringModal()">+ Tekrarlayan ekle</button>
           </div>
@@ -313,15 +306,6 @@
           <div class="card-title">
             <span class="card-title-text">Son hareketler</span>
             <button class="btn btn-sm btn-ghost" onclick="openAllTx()">Tümünü gör →</button>
-          </div>
-          <div class="dash-tx-filters" id="dashTxFilters">
-            <button type="button" class="dtf-btn active" data-f="all" onclick="setDashTxFilter('all')">Tümü</button>
-            <button type="button" class="dtf-btn" data-f="income" onclick="setDashTxFilter('income')">Gelir</button>
-            <button type="button" class="dtf-btn" data-f="expense" onclick="setDashTxFilter('expense')">Gider</button>
-            <span class="dtf-sep"></span>
-            <button type="button" class="dtf-btn active" data-r="all" onclick="setDashTxRange('all')">Tüm zamanlar</button>
-            <button type="button" class="dtf-btn" data-r="month" onclick="setDashTxRange('month')">Bu ay</button>
-            <button type="button" class="dtf-btn" data-r="week" onclick="setDashTxRange('week')">Son 7 gün</button>
           </div>
           <div class="tx-list" id="dashRecentTx">
             <div class="empty-state">Henüz işlem yok. Hızlı işlemden ekleyebilirsin.</div>
@@ -650,7 +634,6 @@
             <button class="set-side-item active" data-set="profil" onclick="setSettingsTab('profil')">Profil</button>
             <button class="set-side-item" data-set="gorunum" onclick="setSettingsTab('gorunum')">Görünüm</button>
             <button class="set-side-item" data-set="guvenlik" onclick="setSettingsTab('guvenlik')">Güvenlik ve veri</button>
-            <button class="set-side-item" data-set="bildirim" onclick="setSettingsTab('bildirim')">Bildirim tercihleri</button>
             <button class="set-side-item" data-set="disaaktar" onclick="setSettingsTab('disaaktar')">Dışa aktar</button>
             <button class="set-side-item" data-set="gizlilik" onclick="setSettingsTab('gizlilik')">Gizlilik</button>
                   <button class="set-side-item" data-set="destek" onclick="setSettingsTab('destek')">Destek</button>
@@ -689,6 +672,7 @@
                 <div class="set-group-title">Tema</div>
                 <div class="set-row col"><div class="set-row-main"><div class="set-row-label">Renk teması</div></div>
                   <div class="theme-pick">
+                    <button class="theme-card tc-royal" data-theme-set="royal" onclick="setTheme('royal')" aria-label="Royal"><span class="tc-name">Royal</span></button>
                     <button class="theme-card tc-light" data-theme-set="light" onclick="setTheme('light')" aria-label="Beyaz"><span class="tc-name">Beyaz</span></button>
                     <button class="theme-card tc-black" data-theme-set="black" onclick="setTheme('black')" aria-label="Siyah"><span class="tc-name">Siyah</span></button>
                   </div>
@@ -740,16 +724,6 @@
             </div>
 
             <!-- BİLDİRİMLER -->
-            <div class="set-panel" data-panel="bildirim">
-              <div class="set-panel-title">Bildirim tercihleri</div>
-              <div class="set-group">
-                <div class="set-group-title">Uygulama bildirimleri</div>
-                <div class="set-row"><div class="set-row-main"><div class="set-row-label">Gelir bildirimleri</div></div><input type="checkbox" id="notifIncome" onchange="saveNotifications()"></div>
-                <div class="set-row"><div class="set-row-main"><div class="set-row-label">Gider bildirimleri</div></div><input type="checkbox" id="notifExpense" onchange="saveNotifications()"></div>
-                <div class="set-row"><div class="set-row-main"><div class="set-row-label">Hedef bildirimleri</div></div><input type="checkbox" id="notifGoals" onchange="saveNotifications()"></div>
-              </div>
-            </div>
-
             <!-- DIŞA AKTAR -->
             <div class="set-panel" data-panel="disaaktar">
               <div class="set-panel-title">Dışa aktar</div>
@@ -772,7 +746,7 @@
                 </div>
               </div>
               <div class="set-group">
-                <div class="set-group-title">Yedek & rapor</div>
+                <div class="set-group-title">Yedek &amp; rapor</div>
                 <div class="set-row"><div class="set-row-main"><div class="set-row-label">CSV indir</div></div><button class="btn btn-sm" onclick="exportCSV()">İndir</button></div>
                 <div class="set-row"><div class="set-row-main"><div class="set-row-label">JSON yedek</div></div><button class="btn btn-sm" onclick="exportJSON()">İndir</button></div>
                 <div class="set-row"><div class="set-row-main"><div class="set-row-label">PDF rapor</div></div><button class="btn btn-sm" onclick="exportPDF()">İndir</button></div>
@@ -783,12 +757,12 @@
             <div class="set-panel" data-panel="gizlilik">
               <div class="set-panel-title">Gizlilik</div>
               <div class="set-group">
-                <div class="set-group-title">KVKK & Gizlilik</div>
+                <div class="set-group-title">KVKK &amp; Gizlilik</div>
                 <div id="kvkkSettingsBody" style="padding:18px 0"></div>
               </div>
             </div>
             <div class="set-panel" data-panel="destek">
-              <div class="set-panel-title">Destek & İletişim</div>
+              <div class="set-panel-title">Destek &amp; İletişim</div>
               <div class="set-group">
     <p class="text-soft" style="font-size:0.83rem;margin-bottom:16px;line-height:1.5">Bir hata mı buldun, önerimiz mi var? Bize ilet.</p>
 
@@ -823,115 +797,115 @@
               <div class="set-panel-title">Yama Notları</div>
               <div class="set-group">
                 <div class="notif-body" id="settingsChangelogBody" style="max-height:60vh;overflow-y:auto;padding-right:4px">
-            <div class="notif-item">
+            <div class="notif-item" onclick="this.classList.toggle('open')">
               <div class="notif-item-ver">v3.9.2</div>
               <div class="notif-item-title">Mobil İyileştirmeler</div>
               <div class="notif-item-body">• Mobil iyileştirmeler ve çeşitli arayüz güncellemesi.</div>
               <div class="notif-item-date">Beta</div>
             </div>
-            <div class="notif-item">
+            <div class="notif-item" onclick="this.classList.toggle('open')">
               <div class="notif-item-ver">v3.8.2</div>
               <div class="notif-item-title">Güncelleme Notları ve Yenilikler</div>
               <div class="notif-item-body">• E-posta değiştirme aktif hale getirildi.<br>• PIN sistemi tamamen kaldırıldı.<br>• Zaman aşımı aktif hale getirildi.<br>• İçe/dışa aktarma özelliği eklendi.<br>• EFT kategorileri eklendi.<br>• Çeşitli arayüz iyileştirmeleri ve düzeltmeleri yapıldı.<br>• Güvenlik açıkları giderildi.</div>
               <div class="notif-item-date">Beta</div>
             </div>
-            <div class="notif-item">
+            <div class="notif-item" onclick="this.classList.toggle('open')">
               <div class="notif-item-ver">v3.3.1</div>
               <div class="notif-item-title">Hata Düzeltmeleri ve Yenilikler</div>
               <div class="notif-item-body"><br>• Çeşitli arayüz iyileştirmeleri ve düzeltmeler.<br>• Takip eklendi.<br></div>
               <div class="notif-item-date"></div>
             </div>
-            <div class="notif-item">
+            <div class="notif-item" onclick="this.classList.toggle('open')">
               <div class="notif-item-ver">v3.1.1</div>
               <div class="notif-item-title">Hata Düzeltmeleri ve Yenilikler</div>
               <div class="notif-item-body">• Çeşitli arayüz iyileştirmeleri ve düzeltmeler.<br>• Dışarı Aktar güvenli hale getirildi.</div>
               <div class="notif-item-date"></div>
             </div>
-            <div class="notif-item">
+            <div class="notif-item" onclick="this.classList.toggle('open')">
               <div class="notif-item-ver">v3.0.0</div>
               <div class="notif-item-title">Arayüz Güncellemesi</div>
               <div class="notif-item-body">• Tüm menü baştan düzenlendi.<br>• Nabvar sadeleştirildi.<br>• Kullanım kolaylığı arttırıldı.<br>• Özelleştiirlebilir Panel eklendi.<br>• Yapışkan not eklendi.<br>• Bölümler arası geçiş daha akıcı hale getirildi.<br>• Performans ve optimizasyon arttırıldı.<br>• Yeni animasyonlar eklendi.<br>• Tema renkleri güncellendi.</div>
               <div class="notif-item-date"></div>
             </div>
-            <div class="notif-item">
+            <div class="notif-item" onclick="this.classList.toggle('open')">
               <div class="notif-item-ver">v2.40.16</div>
               <div class="notif-item-title">Hata Düzeltmeleri ve yenilikler</div>
               <div class="notif-item-body">• Mobil uyumu düzenlendi.<br>• app menüsü düzenlendi.<br>• Bildirim hataları giderildi.<br>• Otomatik özetler eklendi.<br>• KVKK metni güncellendi.<br>• Text hataları giderildi.</div>
               <div class="notif-item-date">Beta</div>
             </div>
-            <div class="notif-item">
+            <div class="notif-item" onclick="this.classList.toggle('open')">
               <div class="notif-item-ver">v2.35.15</div>
               <div class="notif-item-title">Hata Düzeltmeleri ve yenilikler</div>
               <div class="notif-item-body">• Çoklu işlem özelliği eklendi.<br>• Ekstre okuma hataları giderildi.<br>• reklamlar tamamen kaldırıldı.</div>
               <div class="notif-item-date">Beta</div>
             </div>
-            <div class="notif-item">
+            <div class="notif-item" onclick="this.classList.toggle('open')">
               <div class="notif-item-ver">v2.34.14</div>
               <div class="notif-item-title">Hata Düzeltmeleri</div>
               <div class="notif-item-body"><br>Ekstre yükleme yenilendi ve aktif edildi.<br>Tanıtım turu yeniden aktif edildi.<br>Giriş yeniden düzenlendi.</div>
               <div class="notif-item-date">Beta</div>
             </div>
-            <div class="notif-item">
+            <div class="notif-item" onclick="this.classList.toggle('open')">
               <div class="notif-item-ver">v2.31.11</div>
               <div class="notif-item-title">Hata Düzeltmeleri</div>
               <div class="notif-item-body">Reklam planı normalize hatası giderildi.<br>Her veri yenilemesinde reklam alanlarının yanlış açılması düzeltildi.<br>Performans iyileştiremeleri yapıldı.</div>
               <div class="notif-item-date">Beta</div>
             </div>
-            <div class="notif-item">
+            <div class="notif-item" onclick="this.classList.toggle('open')">
               <div class="notif-item-ver">v2.31.9</div>
               <div class="notif-item-title">Güncelleme Notları</div>
               <div class="notif-item-body">Duvar kağıtları eklendi.<br>Renk Teması eklendi.<br>App içi şifre değiştirme eklendi.<br>aktif bildirimler eklendi.<br>Portföy kontrolü eklendi.<br>Tüm verileri silme işlemi eklendi.</div>
               <div class="notif-item-date">Beta</div>
             </div>
-            <div class="notif-item">
+            <div class="notif-item" onclick="this.classList.toggle('open')">
               <div class="notif-item-ver">v2.26.9</div>
               <div class="notif-item-title">Güncelleme Notları</div>
               <div class="notif-item-body">Destek kısmı eklendi.<br>Renk sızması hataları giderildi.<br>Tanıtım turu geçici olarak kaldırıldı.</div>
               <div class="notif-item-date">Beta</div>
             </div>
-            <div class="notif-item">
+            <div class="notif-item" onclick="this.classList.toggle('open')">
               <div class="notif-item-ver">v1.26.9</div>
               <div class="notif-item-title">Güncelleme Notları</div>
               <div class="notif-item-body">Hesabı tamamen silme işlemi eklendi.<br>Onay arayüzü düzenlendi.<br>Tüm ekleme ve silme işlemleri hataları giderildi.<br></div>
               <div class="notif-item-date">Beta</div>
             </div>
-            <div class="notif-item">
+            <div class="notif-item" onclick="this.classList.toggle('open')">
               <div class="notif-item-ver">v1.25.8</div>
               <div class="notif-item-title">Güncelleme Notları</div>
               <div class="notif-item-body">3 kademeli reklam paketi eklendi<br>Reklam Panelleri eklendi.(Test aşamasında)<br>Güncelleme sonrası tek seferlik tanıtım turu eklendi.<br>Ayarlar'a girişte çıkan gezinme hatası giderildi.<br>Ekstre yükleme geçici olarak devre dışı.</div>
               <div class="notif-item-date">Beta</div>
             </div>
-            <div class="notif-item">
+            <div class="notif-item" onclick="this.classList.toggle('open')">
               <div class="notif-item-ver">v0.22.8</div>
               <div class="notif-item-title">Güncelleme Notları</div>
               <div class="notif-item-body">Tutar limiti milyara yükseltildi.<br>Ekstre yüklemede ₺ / TL / TRY sembolü sorunu giderildi.<br>Ondalık virgüllü tutarlarda binlik nokta formatı düzeltildi.<br>Yüksek rakamlarda form reddi hatası giderildi.</div>
               <div class="notif-item-date">Beta</div>
             </div>
-            <div class="notif-item">
+            <div class="notif-item" onclick="this.classList.toggle('open')">
               <div class="notif-item-ver">v0.22.4</div>
               <div class="notif-item-title">Güncelleme Notları</div>
               <div class="notif-item-body">Bildirim paneli ve uygulama bildirimleri eklendi.<br>Tüm tutar alanlarında Türkçe rakam yazı ipucu eklendi.<br>Yazarken otomatik binlik nokta formatlaması eklendi.<br>Piyasa durum rozeti eklendi.<br>PIN sıfırlandıktan sonra kaybolma hatası giderildi</div>
               <div class="notif-item-date">Beta</div>
             </div>
-            <div class="notif-item">
+            <div class="notif-item" onclick="this.classList.toggle('open')">
               <div class="notif-item-ver">v0.18.3</div>
               <div class="notif-item-title">Güncelleme Notları</div>
               <div class="notif-item-body">2FA e-posta doğrulaması ile güvenli giriş eklendi.<br>Yeni PIN sistemi eklendi.<br>Mail e Doğrulama gönderilmeme sorunu çözüldü.<br>Mail e-posta gönderimi iyileştirildi.<br>Doğrulama kodu ekranı güncellendi.</div>
               <div class="notif-item-date">Beta</div>
             </div>
-            <div class="notif-item">
+            <div class="notif-item" onclick="this.classList.toggle('open')">
               <div class="notif-item-ver">v0.14.2</div>
               <div class="notif-item-title">Güncelleme Notları</div>
               <div class="notif-item-body">Tekrarlayan işlemi eklendi.<br>Abonelik yönetimi eklendi.<br>Borç Takip sistemi eklendi.<br>Bütçe limiti ve uyarı sistemi eklendi.<br>Ekstre yükleme eklendi.<br>Gelir ve gider kategorilendirme sistemi düzeltildi.</div>
               <div class="notif-item-date">Beta</div>
             </div>
-            <div class="notif-item">
+            <div class="notif-item" onclick="this.classList.toggle('open')">
               <div class="notif-item-ver">v0.9.1</div>
               <div class="notif-item-title">Güncelleme Notları</div>
               <div class="notif-item-body">Hedef ve tasarruf sistemi eklendi.<br>Canlı kur Sistemi eklendi.<br>Hızlı işlem ekleme paneli.<br>Grafik ile analiz eklendi.<br>Hata Düzeltmeleri yapıldı.</div>
               <div class="notif-item-date">Beta</div>
             </div>
-            <div class="notif-item">
+            <div class="notif-item" onclick="this.classList.toggle('open')">
               <div class="notif-item-ver">v0.4.0</div>
               <div class="notif-item-title">Güncelleme Notlar</div>
               <div class="notif-item-body">Cüzzy yayına girdi.<br>Giriş &amp; kayıt sistemi.<br>Temel gelir ve gider yönetimi eklendi.<br>güvenli bulut senkronizasyonu eklendi.</div>
@@ -1057,6 +1031,7 @@
   <div class="modal-box">
     <button class="modal-close" onclick="_hideModalInstant('modalGoal')">✕</button>
     <div class="modal-title"> Yeni hedef</div>
+    <button type="button" class="btn btn-sm btn-ghost" style="margin-bottom:14px" onclick="_hideModalInstant('modalGoal');openFinSec('finans-hedefler')">Görüntüle</button>
     <div class="form-grid">
       <div class="field"><label>Hedef adı</label><input id="goalName" placeholder="Örn: Araba"></div>
       <div class="form-row">
@@ -1208,13 +1183,11 @@
   <div class="modal-box wide">
     <button class="modal-close" onclick="_hideModalInstant('modalMultiTx')">✕</button>
     <div class="modal-title">Çoklu işlem ekle</div>
-    <p class="text-soft" style="font-size:0.82rem;margin-bottom:14px;line-height:1.5">Birden fazla işlemi tek seferde ekle. Boş satırlar yok sayılır; aynı işlem zaten varsa otomatik atlanır.
-    </p>
     <div class="multi-head">
       <span>Tür</span><span>Tutar ₺</span><span>Açıklama</span><span>Kategori</span><span>Tarih</span><span></span>
     </div>
+    <button class="btn btn-sm mtx-addrow" onclick="addMultiRow()">+ Satır ekle</button>
     <div id="multiTxRows"></div>
-    <button class="btn btn-sm" style="margin-top:6px" onclick="addMultiRow()">+ Satır ekle</button>
     <div class="row-flex mt-16">
       <button class="btn" style="flex:1" onclick="closeModal()">İptal</button>
       <button class="btn btn-primary" style="flex:1" onclick="commitMultiTx()">Tümünü ekle</button>
@@ -1293,11 +1266,43 @@
 </div>
 
 <!-- MEMNUNİYET ANKETİ MODALI -->
-<div class="modal-bg" id="modalQuickAdd" onclick="if(event.target===this)_hideModalInstant('modalQuickAdd')">
-        <div class="modal-box" style="max-width:420px">
-          <button class="modal-close" onclick="_hideModalInstant('modalQuickAdd')">✕</button>
+<div class="modal-bg" id="modalQuickAdd" onclick="if(event.target===this)closeQuickAddMobile()">
+        <div class="modal-box qm-qa-box" style="max-width:420px">
+          <div class="qm-qa-handle" id="qmqaHandle"></div>
           <div class="modal-title" style="margin-bottom:14px">Hızlı işlem ekle</div>
-          <div id="mqaHost"></div>
+          <div id="mqaHost">
+            <div class="qm-qa">
+              <div class="qm-qa-type">
+                <button type="button" class="qm-qa-type-btn income active" id="qmqaTypeIncome" onclick="qmQaSetType('income')">+ Gelir</button>
+                <button type="button" class="qm-qa-type-btn expense" id="qmqaTypeExpense" onclick="qmQaSetType('expense')">− Gider</button>
+              </div>
+              <div class="qm-qa-amt-wrap">
+                <span class="qm-qa-amt-sym">₺</span>
+                <input type="text" inputmode="numeric" id="qmqaAmt" class="qm-qa-amt" placeholder="0,00">
+              </div>
+              <div class="num-word-hint" id="h-qmqaAmt" style="text-align:center"></div>
+              <div class="qm-qa-cats" id="qmqaCats">
+                <button type="button" class="qm-qa-chip active" data-cat="Diğer" onclick="qmQaSetCat(this)">Diğer</button>
+                <button type="button" class="qm-qa-chip" data-cat="Market" onclick="qmQaSetCat(this)">Market</button>
+                <button type="button" class="qm-qa-chip" data-cat="Fatura" onclick="qmQaSetCat(this)">Fatura</button>
+                <button type="button" class="qm-qa-chip" data-cat="Kira" onclick="qmQaSetCat(this)">Kira</button>
+                <button type="button" class="qm-qa-chip" data-cat="Ulaşım" onclick="qmQaSetCat(this)">Ulaşım</button>
+                <button type="button" class="qm-qa-chip" data-cat="Yemek" onclick="qmQaSetCat(this)">Yemek</button>
+                <button type="button" class="qm-qa-chip" data-cat="Sağlık" onclick="qmQaSetCat(this)">Sağlık</button>
+                <button type="button" class="qm-qa-chip" data-cat="Eğlence" onclick="qmQaSetCat(this)">Eğlence</button>
+                <button type="button" class="qm-qa-chip" data-cat="Eğitim" onclick="qmQaSetCat(this)">Eğitim</button>
+                <button type="button" class="qm-qa-chip" data-cat="Maaş" onclick="qmQaSetCat(this)">Maaş</button>
+                <button type="button" class="qm-qa-chip" data-cat="Yatırım" onclick="qmQaSetCat(this)">Yatırım</button>
+                <button type="button" class="qm-qa-chip" data-cat="EFT - Para Gönderimi" onclick="qmQaSetCat(this)">EFT gönder</button>
+                <button type="button" class="qm-qa-chip" data-cat="EFT - Para Alımı" onclick="qmQaSetCat(this)">EFT al</button>
+              </div>
+              <div class="qm-qa-row2">
+                <input type="text" id="qmqaDesc" class="qm-qa-desc" placeholder="Not (opsiyonel)" maxlength="50">
+              </div>
+              <input type="date" id="qmqaDate" class="qm-qa-date">
+              <button type="button" class="btn btn-block qm-qa-submit income" id="qmqaSubmit" onclick="quickAddMobile()">+ Gelir ekle</button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -1312,7 +1317,8 @@
       <div class="modal-bg" id="modalFinSec" onclick="if(event.target===this)closeFinSec()">
         <div class="modal-box" style="max-width:460px">
           <button class="modal-close" onclick="closeFinSec()">✕</button>
-          <div class="modal-title" id="finSecTitle" style="margin-bottom:14px"></div>
+          <div class="modal-title" id="finSecTitle" style="margin-bottom:6px"></div>
+          <button type="button" class="btn btn-sm btn-ghost" id="finSecListBtn" style="margin-bottom:12px;display:none" onclick="finSecShowList()">Görüntüle</button>
           <div class="fin-sec-host" id="finSecHost-islemler"></div>
           <div class="fin-sec-host" id="finSecHost-tekrarlayan"></div>
           <div class="fin-sec-host" id="finSecHost-borc"></div>
@@ -1377,6 +1383,7 @@
   <div class="modal-box">
     <button class="modal-close" onclick="_hideModalInstant('modalRecurring')">✕</button>
     <div class="modal-title">Tekrarlayan ekle</div>
+    <button type="button" class="btn btn-sm btn-ghost" style="margin-bottom:12px" onclick="showModal('modalRecList')">Görüntüle</button>
     <div class="type-toggle" style="margin-bottom:12px"><div class="toggle-slider"></div>
       <button class="t-btn active income" id="mRecTypeIncome" onclick="mSetRecType('income')">Gelir</button>
       <button class="t-btn expense" id="mRecTypeExpense" onclick="mSetRecType('expense')">Gider</button>
@@ -1400,7 +1407,24 @@
   <div class="modal-box wide">
     <button class="modal-close" onclick="closeModal()">✕</button>
     <div class="modal-title">Tüm hareketler</div>
-    <div class="tx-list" id="allTxList" style="max-height:62vh;overflow-y:auto;margin-top:8px"></div>
+    <div class="dash-tx-filters" id="allTxFilters" style="flex-direction:column;align-items:stretch;gap:0">
+      <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center">
+        <button type="button" class="dtf-btn active" data-f="all" onclick="setAllTxFilter('all')">Tümü</button>
+        <button type="button" class="dtf-btn" data-f="income" onclick="setAllTxFilter('income')">Gelir</button>
+        <button type="button" class="dtf-btn" data-f="expense" onclick="setAllTxFilter('expense')">Gider</button>
+      </div>
+      <div style="height:1px;background:var(--glass-border);margin:9px 0"></div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center">
+        <button type="button" class="dtf-btn active" data-r="all" onclick="setAllTxRange('all')">Tüm zamanlar</button>
+        <button type="button" class="dtf-btn" data-r="month" onclick="setAllTxRange('month')">Bu ay</button>
+        <button type="button" class="dtf-btn" data-r="week" onclick="setAllTxRange('week')">Son 7 gün</button>
+      </div>
+    </div>
+    <div class="form-row" style="margin:10px 0 4px">
+      <div class="field"><label>Başlangıç</label><input type="date" id="allTxFrom" onchange="setAllTxCustomDate()"></div>
+      <div class="field"><label>Bitiş</label><input type="date" id="allTxTo" onchange="setAllTxCustomDate()"></div>
+    </div>
+    <div class="tx-list" id="allTxList" style="max-height:56vh;overflow-y:auto;margin-top:8px"></div>
   </div>
 </div>
 

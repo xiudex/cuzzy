@@ -61,10 +61,12 @@ function closeQuickMenu() {
   if (hint) hint.classList.remove('show');
 }
 function toggleQuickMenu() {
+  try { haptic('tap'); } catch (e) {}
   const sheet = document.getElementById('qmSheet');
   if (sheet && sheet.classList.contains('show')) closeQuickMenu(); else openQuickMenu();
 }
 function qmAction(fn) {
+  try { haptic('tap'); } catch (e) {}
   closeQuickMenu();
   try { if (typeof fn === 'function') fn(); } catch (e) {}
 }
@@ -140,9 +142,10 @@ try {
 })();
 
 function goTo(page, sub) {
-  if (page === 'ayarlar') { var _wn = (function () { var p = document.getElementById('notifPanel'); return !!(p && p.style.display !== 'none'); })(); try { _hideNotifInstant(); } catch (e) {} if (_wn) { try { _instantShow = true; } catch (e) {} } try { document.querySelectorAll('.mbn-item').forEach(function (i) { i.classList.toggle('active', i.dataset.nav === 'ayarlar'); }); } catch (e) {} openSettings(sub); requestAnimationFrame(function () { try { if (typeof updateMbnPill === 'function') updateMbnPill(); } catch (e) {} }); return; }
+  try { haptic('tap'); } catch (e) {}
+  if (page === 'ayarlar') { try { _hideNotifInstant(); } catch (e) {} try { if (isMobileView()) _instantShow = true; } catch (e) {} try { document.querySelectorAll('.mbn-item').forEach(function (i) { i.classList.toggle('active', i.dataset.nav === 'ayarlar'); }); } catch (e) {} try { const _fab = document.getElementById('qmFab'); if (_fab) _fab.style.display = 'none'; } catch (e) {} openSettings(sub); requestAnimationFrame(function () { try { if (typeof updateMbnPill === 'function') updateMbnPill(); } catch (e) {} }); return; }
   try { closeNotifPanel(); } catch (e) {}
-  try { closeModal('modalSettings'); } catch (e) {}
+  try { _hideModalInstant('modalSettings'); } catch (e) {}
   try { closeQuickMenu(); } catch (e) {}
   try {
     const _fab = document.getElementById('qmFab');
@@ -272,6 +275,7 @@ function updateSubnavPill() {
 
 function applySettings() {
   if (!S.themeReset4) { S.theme = 'light'; S.wallpaper = 'light'; S.themeReset4 = true; try { save(); } catch {} }
+  if (!S.themeReset5) { S.theme = 'royal'; S.wallpaper = 'royal'; S.themeReset5 = true; try { save(); } catch {} }
   document.documentElement.setAttribute('data-theme', S.theme);
   document.documentElement.setAttribute('data-wallpaper', S.wallpaper);
   document.documentElement.setAttribute('lang', S.language);
@@ -337,6 +341,7 @@ function saveName() {
 function openSettings(tab) {
   showModal('modalSettings');
   try { var _ms = document.getElementById('modalSettings'); if (_ms) _ms.style.zIndex = ''; } catch (e) {}
+  try { var _fab = document.getElementById('qmFab'); if (_fab) _fab.style.display = 'none'; } catch (e) {}
   try { updateSettingsExtra(); } catch (e) {}
   var name = (S.profile && S.profile.name) || 'Kullanıcı';
   var av = document.getElementById('setProfileAv'), nm = document.getElementById('setProfileName'), ml = document.getElementById('setProfileMail');
@@ -419,16 +424,6 @@ function saveBudget() {
   save();
   renderAll();
   toast('Bütçe ayarları kaydedildi', 't-ok');
-}
-
-function saveNotifications() {
-  S.notifications = {
-    income: document.getElementById('notifIncome').checked,
-    expense: document.getElementById('notifExpense').checked,
-    goals: document.getElementById('notifGoals').checked
-  };
-  save();
-  toast('Bildirim tercihleri kaydedildi', 't-ok');
 }
 
 // Theme/wallpaper card click bağla

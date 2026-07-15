@@ -113,7 +113,7 @@ const DEFAULT_STATE = {
   homeLayout: [], homeAppearance: { card: 'glass', accent: '' }, homeOnboarded: false, homeColors: {},
   recurringApplied: [],
   profile: { name: 'Kullanıcı' },
-  theme: 'light', wallpaper: 'light', language: 'tr', themeReset4: false,
+  theme: 'royal', wallpaper: 'royal', language: 'tr', themeReset4: false, themeReset5: false,
   adsEnabled: false, adPlan: 'none', autoLogout: 30,
   monthlyBudget: 0, budgetWarningThreshold: 80, budgetAlertSentMonth: '',
   notifications: { income: true, expense: true, goals: true },
@@ -398,9 +398,10 @@ function normalizeState(raw) {
         .slice(-200);
     })(),
     profile: { name: validateString(src?.profile?.name, 30) || 'Kullanıcı' },
-    theme: ['light','black','grey','aurora','midnight','sunset','forest'].includes(src.theme) ? src.theme : 'light',
+    theme: ['light','black','grey','aurora','midnight','sunset','forest','royal'].includes(src.theme) ? src.theme : 'royal',
     themeReset4: src.themeReset4 === true,
-    wallpaper: ['light','black','grey','aurora','ocean','sunset','forest','mesh','solid'].includes(src.wallpaper) ? src.wallpaper : 'light',
+    themeReset5: src.themeReset5 === true,
+    wallpaper: ['light','black','grey','aurora','ocean','sunset','forest','mesh','solid','royal'].includes(src.wallpaper) ? src.wallpaper : 'royal',
     language: src.language === 'en' ? 'en' : 'tr',
     adsEnabled: false,
     adPlan: 'none',
@@ -453,6 +454,24 @@ function normalizeState(raw) {
 /* ═══ 4. UI HELPERS ═══ */
 
 let toastTimer = null;
+/* ═══ HAPTİK (TİTREŞİM) MOTORU ═══
+   Tek merkezi fonksiyon. Şimdilik navigator.vibrate() (Android Chrome'da çalışır,
+   iOS Safari'de sessizce no-op olur). Capacitor'a geçince SADECE bu fonksiyon
+   Haptics.impact(...) çağıracak şekilde değişecek — çağıran yerler hiç değişmeyecek.
+   type: 'tap' | 'success' | 'warning' | 'celebrate' */
+function haptic(type) {
+  try {
+    if (!navigator.vibrate) return;
+    switch (type) {
+      case 'tap':       navigator.vibrate(10); break;
+      case 'success':   navigator.vibrate([12, 40, 12]); break;
+      case 'warning':   navigator.vibrate(35); break;
+      case 'celebrate': navigator.vibrate([15, 30, 15, 30, 45]); break;
+      default:          navigator.vibrate(10);
+    }
+  } catch (e) {}
+}
+
 function toast(msg, type = 't-info') {
   const el = document.getElementById('toast');
   if (!el) return;
@@ -462,6 +481,9 @@ function toast(msg, type = 't-info') {
   void el.offsetWidth;              // reflow -> her seferinde yeniden insin
   el.classList.add('show');
   toastTimer = setTimeout(() => el.classList.remove('show'), 3000);
+  if (type === 't-ok') haptic('success');
+  else if (type === 't-err') haptic('warning');
+  else haptic('tap');
 }
 
 function setSyncStatus(s) {
@@ -620,7 +642,7 @@ function springOpenModal(m) {
   box.style.opacity = '0';
   void box.offsetWidth;
   const fr = box.getBoundingClientRect();
-  const _noMorph = box.classList.contains('set-modal');
+  const _noMorph = box.classList.contains('set-modal') || (typeof isMobileView === 'function' && isMobileView());
   const tr = _noMorph ? null : __cuzzyTriggerRect;
   const _clear = () => { box.style.transition = ''; box.style.transform = ''; box.style.opacity = ''; box.style.transformOrigin = ''; box.style.borderRadius = ''; };
   m._morphRect = (tr && fr.width > 4 && fr.height > 4) ? tr : null;

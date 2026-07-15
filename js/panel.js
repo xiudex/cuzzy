@@ -853,7 +853,7 @@ function dismissFeaturesNotice() {
         if (ds === inp.value) cls += ' sel';
         cells += '<div class="' + cls + '" data-d="' + ds + '">' + d + '</div>';
       }
-      const total = startDow + dim, trail = (7 - (total % 7)) % 7;
+      const total = startDow + dim, trail = 42 - total;
       for (let i = 0; i < trail; i++) cells += '<div class="cz-cal-day other"></div>';
       pop.innerHTML =
         '<div class="cz-cal">' +
@@ -950,4 +950,3 @@ function dismissFeaturesNotice() {
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
   else init();
 })();
-

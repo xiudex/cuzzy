@@ -10,6 +10,25 @@ input, button, select, textarea { font-family: inherit; outline: none; }
 
 /* ══════ 1. TEMA SİSTEMİ ══════ */
 
+[data-theme="royal"] {
+  --accent: #9b8cff; --accent-rgb: 155, 140, 255;
+  --accent2: #d4af5a; --accent2-rgb: 212, 175, 90;
+  --accent-soft: rgba(155, 140, 255, 0.12);
+  --accent-strong: rgba(155, 140, 255, 0.32);
+  --accent-glow: rgba(155, 140, 255, 0.38);
+  --income: #5ee0b0; --income-rgb: 94, 224, 176;
+  --expense: #f0a15e; --expense-rgb: 240, 161, 94;
+  --warning: #f0c168; --warning-rgb: 240, 193, 104;
+  --text: #f0eefc; --text-soft: #a79cd6; --text-muted: #6f6699;
+  --glass: rgba(255, 255, 255, 0.05);
+  --glass-strong: rgba(255, 255, 255, 0.09);
+  --glass-border: rgba(155, 140, 255, 0.14);
+  --glass-border-strong: rgba(155, 140, 255, 0.24);
+  --glass-shadow: 0 8px 32px rgba(8, 6, 24, 0.45);
+  --glass-inner: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  --input-bg: rgba(10, 8, 30, 0.35);
+}
+
 [data-theme="light"] {
   --accent: #007AFF; --accent-rgb: 0,122,255;
   --accent2: #0A84FF; --accent2-rgb: 10,132,255;
@@ -170,6 +189,23 @@ input, button, select, textarea { font-family: inherit; outline: none; }
 }
 @keyframes auroraFloat { 0%, 100% { transform: translate(0,0) scale(1); opacity: 0.6; } 50% { transform: translate(40px, -30px) scale(1.1); opacity: 1; } }
 
+[data-wallpaper="royal"] { --wp-bg: #14122b; }
+[data-wallpaper="royal"] body::before {
+  content: ''; position: fixed; inset: 0; z-index: -2; pointer-events: none;
+  background:
+    radial-gradient(ellipse 75% 55% at 15% 8%, rgba(155, 140, 255, 0.16), transparent 55%),
+    radial-gradient(ellipse 70% 60% at 90% 25%, rgba(212, 175, 90, 0.08), transparent 55%),
+    radial-gradient(ellipse 85% 70% at 50% 95%, rgba(120, 100, 220, 0.14), transparent 55%),
+    linear-gradient(160deg, #1d1840, #14122b 60%);
+}
+[data-wallpaper="royal"] body::after {
+  content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background: radial-gradient(ellipse 55% 45% at 65% 40%, rgba(155, 140, 255, 0.07), transparent 60%);
+  animation: royalFloat 28s ease-in-out infinite;
+  will-change: transform;
+}
+@keyframes royalFloat { 0%, 100% { transform: translate(0,0) scale(1); opacity: 0.55; } 50% { transform: translate(-30px, 24px) scale(1.08); opacity: 0.9; } }
+
 [data-wallpaper="ocean"] { --wp-bg: #061223; }
 [data-wallpaper="ocean"] body::before {
   content: ''; position: fixed; inset: 0; z-index: -2; pointer-events: none;
@@ -239,7 +275,7 @@ input, button, select, textarea { font-family: inherit; outline: none; }
 .kpi-value { font-weight: 700 !important; }
 /* ── ana panel yeniden yerleşim ── */
 .summary-card { padding: 20px 24px; }
-.summary-row { display: grid; grid-template-columns: 1fr 1px 1fr 1px 1fr 1px 1fr 1px 1fr; align-items: center; gap: 14px; }
+.summary-row { display: grid; grid-template-columns: 1fr 1px 1fr 1px 1fr 1px 1fr; align-items: center; gap: 14px; }
 .summary-cell { min-width: 0; }
 .summary-div { width: 1px; align-self: stretch; background: var(--glass-border); }
 .summary-cell .kpi-label { margin-bottom: 6px; }
@@ -258,10 +294,10 @@ input, button, select, textarea { font-family: inherit; outline: none; }
 .sticky-note { flex: 1; display: flex; flex-direction: column; background: rgba(255, 211, 77, 0.16); border: 1px solid rgba(245, 184, 0, 0.34); border-radius: 16px; padding: 12px 14px; }
 .sticky-note-label { font-size: 0.68rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.14em; color: #b07c00; margin-bottom: 6px; }
 .sticky-note-area { width: 100%; height: 92px; resize: none; overflow-y: auto; border: none; background: transparent; color: var(--text); font-family: inherit; font-size: 0.85rem; line-height: 1.45; }
-.acct-row { display: flex; align-items: center; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid var(--glass-border); font-size: 0.84rem; }
+.acct-row { display: flex; align-items: center; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid var(--glass-border); font-size: 0.84rem; gap: 10px; }
 .acct-row:last-child { border-bottom: none; }
-.acct-row span { color: var(--text-soft); }
-.acct-row strong { font-family: 'JetBrains Mono', monospace; font-weight: 700; }
+.acct-row span { color: var(--text-soft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.acct-row strong { font-family: 'JetBrains Mono', monospace; font-weight: 700; flex-shrink: 0; white-space: nowrap; }
 .acct-row strong.pos { color: var(--income); }
 .acct-row strong.neg { color: var(--expense); }
 .mini-market-grid.big { grid-template-columns: repeat(auto-fill, minmax(148px, 1fr)); gap: 12px; }
@@ -320,11 +356,13 @@ input, button, select, textarea { font-family: inherit; outline: none; }
 .set-main .theme-card { height: 58px; padding: 0; border-radius: 12px; position: relative; overflow: hidden; }
 .theme-card.tc-light { background: linear-gradient(135deg, #ffffff, #e7e7ec) !important; }
 .theme-card.tc-black { background: linear-gradient(135deg, #2a2a2e, #000) !important; }
+.theme-card.tc-royal { background: linear-gradient(145deg, #221d47, #14122b) !important; }
 .theme-card.tc-grey { background: linear-gradient(135deg, #48484c, #1c1c1e) !important; }
 .set-main .theme-card.active { box-shadow: 0 0 0 3px var(--accent); border-color: transparent !important; }
 .tc-name { position: absolute; right: 9px; bottom: 7px; font-size: 0.74rem; font-weight: 700; }
 .tc-light .tc-name { color: #1c1c1e; }
 .tc-black .tc-name, .tc-grey .tc-name { color: #fff; }
+.tc-royal .tc-name { color: #d8d2f7; }
 .set-side-item, .set-group-title, .set-row-label, .set-row-sub, .set-panel-title, .set-sub-head, .set-side-title { user-select: text; -webkit-user-select: text; }
 /* bildirim anahtarları */
 .set-row input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 46px; height: 28px; border-radius: 14px; background: var(--glass-border-strong); position: relative; cursor: pointer; transition: background 0.25s ease; flex-shrink: 0; margin: 0; }
@@ -378,7 +416,7 @@ input, button, select, textarea { font-family: inherit; outline: none; }
 @media (max-width: 600px) { .set-input { width: 130px; } }
 /* native kontrol tema uyumu */
 [data-theme="light"] { color-scheme: light; }
-[data-theme="black"], [data-theme="aurora"], [data-theme="midnight"], [data-theme="sunset"], [data-theme="forest"] { color-scheme: dark; }
+[data-theme="black"], [data-theme="aurora"], [data-theme="midnight"], [data-theme="sunset"], [data-theme="forest"], [data-theme="royal"] { color-scheme: dark; }
 .quick-add select, .quick-add input { color-scheme: inherit; }
 /* ── 6 eşit kart grid ── */
 .home-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 16px; }

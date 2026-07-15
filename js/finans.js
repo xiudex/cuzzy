@@ -34,6 +34,99 @@ function addTx() {
   renderAll();
 }
 
+let qmQaType = 'income';
+
+/* ── Hızlı işlem: tutamacı tutup aşağı çekince kapat ── */
+(function () {
+  var handle, box, dragging = false, startY = 0, curY = 0, moved = false;
+  function onMove(e) {
+    if (!dragging) return;
+    var dy = e.clientY - startY;
+    if (!moved && Math.abs(dy) > 6) moved = true;
+    curY = Math.max(0, dy * (dy > 0 ? 1 : 0.25));
+    if (moved) { e.preventDefault(); box.style.transition = 'none'; box.style.transform = 'translateY(' + curY + 'px)'; }
+  }
+  function onUp() {
+    if (!dragging) return;
+    dragging = false;
+    document.removeEventListener('pointermove', onMove);
+    document.removeEventListener('pointerup', onUp);
+    document.removeEventListener('pointercancel', onUp);
+    box.style.transition = 'transform 0.28s cubic-bezier(0.4, 0, 0.2, 1)';
+    if (curY > 90) { closeQuickAddMobile(); }
+    else { box.style.transform = ''; }
+    moved = false;
+  }
+  handle = document.getElementById('qmqaHandle');
+  box = handle && handle.closest('.modal-box');
+  if (handle && box) {
+    handle.addEventListener('pointerdown', function (e) {
+      dragging = true; startY = e.clientY; curY = 0; moved = false;
+      document.addEventListener('pointermove', onMove, { passive: false });
+      document.addEventListener('pointerup', onUp);
+      document.addEventListener('pointercancel', onUp);
+    });
+  }
+})();
+function closeQuickAddMobile() {
+  const m = document.getElementById('modalQuickAdd');
+  const box = m && m.querySelector('.modal-box');
+  if (!m || !box || !m.classList.contains('show')) return;
+  box.style.transition = 'transform 0.32s cubic-bezier(0.4, 0, 0.2, 1)';
+  box.style.transform = 'translateY(100%)';
+  m.style.transition = 'opacity 0.3s ease';
+  m.style.opacity = '0';
+  setTimeout(() => {
+    m.classList.remove('show');
+    box.style.transition = ''; box.style.transform = '';
+    m.style.transition = ''; m.style.opacity = '';
+  }, 300);
+}
+function qmQaSetType(type) {
+  qmQaType = type;
+  const bI = document.getElementById('qmqaTypeIncome'), bE = document.getElementById('qmqaTypeExpense');
+  if (bI) bI.classList.toggle('active', type === 'income');
+  if (bE) bE.classList.toggle('active', type === 'expense');
+  const sub = document.getElementById('qmqaSubmit');
+  if (sub) {
+    sub.classList.toggle('income', type === 'income');
+    sub.classList.toggle('expense', type === 'expense');
+    sub.textContent = type === 'income' ? '+ Gelir ekle' : '− Gider ekle';
+  }
+}
+function qmQaSetCat(el) {
+  document.querySelectorAll('#qmqaCats .qm-qa-chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+}
+function quickAddMobile() {
+  const amt = validateAmount(document.getElementById('qmqaAmt').value);
+  if (!amt) return toast('Tutar gerekli', 't-err');
+  const catEl = document.querySelector('#qmqaCats .qm-qa-chip.active');
+  const cat = (catEl && catEl.dataset.cat) || 'Diğer';
+  const desc = validateString(document.getElementById('qmqaDesc').value, 50) || cat;
+  const dateInp = document.getElementById('qmqaDate');
+  const dateVal = validateDate((dateInp && dateInp.value) || todayStr());
+  S.transactions.push({
+    id: uid(), type: qmQaType, desc, amount: amt, category: cat,
+    date: dateVal, note: 'Hızlı işlem', ts: new Date(dateVal + 'T12:00:00').getTime()
+  });
+  save();
+  notify(qmQaType === 'income' ? 'income' : 'expense',
+    qmQaType === 'income' ? 'Hızlı Gelir eklendi' : 'Hızlı Gider eklendi',
+    '₺' + amt.toLocaleString('tr-TR') + ' · ' + desc
+  );
+  toast(qmQaType === 'income' ? '+ Gelir eklendi' : '- Gider eklendi', 't-ok');
+  document.getElementById('qmqaAmt').value = '';
+  updateNumWordHint(document.getElementById('qmqaAmt'));
+  document.getElementById('qmqaDesc').value = '';
+  if (dateInp) dateInp.value = todayStr();
+  document.querySelectorAll('#qmqaCats .qm-qa-chip').forEach(c => c.classList.remove('active'));
+  const defCat = document.querySelector('#qmqaCats .qm-qa-chip[data-cat="Diğer"]'); if (defCat) defCat.classList.add('active');
+  renderAll();
+  try { haptic('success'); } catch (e) {}
+  closeQuickAddMobile();
+}
+
 function quickAdd(type) {
   const amt = validateAmount(document.getElementById('qAmt').value);
   const cat = document.getElementById('qCat')?.value || 'Diğer';
@@ -74,40 +167,14 @@ function setTxFilter(f, btn) {
   softModalResize(renderTxList);
 }
 
-let dashTxType = 'all';
-let dashTxRange = 'all';
-function setDashTxFilter(f) {
-  const sy = window.scrollY;
-  dashTxType = f;
-  document.querySelectorAll('#dashTxFilters .dtf-btn[data-f]').forEach(b => b.classList.toggle('active', b.dataset.f === f));
-  softModalResize(renderDashRecent, document.getElementById('dashRecentTx'));
-  window.scrollTo(0, sy);
-}
-function setDashTxRange(r) {
-  const sy = window.scrollY;
-  dashTxRange = r;
-  document.querySelectorAll('#dashTxFilters .dtf-btn[data-r]').forEach(b => b.classList.toggle('active', b.dataset.r === r));
-  softModalResize(renderDashRecent, document.getElementById('dashRecentTx'));
-  window.scrollTo(0, sy);
-}
 function renderDashRecent() {
   const dr = document.getElementById('dashRecentTx');
   if (!dr) return;
-  let txs = [...S.transactions];
-  if (dashTxType !== 'all') txs = txs.filter(t => t.type === dashTxType);
-  if (dashTxRange !== 'all') {
-    const now = new Date();
-    const from = dashTxRange === 'month'
-      ? new Date(now.getFullYear(), now.getMonth(), 1)
-      : (() => { const d = new Date(); d.setDate(d.getDate() - 7); return d; })();
-    const fromStr = from.getFullYear() + '-' + String(from.getMonth() + 1).padStart(2, '0') + '-' + String(from.getDate()).padStart(2, '0');
-    txs = txs.filter(t => t.date >= fromStr);
-  }
-  txs.sort((a, b) => b.ts - a.ts);
+  const txs = [...S.transactions].sort((a, b) => b.ts - a.ts);
   const recent = txs.slice(0, 8);
   dr.innerHTML = recent.length
     ? recent.map(txItemHTML).join('')
-    : '<div class="empty-state">Bu filtreye uygun işlem yok.</div>';
+    : '<div class="empty-state">Henüz işlem yok. Hızlı işlemden ekleyebilirsin.</div>';
   if (typeof _censorOn !== 'undefined' && _censorOn) { try { applyCensor(); } catch (e) {} }
 }
 

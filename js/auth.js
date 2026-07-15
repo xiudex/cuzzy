@@ -166,9 +166,6 @@ function _setupMobilePanel() {
   if (_mobilePanelSetup || !isMobileView()) return;
   _mobilePanelSetup = true;
   try {
-    const qa = document.querySelector('.quick-add[data-wid="quickadd"]');
-    const qaHost = document.getElementById('mqaHost');
-    if (qa && qaHost && qa.parentElement !== qaHost) qaHost.appendChild(qa);
     const note = document.querySelector('.sticky-note[data-wid="note"]');
     const noteHost = document.getElementById('mnoteHost');
     if (note && noteHost && note.parentElement !== noteHost) noteHost.appendChild(note);
@@ -184,6 +181,8 @@ function _finRestoreAll() {
     });
   } catch (e) {}
 }
+var _finSecListModal = { borc: 'modalDebtList', abonelik: 'modalSubList', tekrarlayan: 'modalRecList', ekstre: 'modalUploadHist' };
+var _finSecCurKey = null;
 function openFinSec(cardId) {
   _finRestoreAll();
   var key = cardId.replace('finans-', '');
@@ -195,7 +194,14 @@ function openFinSec(cardId) {
   });
   var t = document.getElementById('finSecTitle');
   if (t) t.textContent = (card.querySelector('.card-title-text') || {}).textContent || '';
+  _finSecCurKey = key;
+  var listBtn = document.getElementById('finSecListBtn');
+  if (listBtn) listBtn.style.display = _finSecListModal[key] ? '' : 'none';
   try { showModal('modalFinSec'); } catch (e) {}
+}
+function finSecShowList() {
+  var m = _finSecListModal[_finSecCurKey];
+  if (m) { try { showModal(m); } catch (e) {} }
 }
 function closeFinSec() {
   _finRestoreAll();
@@ -518,7 +524,7 @@ function formatWhileTyping(el) {
   updateNumWordHint(el);
 }
 
-const NUM_WORD_IDS = ['txAmt','recAmt','debtAmt','subAmt','setBudget','qAmt','goalTarget','goalCurrent','invBuyPrice','invManualAmount','baseBalanceInput'];
+const NUM_WORD_IDS = ['txAmt','recAmt','debtAmt','subAmt','setBudget','qAmt','qmqaAmt','goalTarget','goalCurrent','invBuyPrice','invManualAmount','baseBalanceInput'];
 
 function initNumWordHints() {
   for (const id of NUM_WORD_IDS) {

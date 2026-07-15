@@ -355,6 +355,7 @@ function showConfirm({ title = 'Emin misin?', msg = '', danger = false, onOk }) 
   btn.className = danger ? 'btn btn-danger' : 'btn btn-primary';
   btn.textContent = danger ? 'Evet, sil' : 'Onayla';
   document.getElementById('modalConfirm').classList.add('show');
+  try { haptic(danger ? 'warning' : 'tap'); } catch (e) {}
 }
 function _confirmOk() {
   document.getElementById('modalConfirm').classList.remove('show');
@@ -551,13 +552,21 @@ let _multiRowSeq = 0;
 
 function _multiRowHTML(rid) {
   const opts = MULTI_CATS.map(c => `<option value="${c}">${c}</option>`).join('');
-  return `<div class="multi-row" id="mrow-${rid}">
-    <select class="mr-type"><option value="expense">Gider</option><option value="income">Gelir</option></select>
-    <input class="mr-amt" inputmode="decimal" placeholder="0,00">
-    <input class="mr-desc" placeholder="Açıklama (ops.)">
-    <select class="mr-cat">${opts}</select>
-    <input class="mr-date" type="date" value="${todayStr()}">
-    <button class="mr-del" onclick="removeMultiRow('${rid}')" title="Satırı sil">✕</button>
+  return `<div class="multi-row" id="mrow-${rid}" data-type="expense">
+    <div class="mrow-main">
+      <div class="mr-type-toggle">
+        <button type="button" class="mr-type-btn income" onclick="mrSetType('${rid}','income')">+ Gelir</button>
+        <button type="button" class="mr-type-btn expense active" onclick="mrSetType('${rid}','expense')">− Gider</button>
+      </div>
+      <input class="mr-amt" inputmode="decimal" placeholder="0,00">
+      <button type="button" class="mr-expand" id="mr-exp-${rid}" onclick="mrToggleExpand('${rid}')" aria-label="Detayları göster">›</button>
+      <button type="button" class="mr-del" onclick="removeMultiRow('${rid}')" title="Satırı sil">✕</button>
+    </div>
+    <div class="mrow-extra" id="mrow-extra-${rid}">
+      <input class="mr-desc" placeholder="Açıklama (ops.)">
+      <select class="mr-cat">${opts}</select>
+      <input class="mr-date" type="date" value="${todayStr()}">
+    </div>
   </div>`;
 }
 
@@ -571,6 +580,22 @@ function addMultiRow() {
 function removeMultiRow(rid) {
   const el = document.getElementById('mrow-' + rid);
   if (el) el.remove();
+}
+
+function mrSetType(rid, type) {
+  const row = document.getElementById('mrow-' + rid);
+  if (!row) return;
+  row.dataset.type = type;
+  row.querySelector('.mr-type-btn.income').classList.toggle('active', type === 'income');
+  row.querySelector('.mr-type-btn.expense').classList.toggle('active', type === 'expense');
+}
+
+function mrToggleExpand(rid) {
+  const extra = document.getElementById('mrow-extra-' + rid);
+  const btn = document.getElementById('mr-exp-' + rid);
+  if (!extra) return;
+  const open = extra.classList.toggle('open');
+  if (btn) btn.classList.toggle('open', open);
 }
 
 function openMultiTx() {
@@ -608,7 +633,7 @@ function commitMultiTx() {
     if (!amtRaw && !descRaw) return;                       // tamamen boş satır → sessizce atla
     const amt = validateAmount(amtRaw);
     if (!amt) { invalid++; return; }                       // tutarsız/geçersiz tutar
-    const type = row.querySelector('.mr-type').value === 'income' ? 'income' : 'expense';
+    const type = row.dataset.type === 'income' ? 'income' : 'expense';
     const cat = row.querySelector('.mr-cat').value || 'Diğer';
     const dateVal = row.querySelector('.mr-date').value || todayStr();
     const txObj = {

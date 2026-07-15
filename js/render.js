@@ -98,12 +98,58 @@ function addRecurringQuick() {
   toast('Tekrarlayan eklendi', 't-ok');
 }
 
+let allTxType = 'all';
+let allTxRange = 'all';
 function openAllTx() {
+  allTxType = 'all'; allTxRange = 'all';
+  const fromEl = document.getElementById('allTxFrom'), toEl = document.getElementById('allTxTo');
+  if (fromEl) fromEl.value = ''; if (toEl) toEl.value = '';
+  document.querySelectorAll('#allTxFilters .dtf-btn[data-f]').forEach(b => b.classList.toggle('active', b.dataset.f === 'all'));
+  document.querySelectorAll('#allTxFilters .dtf-btn[data-r]').forEach(b => b.classList.toggle('active', b.dataset.r === 'all'));
+  renderAllTxList();
+  showModal('modalAllTx');
+}
+function setAllTxFilter(f) {
+  allTxType = f;
+  document.querySelectorAll('#allTxFilters .dtf-btn[data-f]').forEach(b => b.classList.toggle('active', b.dataset.f === f));
+  renderAllTxList();
+}
+function setAllTxRange(r) {
+  allTxRange = r;
+  const fromEl = document.getElementById('allTxFrom'), toEl = document.getElementById('allTxTo');
+  if (fromEl) fromEl.value = ''; if (toEl) toEl.value = '';
+  document.querySelectorAll('#allTxFilters .dtf-btn[data-r]').forEach(b => b.classList.toggle('active', b.dataset.r === r));
+  renderAllTxList();
+}
+function setAllTxCustomDate() {
+  const fromEl = document.getElementById('allTxFrom'), toEl = document.getElementById('allTxTo');
+  if (fromEl && fromEl.value || toEl && toEl.value) {
+    allTxRange = 'custom';
+    document.querySelectorAll('#allTxFilters .dtf-btn[data-r]').forEach(b => b.classList.remove('active'));
+  }
+  renderAllTxList();
+}
+function renderAllTxList() {
   const c = document.getElementById('allTxList');
   if (!c) return;
-  const all = [...S.transactions].sort((a, b) => b.ts - a.ts);
-  c.innerHTML = all.length ? all.map(txItemHTML).join('') : '<div class="empty-state">Henüz işlem yok.</div>';
-  showModal('modalAllTx');
+  let txs = [...S.transactions];
+  if (allTxType !== 'all') txs = txs.filter(t => t.type === allTxType);
+  if (allTxRange === 'month' || allTxRange === 'week') {
+    const now = new Date();
+    const from = allTxRange === 'month'
+      ? new Date(now.getFullYear(), now.getMonth(), 1)
+      : (() => { const d = new Date(); d.setDate(d.getDate() - 7); return d; })();
+    const fromStr = from.getFullYear() + '-' + String(from.getMonth() + 1).padStart(2, '0') + '-' + String(from.getDate()).padStart(2, '0');
+    txs = txs.filter(t => t.date >= fromStr);
+  } else if (allTxRange === 'custom') {
+    const fromEl = document.getElementById('allTxFrom'), toEl = document.getElementById('allTxTo');
+    const fromV = fromEl && fromEl.value, toV = toEl && toEl.value;
+    if (fromV) txs = txs.filter(t => t.date >= fromV);
+    if (toV) txs = txs.filter(t => t.date <= toV);
+  }
+  txs.sort((a, b) => b.ts - a.ts);
+  c.innerHTML = txs.length ? txs.map(txItemHTML).join('') : '<div class="empty-state">Bu filtreye uygun işlem yok.</div>';
+  if (typeof _censorOn !== 'undefined' && _censorOn) { try { applyCensor(); } catch (e) {} }
 }
 
 function onStickyInput(el) {
@@ -138,6 +184,7 @@ function renderAll() {
     '<div class="acct-row"><span>Aktif hedef</span><strong>'+((S.goals&&S.goals.length)||0)+'</strong></div>';
   const _sn = document.getElementById('stickyNote');
   if (_sn && document.activeElement !== _sn) _sn.value = S.stickyNote || '';
+  try { if (typeof isMobileView === 'function' && isMobileView() && typeof renderCategoryDonut === 'function') renderCategoryDonut('panelCategoryDonut'); } catch (e) {}
   setText('kpiExpense', fmt(monthExp));
   setText('kpiWeekIncome', fmt(weekInc));
   setText('kpiWeekExpense', fmt(weekExp));

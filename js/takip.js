@@ -27,8 +27,8 @@ function renderBalanceTrend() {
 }
 
 
-function renderCategoryDonut() {
-  const c = document.getElementById('categoryDonut');
+function renderCategoryDonut(targetId) {
+  const c = document.getElementById(targetId || 'categoryDonut');
   if (!c) return;
   const expenses = S.transactions.filter(t => t.type === 'expense');
   if (!expenses.length) { c.innerHTML = '<div class="empty-state" style="width:100%">Veri yok</div>'; return; }
