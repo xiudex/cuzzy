@@ -3,62 +3,62 @@
 const TOUR_STEPS = [
   {
     target: () => document.querySelector('.topnav-logo'),
-    title: 'Cüzzy\'ye hoş geldin! ',
-    text: 'Cüzzy, kişisel finanslarını tek panelde toplayan modern bir yardımcı. Birlikte hızlı bir tur atalım — 10 adım, yaklaşık 1 dakika sürecek. Logoya basınca sayfayı her zaman yenileyebilirsin.',
+    get title() { return t('tour_1_title'); },
+    get text() { return t('tour_1_text'); },
     page: 'home'
   },
   {
     target: () => document.querySelector('.kpi-grid'),
-    title: 'Bu ay nasıl gidiyorsun? ',
-    text: 'Üst panelde gelir, gider ve net bakiyeni anında görürsün. Tasarruf oranın da burada — sağlıklı bir hedef genelde %20 üstüdür.',
+    get title() { return t('tour_2_title'); },
+    get text() { return t('tour_2_text'); },
     page: 'home'
   },
   {
     target: () => document.querySelector('[data-tour="quick-add"]'),
-    title: 'Hızlı işlem ekle',
-    text: 'Sağ panelden iki tıkla gelir veya gider ekleyebilirsin. Detaylı kategori için Finans sekmesini kullan.',
+    get title() { return t('tour_3_title'); },
+    get text() { return t('tour_3_text'); },
     page: 'home'
   },
   {
     target: () => document.querySelector('.ticker-wrap'),
-    title: 'Takip listesi ',
-    text: 'Üst sağdaki bu çubuğa tıklayıp döviz, kripto ve hisse senedi takiplerini ekleyebilirsin. Eklediklerin sürekli gözünün önünde olur, fiyatlar canlı güncellenir.',
+    get title() { return t('tour_4_title'); },
+    get text() { return t('tour_4_text'); },
     page: 'home'
   },
   {
     target: () => document.querySelector('[data-nav="finans"]'),
-    title: 'Finans merkezi ',
-    text: 'Tüm gelir-giderlerin, tekrarlayan ödemelerin, borçların, abonelik ve hedeflerin tek yerde. Üstteki sekmelerden geçiş yap.',
+    get title() { return t('tour_5_title'); },
+    get text() { return t('tour_5_text'); },
     page: 'home'
   },
   {
     target: () => document.querySelector('[data-nav="yatirim"]'),
-    title: 'Yatırım takibi ',
-    text: 'Kripto, BIST hisseleri ve manuel yatırımları (altın, döviz, fon) ekle. Canlı fiyatla kâr/zarar otomatik hesaplanır. Detaylı piyasa burada.',
+    get title() { return t('tour_6_title'); },
+    get text() { return t('tour_6_text'); },
     page: 'home'
   },
   {
     target: () => document.getElementById('settingsBtn'),
-    title: 'Görünüm ve güvenlik ',
-    text: 'Tema, duvar kağıdı, PIN kilidi, bütçe limiti ve bildirim ayarları... hepsi dişli ikonundaki Ayarlar penceresinde.',
+    get title() { return t('tour_7_title'); },
+    get text() { return t('tour_7_text'); },
     page: 'home'
   },
   {
     target: () => document.querySelector('.kpi-card.balance'),
-    title: 'Bütçeni belirle ',
-    text: 'Ayarlar > Güvenlik\'ten aylık bütçe limiti gir. Eşiğe yaklaştığında uyarırız, aştığında kırmızı banner çıkar.',
+    get title() { return t('tour_8_title'); },
+    get text() { return t('tour_8_text'); },
     page: 'home'
   },
   {
     target: () => document.querySelector('.topnav-avatar'),
-    title: 'Profil ve senkron ',
-    text: 'Avatar yuvarlağına tıklayınca profil ayarlarına gidersin. Sağ alttaki minik nokta verilerinin bulutla senkron olduğunu gösterir.',
+    get title() { return t('tour_9_title'); },
+    get text() { return t('tour_9_text'); },
     page: 'home'
   },
   {
     target: () => document.querySelector('[data-tour="quick-add"]'),
-    title: 'Hazırsın! ',
-    text: 'Cüzzy senin elinde. Bu turu istediğin zaman Ayarlar > Görünüm\'den tekrar başlatabilirsin. İyi kullanımlar!',
+    get title() { return t('tour_10_title'); },
+    get text() { return t('tour_10_text'); },
     page: 'home'
   }
 ];
@@ -73,7 +73,7 @@ function isMobileDevice() {
 let tourManualStart = false;
 
 function startTour(manual) {
-  if (isMobileView()) { try { toast('Tanıtım turu mobilde kullanılamaz'); } catch (e) {} return; }
+  if (isMobileView()) { try { toast(t('toast_tour_no_mobile')); } catch (e) {} return; }
   tourManualStart = manual === true;
   // Mobilde tur açma — sessizce tamamlanmış say
   if (isMobileDevice()) {
@@ -82,7 +82,7 @@ function startTour(manual) {
       save();
     }
     // Eğer kullanıcı manuel olarak Ayarlar > Görünüm > Turu başlat dedi ise toast
-    if (tourManualStart) toast('Tur masaüstü için tasarlandı', 't-info');
+    if (tourManualStart) toast(t('toast_tour_desktop_only'), 't-info');
     tourManualStart = false;
     return;
   }
@@ -200,7 +200,7 @@ function endTour(completed) {
     save();
   }
   if (completed) {
-    toast('Tur tamamlandı! ', 't-ok');
+    toast(t('toast_tour_completed'), 't-ok');
   }
 }
 

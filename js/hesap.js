@@ -35,9 +35,9 @@ async function changePassword() {
   const ny = document.getElementById('cpNew').value;
   const ny2 = document.getElementById('cpNew2').value;
 
-  if (!old) return toast('Mevcut şifrenizi girin', 't-err');
-  if (ny !== ny2) return toast('Şifreler eşleşmiyor', 't-err');
-  if (ny === old) return toast('Yeni şifre eski ile aynı olamaz', 't-err');
+  if (!old) return toast(t('toast_enter_current_pw'), 't-err');
+  if (ny !== ny2) return toast(t('toast_passwords_mismatch'), 't-err');
+  if (ny === old) return toast(t('toast_new_pw_same'), 't-err');
 
   const pwErr = passwordStrengthError(ny);
   if (pwErr) return toast(pwErr, 't-err');
@@ -50,26 +50,26 @@ async function changePassword() {
     document.getElementById('cpOld').value = '';
     document.getElementById('cpNew').value = '';
     document.getElementById('cpNew2').value = '';
-    toast('Şifre değiştirildi', 't-ok');
+    toast(t('toast_password_changed'), 't-ok');
   } catch (e) {
-    if (e.code === 'auth/wrong-password' || e.code === 'auth/invalid-credential') toast('Mevcut şifre yanlış', 't-err');
-    else if (e.code === 'auth/weak-password') toast('Şifre çok zayıf', 't-err');
-    else if (e.code === 'auth/too-many-requests') toast('Çok fazla deneme. Sonra tekrar deneyin.', 't-err');
-    else if (e.code === 'auth/requires-recent-login') toast('Yeniden giriş yapmanız gerekiyor', 't-err');
-    else toast('Hata: ' + (e.code || 'bilinmiyor'), 't-err');
+    if (e.code === 'auth/wrong-password' || e.code === 'auth/invalid-credential') toast(t('toast_current_pw_wrong'), 't-err');
+    else if (e.code === 'auth/weak-password') toast(t('toast_password_weak'), 't-err');
+    else if (e.code === 'auth/too-many-requests') toast(t('toast_too_many_attempts'), 't-err');
+    else if (e.code === 'auth/requires-recent-login') toast(t('toast_relogin_required'), 't-err');
+    else toast(t('common_error_prefix') + (e.code || 'bilinmiyor'), 't-err');
   }
 }
 
 async function changeEmail() {
   const g = guardAction('changeEmail');
   if (!g.ok) return toast(`${g.retrySec}s bekleyin`, 't-err');
-  if (!currentUser) return toast('Oturum bulunamadı', 't-err');
+  if (!currentUser) return toast(t('toast_session_not_found'), 't-err');
   const newEmail = (document.getElementById('ceEmail').value || '').trim().toLowerCase();
   const pass = document.getElementById('cePass').value;
   const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRe.test(newEmail)) return toast('Geçerli bir e-posta girin', 't-err');
-  if (newEmail === (currentUser.email || '').toLowerCase()) return toast('Bu zaten mevcut e-postanız', 't-err');
-  if (!pass) return toast('Mevcut şifrenizi girin', 't-err');
+  if (!emailRe.test(newEmail)) return toast(t('toast_valid_email'), 't-err');
+  if (newEmail === (currentUser.email || '').toLowerCase()) return toast(t('toast_already_current_email'), 't-err');
+  if (!pass) return toast(t('toast_enter_current_pw'), 't-err');
   try {
     const cred = firebase.auth.EmailAuthProvider.credential(currentUser.email, pass);
     await currentUser.reauthenticateWithCredential(cred);
@@ -77,14 +77,14 @@ async function changeEmail() {
     closeModal();
     document.getElementById('ceEmail').value = '';
     document.getElementById('cePass').value = '';
-    toast('Doğrulama bağlantısı yeni adrese gönderildi', 't-ok');
+    toast(t('toast_verify_link_sent_new'), 't-ok');
   } catch (e) {
-    if (e.code === 'auth/wrong-password' || e.code === 'auth/invalid-credential') toast('Mevcut şifre yanlış', 't-err');
-    else if (e.code === 'auth/email-already-in-use') toast('Bu e-posta zaten kullanımda', 't-err');
-    else if (e.code === 'auth/invalid-email') toast('Geçersiz e-posta', 't-err');
-    else if (e.code === 'auth/requires-recent-login') toast('Yeniden giriş yapıp tekrar deneyin', 't-err');
-    else if (e.code === 'auth/too-many-requests') toast('Çok fazla deneme. Sonra tekrar deneyin.', 't-err');
-    else toast('Hata: ' + (e.code || 'bilinmiyor'), 't-err');
+    if (e.code === 'auth/wrong-password' || e.code === 'auth/invalid-credential') toast(t('toast_current_pw_wrong'), 't-err');
+    else if (e.code === 'auth/email-already-in-use') toast(t('toast_email_in_use'), 't-err');
+    else if (e.code === 'auth/invalid-email') toast(t('toast_invalid_email'), 't-err');
+    else if (e.code === 'auth/requires-recent-login') toast(t('toast_relogin_retry'), 't-err');
+    else if (e.code === 'auth/too-many-requests') toast(t('toast_too_many_attempts'), 't-err');
+    else toast(t('common_error_prefix') + (e.code || 'bilinmiyor'), 't-err');
   }
 }
 
@@ -93,11 +93,11 @@ async function deleteAccount() {
   if (!g.ok) return toast(`${g.retrySec}s bekleyin`, 't-err');
 
   const p = document.getElementById('delPass').value;
-  if (!p) return toast('Şifrenizi girin', 't-err');
+  if (!p) return toast(t('toast_enter_password2'), 't-err');
 
   showConfirm({
-    title: ' Hesabı kalıcı sil',
-    msg: 'Tüm verileriniz ve hesabınız kalıcı olarak silinecek. Bu işlem geri alınamaz.',
+    title: t('confirm_del_account_title'),
+    msg: t('confirm_del_account_msg'),
     danger: true,
     onOk: async () => {
       try {
@@ -106,10 +106,10 @@ async function deleteAccount() {
         await db.collection('users').doc(currentUser.uid).delete().catch(() => {});
         await db.collection('verificationCodes').doc(currentUser.uid).delete().catch(() => {});
         await currentUser.delete();
-        toast('Hesap silindi', 't-ok');
+        toast(t('toast_account_deleted'), 't-ok');
         setTimeout(() => window.location.replace('index.html'), 1000);
       } catch (e) {
-        toast('Hata: ' + (e.code || e.message), 't-err');
+        toast(t('common_error_prefix') + (e.code || e.message), 't-err');
       }
     }
   });
@@ -119,8 +119,8 @@ function clearAllData() {
   const g = guardAction('clearAll');
   if (!g.ok) return toast(`${g.retrySec}s bekleyin`, 't-err');
   showConfirm({
-    title: 'Tüm verileri sil',
-    msg: 'Tüm işlem, hedef, yatırım ve notlar kalıcı olarak silinecek. Hesabınız kalacak. Bu işlem geri alınamaz.',
+    title: t('confirm_del_alldata_title'),
+    msg: t('confirm_del_alldata_msg'),
     danger: true,
     onOk: () => {
       S.transactions = [];
@@ -133,7 +133,7 @@ function clearAllData() {
       S.uploads = [];
       save();
       renderAll();
-      toast('Tüm veriler silindi', 't-ok');
+      toast(t('toast_all_data_deleted'), 't-ok');
     }
   });
 }
@@ -164,8 +164,8 @@ function updateSupportChar(inputId, charId, max) {
 async function sendSupportEmail() {
   const subject = document.getElementById('supportSubject')?.value.trim();
   const message = document.getElementById('supportMessage')?.value.trim();
-  if (!subject) return toast('Konu alanı boş bırakılamaz', 't-err');
-  if (!message || message.length < 10) return toast('Açıklama en az 10 karakter olmalı', 't-err');
+  if (!subject) return toast(t('toast_subject_required'), 't-err');
+  if (!message || message.length < 10) return toast(t('toast_desc_min10'), 't-err');
 
   const btn = document.getElementById('supportSendBtn');
   btn.disabled = true;
@@ -188,7 +188,7 @@ async function sendSupportEmail() {
   try {
     if (typeof emailjs === 'undefined') throw new Error('emailjs_missing');
     await emailjs.send(EMAILJS_CONFIG.serviceId, EMAILJS_CONFIG.templateId, params);
-    toast('Mesajın iletildi, teşekkürler! ', 't-ok');
+    toast(t('toast_message_sent'), 't-ok');
     closeModal();
     document.getElementById('supportSubject').value = '';
     document.getElementById('supportMessage').value = '';
@@ -203,7 +203,7 @@ async function sendSupportEmail() {
     );
     const mailtoLink = `mailto:cuzzyapp@gmail.com?subject=${encodeURIComponent(`[Cüzzy] ${_supportCat}: ${subject}`)}&body=${body}`;
     window.open(mailtoLink, '_blank');
-    toast('E-posta uygulaması açılıyor…', 't-info');
+    toast(t('toast_opening_mail'), 't-info');
     closeModal();
   } finally {
     btn.disabled = false;
@@ -281,7 +281,7 @@ function surveyNext() {
   _surveySaveCurrent();
   const _q = SURVEY_QUESTIONS[_surveyIdx];
   if (_q && _surveyAnswers[_q.id].rating == null) {
-    return toast('Devam etmek için bir puan seç (1-10)', 't-err');
+    return toast(t('toast_pick_score'), 't-err');
   }
   if (_surveyIdx < SURVEY_QUESTIONS.length - 1) { _surveyIdx++; renderSurveyStep(); }
   else submitSurvey();
@@ -291,7 +291,7 @@ async function submitSurvey() {
   _surveySaveCurrent();
   const answered = SURVEY_QUESTIONS.some(q =>
     _surveyAnswers[q.id].rating != null || (_surveyAnswers[q.id].text || '').trim());
-  if (!answered) return toast('Lütfen en az bir soruyu yanıtla', 't-err');
+  if (!answered) return toast(t('toast_answer_one'), 't-err');
 
   const btn = document.getElementById('surveyNext');
   const prevTxt = btn ? btn.textContent : '';
@@ -332,13 +332,13 @@ async function submitSurvey() {
     save();
     const _sb = document.getElementById('surveyNavBtn');
     if (_sb) _sb.style.display = 'none';
-    toast('Anketin gönderildi, teşekkürler! ', 't-ok');
+    toast(t('toast_survey_sent'), 't-ok');
     closeModal();
   } catch {
     const mailtoLink = 'mailto:cuzzyapp@gmail.com?subject=' +
       encodeURIComponent('[Cüzzy Anket] Memnuniyet Anketi') + '&body=' + encodeURIComponent(body);
     window.open(mailtoLink, '_blank');
-    toast('E-posta uygulaması açılıyor…', 't-info');
+    toast(t('toast_opening_mail'), 't-info');
     closeModal();
   } finally {
     if (btn) { btn.disabled = false; btn.textContent = prevTxt; }
@@ -559,7 +559,7 @@ function _multiRowHTML(rid) {
         <button type="button" class="mr-type-btn expense active" onclick="mrSetType('${rid}','expense')">− Gider</button>
       </div>
       <input class="mr-amt" inputmode="decimal" placeholder="0,00">
-      <button type="button" class="mr-expand" id="mr-exp-${rid}" onclick="mrToggleExpand('${rid}')" aria-label="Detayları göster">›</button>
+      <button type="button" class="mr-expand" id="mr-exp-${rid}" onclick="mrToggleExpand('${rid}')" aria-label="Detayları göster"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></button>
       <button type="button" class="mr-del" onclick="removeMultiRow('${rid}')" title="Satırı sil">✕</button>
     </div>
     <div class="mrow-extra" id="mrow-extra-${rid}">
@@ -651,7 +651,7 @@ function commitMultiTx() {
     added++;
   });
 
-  if (added === 0 && dup === 0 && invalid === 0) { toast('Eklenecek işlem yok', 't-err'); return; }
+  if (added === 0 && dup === 0 && invalid === 0) { toast(t('toast_no_tx_to_add'), 't-err'); return; }
 
   if (added > 0) {
     save();

@@ -97,7 +97,7 @@ function reparseUpload() {
     credit: parseInt(document.getElementById('mapCredit').value),
     type:   parseInt(document.getElementById('mapType').value)
   };
-  toast('Eşleme güncellendi', 't-info');
+  toast(t('toast_mapping_updated'), 't-info');
 }
 
 function parseCSV(text) {
@@ -142,7 +142,7 @@ function parseCSV(text) {
 }
 
 async function parseExcel(file) {
-  if (typeof XLSX === 'undefined') { toast('Excel kütüphanesi yüklenmedi', 't-err'); return null; }
+  if (typeof XLSX === 'undefined') { toast(t('toast_excel_lib_missing'), 't-err'); return null; }
   const buf = await file.arrayBuffer();
   const wb = XLSX.read(buf, { type: 'array' });
   const sheet = wb.Sheets[wb.SheetNames[0]];
@@ -161,7 +161,7 @@ async function parseExcel(file) {
 }
 
 async function parsePDFFile(file) {
-  if (typeof pdfjsLib === 'undefined') { toast('PDF kütüphanesi yüklenmedi', 't-err'); return null; }
+  if (typeof pdfjsLib === 'undefined') { toast(t('toast_pdf_lib_not_loaded'), 't-err'); return null; }
   const buf = await file.arrayBuffer();
   const pdf = await pdfjsLib.getDocument({ data: buf }).promise;
   const allLines = [];
@@ -320,14 +320,14 @@ async function handleFileUpload(event) {
 
   // Dosya boyutu — max 5MB
   if (file.size > 5 * 1024 * 1024) {
-    toast('Dosya 5MB altında olmalı', 't-err');
+    toast(t('toast_file_max_5mb'), 't-err');
     event.target.value = '';
     return;
   }
 
   // Dosya adı uzunluğu güvenliği
   if (file.name.length > 100) {
-    toast('Dosya adı çok uzun (max 100 karakter)', 't-err');
+    toast(t('toast_filename_too_long'), 't-err');
     event.target.value = '';
     return;
   }
@@ -336,7 +336,7 @@ async function handleFileUpload(event) {
   const ext = file.name.split('.').pop().toLowerCase();
   const ALLOWED_EXT = ['csv', 'txt', 'xlsx', 'xls', 'pdf'];
   if (!ALLOWED_EXT.includes(ext)) {
-    toast('Sadece CSV, TXT, Excel veya PDF dosyaları kabul edilir', 't-err');
+    toast(t('toast_file_types'), 't-err');
     event.target.value = '';
     return;
   }
@@ -353,7 +353,7 @@ async function handleFileUpload(event) {
     console.warn('Suspicious MIME type:', file.type);
   }
 
-  toast('Dosya işleniyor...', 't-info');
+  toast(t('toast_file_processing'), 't-info');
 
   let parsed = null;
   try {
@@ -367,13 +367,13 @@ async function handleFileUpload(event) {
     }
   } catch (e) {
     console.error('Parse error:', e);
-    toast('Dosya okunamadı: ' + e.message, 't-err');
+    toast(t('toast_file_read_error') + e.message, 't-err');
     event.target.value = '';
     return;
   }
 
   if (!parsed || !parsed.rows?.length) {
-    toast('Dosyada işlem bulunamadı', 't-err');
+    toast(t('toast_no_tx_in_file'), 't-err');
     event.target.value = '';
     return;
   }
@@ -386,7 +386,7 @@ async function handleFileUpload(event) {
 }
 
 function showImportWarn() {
-  if (!uploadParsed || !uploadMapping) return toast('Önce dosya seç', 't-err');
+  if (!uploadParsed || !uploadMapping) return toast(t('toast_select_file_first'), 't-err');
   const w = document.getElementById('importWarn');
   if (w) softModalResize(() => { w.style.display = 'block'; });
 }
@@ -406,7 +406,7 @@ function confirmUploadImport() {
   const hasDebit    = m.debit  >= 0;
   const hasCredit   = m.credit >= 0;
   const hasSplit    = hasDebit || hasCredit;
-  if (!hasCombined && !hasSplit) return toast('En az bir tutar sütunu seçin', 't-err');
+  if (!hasCombined && !hasSplit) return toast(t('toast_pick_amount_col'), 't-err');
 
   let added = 0;
   let dup = 0;
@@ -509,7 +509,7 @@ function confirmUploadImport() {
   } else if (dup > 0) {
     toast(`Bu ekstre zaten yüklenmiş · ${dup} mükerrer işlem atlandı`, 't-info');
   } else {
-    toast('Hiçbir işlem okunamadı. Sütun eşlemesini kontrol edin.', 't-err');
+    toast(t('toast_no_tx_read'), 't-err');
   }
   if (added > 0) notify('general', 'Ekstre içe aktarıldı', `${added} işlem eklendi.`);
   renderAll();
@@ -547,7 +547,7 @@ function dl(content, name, type = 'text/plain') {
 function exportCSV() {
   const g = guardAction('exportData');
   if (!g.ok) return toast(`${g.retrySec}s bekleyin`, 't-err');
-  if (!S.transactions.length) return toast('İşlem yok', 't-err');
+  if (!S.transactions.length) return toast(t('toast_no_tx'), 't-err');
   const rows = [['Tarih','Tür','Açıklama','Tutar','Kategori','Not']];
   S.transactions.forEach(t => {
     rows.push([
@@ -561,7 +561,7 @@ function exportCSV() {
   });
   const csv = rows.map(r => r.map(c => `"${String(c).replace(/"/g, '""')}"`).join(',')).join('\n');
   dl('\ufeff' + csv, `cuzzy-${todayStr()}.csv`, 'text/csv;charset=utf-8');
-  toast('CSV indirildi', 't-ok');
+  toast(t('toast_csv_downloaded'), 't-ok');
 }
 
 function exportJSON() {
@@ -586,13 +586,13 @@ function exportJSON() {
     state: safeState
   };
   dl(JSON.stringify(data, null, 2), `cuzzy-yedek-${todayStr()}.json`, 'application/json');
-  toast('JSON yedek indirildi', 't-ok');
+  toast(t('toast_json_downloaded'), 't-ok');
 }
 
 function exportPDF() {
   const g = guardAction('exportData');
   if (!g.ok) return toast(`${g.retrySec}s bekleyin`, 't-err');
-  if (typeof window.jspdf === 'undefined') { toast('PDF kütüphanesi yok', 't-err'); return; }
+  if (typeof window.jspdf === 'undefined') { toast(t('toast_pdf_lib_missing'), 't-err'); return; }
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF();
 
@@ -610,7 +610,7 @@ function exportPDF() {
   doc.text('CUZZY - Finansal Rapor', 14, 18);
   doc.setFontSize(10);
   doc.setTextColor(100);
-  doc.text(`Olusturma: ${new Date().toLocaleDateString('tr-TR')} ${new Date().toLocaleTimeString('tr-TR', {hour:'2-digit', minute:'2-digit'})}`, 14, 25);
+  doc.text(`Olusturma: ${new Date().toLocaleDateString(localeCode())} ${new Date().toLocaleTimeString(localeCode(), {hour:'2-digit', minute:'2-digit'})}`, 14, 25);
   doc.text(`Kullanici: ${tr(S.profile.name)}`, 14, 30);
 
   // Özet
@@ -677,5 +677,5 @@ function exportPDF() {
   }
 
   doc.save(`cuzzy-rapor-${todayStr()}.pdf`);
-  toast('PDF indirildi', 't-ok');
+  toast(t('toast_pdf_downloaded'), 't-ok');
 }

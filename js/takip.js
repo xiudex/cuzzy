@@ -31,7 +31,7 @@ function renderCategoryDonut(targetId) {
   const c = document.getElementById(targetId || 'categoryDonut');
   if (!c) return;
   const expenses = S.transactions.filter(t => t.type === 'expense');
-  if (!expenses.length) { c.innerHTML = '<div class="empty-state" style="width:100%">Veri yok</div>'; return; }
+  if (!expenses.length) { c.innerHTML = '<div class="empty-state" style="width:100%">' + t('common_no_data') + '</div>'; return; }
   const byCat = {};
   expenses.forEach(t => { const k = t.category || 'Diğer'; byCat[k] = (byCat[k] || 0) + t.amount; });
   const entries = Object.entries(byCat).sort((a, b) => b[1] - a[1]);
@@ -179,7 +179,7 @@ function renderYearlyBars() {
   const c = document.getElementById('tkYearly');
   if (!c || typeof Chart === 'undefined') return;
   const year = new Date().getFullYear();
-  const _yl = document.getElementById('tkYearLbl'); if (_yl) _yl.textContent = year + ' yılı trendi';
+  const _yl = document.getElementById('tkYearLbl'); if (_yl) _yl.textContent = (typeof t === 'function' ? t('takip_year_trend').replace('{year}', year) : year + ' yılı trendi');
   const labels = [], inc = [], exp = [];
   for (let m = 0; m < 12; m++) {
     const first = new Date(year, m, 1), last = new Date(year, m + 1, 0);

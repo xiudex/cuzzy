@@ -59,7 +59,7 @@ function attachAuthListener() {
     } catch (err) {
       console.error('Auth bootstrap hatası:', err);
       hideSplash();
-      toast('Veriler yüklenemedi. Tekrar deneyin.', 't-err');
+      toast(t('toast_load_failed'), 't-err');
       // App içinde fallback göster
       enterApp();
     }
@@ -75,7 +75,12 @@ function enterApp() {
   renderKvkkSettings();
   // Pill konumunu hazırla
   setTimeout(updateTopnavPill, 100);
-  setTimeout(function () { try { if (typeof updateMbnPill === 'function') updateMbnPill(); } catch (e) {} }, 100);
+  var _mbnPillInit = function () { try { if (typeof updateMbnPill === 'function') updateMbnPill(); } catch (e) {} };
+  (function _mbnPillPoll(tries) {
+    _mbnPillInit();
+    if (tries < 40) requestAnimationFrame(function () { _mbnPillPoll(tries + 1); });
+  })(0);
+  window.addEventListener('load', _mbnPillInit);
   updateVerifyBadge();
 
   // Açılış akışı: önce BETA bilgilendirmesi (kalıcı kapatılmadıysa her açılışta),
@@ -205,7 +210,7 @@ function finSecShowList() {
 }
 function closeFinSec() {
   _finRestoreAll();
-  try { _hideModalInstant('modalFinSec'); } catch (e) {}
+  try { closeGenericModal('modalFinSec'); } catch (e) {}
 }
 try {
   var _finMq = window.matchMedia('(max-width: 760px)');
@@ -273,7 +278,7 @@ function openImportData() {
 }
 async function exportDataCode() {
   const pass = (document.getElementById('expPass') && document.getElementById('expPass').value) || '';
-  if (pass.length < 4) return toast('Parola en az 4 karakter olmalı', 't-err');
+  if (pass.length < 4) return toast(t('toast_password_min4'), 't-err');
   try {
     const payload = JSON.stringify({ v: 1, app: 'cuzzy', ts: Date.now(), data: normalizeState(S) });
     const code = await czEncrypt(payload, pass);
@@ -281,31 +286,31 @@ async function exportDataCode() {
     if (ta) ta.value = code;
     const wrap = document.getElementById('exportCodeWrap');
     if (wrap) wrap.style.display = 'block';
-    toast('Şifreli kod oluşturuldu — kopyala ve sakla', 't-ok');
-  } catch (e) { toast('Kod oluşturulamadı', 't-err'); }
+    toast(t('toast_encrypted_code_created'), 't-ok');
+  } catch (e) { toast(t('toast_code_gen_failed'), 't-err'); }
 }
 function copyExportCode() {
   const ta = document.getElementById('exportCodeArea');
   if (!ta || !ta.value) return;
   ta.select();
-  if (navigator.clipboard) navigator.clipboard.writeText(ta.value).then(() => toast('Kopyalandı', 't-ok')).catch(() => { try { document.execCommand('copy'); toast('Kopyalandı', 't-ok'); } catch (e) {} });
-  else { try { document.execCommand('copy'); toast('Kopyalandı', 't-ok'); } catch (e) {} }
+  if (navigator.clipboard) navigator.clipboard.writeText(ta.value).then(() => toast(t('common_copied'), 't-ok')).catch(() => { try { document.execCommand('copy'); toast(t('common_copied'), 't-ok'); } catch (e) {} });
+  else { try { document.execCommand('copy'); toast(t('common_copied'), 't-ok'); } catch (e) {} }
 }
 async function importDataCode() {
   const ta = document.getElementById('importCodeArea');
   const code = (ta && ta.value || '').trim();
-  if (!code) return toast('Önce kodu yapıştır', 't-err');
+  if (!code) return toast(t('toast_paste_code_first'), 't-err');
   const pass = (document.getElementById('impPass') && document.getElementById('impPass').value) || '';
-  if (!pass) return toast('Parolayı gir', 't-err');
+  if (!pass) return toast(t('toast_enter_password'), 't-err');
   let obj;
   try {
     const json = await czDecrypt(code, pass);
     obj = JSON.parse(json);
-  } catch (e) { return toast('Çözülemedi — parola veya kod hatalı', 't-err'); }
-  if (!obj || obj.app !== 'cuzzy' || !obj.data) return toast('Geçersiz Cüzzy kodu', 't-err');
+  } catch (e) { return toast(t('toast_decrypt_failed'), 't-err'); }
+  if (!obj || obj.app !== 'cuzzy' || !obj.data) return toast(t('toast_invalid_code'), 't-err');
   showConfirm({
-    title: 'Verileri içeri aktar',
-    msg: 'Bu hesaptaki MEVCUT tüm verilerin silinip koddaki verilerle değiştirilecek. Bu geri alınamaz. Devam edilsin mi?',
+    title: t('confirm_import_title'),
+    msg: t('confirm_import_msg'),
     danger: true,
     onOk: () => {
       try {
@@ -315,8 +320,8 @@ async function importDataCode() {
         try { renderAll(); } catch (e) {}
         if (ta) ta.value = '';
         closeModal();
-        toast('Veriler eksiksiz içeri aktarıldı', 't-ok');
-      } catch (e) { toast('İçeri aktarma hatası', 't-err'); }
+        toast(t('toast_import_complete'), 't-ok');
+      } catch (e) { toast(t('toast_import_error'), 't-err'); }
     }
   });
 }
@@ -340,7 +345,7 @@ function startInactivityTimer() {
   const mins = parseInt(S.autoLogout) || 0;
   if (!mins || !currentUser) return;
   _inactivityTimer = setTimeout(() => {
-    try { toast('Hareketsizlik nedeniyle güvenli çıkış yapıldı', 't-info'); } catch (e) {}
+    try { toast(t('toast_auto_logout'), 't-info'); } catch (e) {}
     logOut();
   }, mins * 60 * 1000);
   bindInactivityListeners();
@@ -425,11 +430,11 @@ async function _recheckEmailVerified() {
       try { await db.collection('users').doc(currentUser.uid).set({ email: currentUser.email }, { merge: true }); } catch (e) {}
       try { renderProfileModal(); } catch (e) {}
       try { applySettings(); } catch (e) {}
-      try { toast('E-posta güncellendi', 't-ok'); } catch (e) {}
+      try { toast(t('toast_email_updated'), 't-ok'); } catch (e) {}
     }
     if (currentUser.emailVerified && !was) {
       if (_verifyPollTimer) { clearInterval(_verifyPollTimer); _verifyPollTimer = null; }
-      try { toast('E-posta doğrulandı', 't-ok'); } catch (e) {}
+      try { toast(t('toast_email_verified'), 't-ok'); } catch (e) {}
     }
   } catch (e) {}
 }
@@ -444,12 +449,12 @@ function _startVerifyPolling() {
 async function resendEmailVerification() {
   if (!currentUser) return;
   try { await currentUser.reload(); } catch (e) {}
-  if (currentUser.emailVerified) { updateVerifyBadge(); return toast('E-postan zaten doğrulanmış', 't-ok'); }
+  if (currentUser.emailVerified) { updateVerifyBadge(); return toast(t('toast_email_already_verified'), 't-ok'); }
   const g = guardAction('resendVerify');
   if (!g.ok) return toast(`${g.retrySec}s sonra tekrar dene`, 't-err');
   try {
     await currentUser.sendEmailVerification();
-    toast('Doğrulama e-postası gönderildi. Gelen kutunu (ve spam) kontrol et.', 't-ok');
+    toast(t('toast_verify_email_sent'), 't-ok');
   } catch (e) {
     const code = (e && e.code) || '';
     toast(code === 'auth/too-many-requests' ? 'Çok fazla istek, biraz sonra dene' : 'Gönderilemedi', 't-err');
@@ -524,7 +529,7 @@ function formatWhileTyping(el) {
   updateNumWordHint(el);
 }
 
-const NUM_WORD_IDS = ['txAmt','recAmt','debtAmt','subAmt','setBudget','qAmt','qmqaAmt','goalTarget','goalCurrent','invBuyPrice','invManualAmount','baseBalanceInput'];
+const NUM_WORD_IDS = ['txAmt','recAmt','mRecAmt','debtAmt','subAmt','setBudget','qAmt','qmqaAmt','goalTarget','goalCurrent','invBuyPrice','invManualAmount','baseBalanceInput'];
 
 function initNumWordHints() {
   for (const id of NUM_WORD_IDS) {
@@ -553,7 +558,7 @@ function selectPlan(plan) {
   S.adPlan = plan;
   save();
   applyPlanRestrictions();
-  toast('Paket güncellendi', 't-info');
+  toast(t('toast_plan_updated'), 't-info');
 }
 
 function applyPlanRestrictions() {

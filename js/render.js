@@ -59,7 +59,7 @@ function updateBudgetBanner() {
   if (usage >= 100) {
     banner.classList.add('danger');
     if (S.budgetAlertSentMonth !== `${monthKey}-d` && S.notifications.expense) {
-      toast('Aylık bütçe aşıldı!', 't-err');
+      toast(t('toast_budget_exceeded'), 't-err');
       S.budgetAlertSentMonth = `${monthKey}-d`;
       save();
     }
@@ -79,23 +79,93 @@ function mSetRecType(t) {
   const inc = document.getElementById('mRecTypeIncome'), exp = document.getElementById('mRecTypeExpense');
   if (inc) inc.classList.toggle('active', mRecType === 'income');
   if (exp) exp.classList.toggle('active', mRecType === 'expense');
+  const sub = document.querySelector('#modalRecurring .mrec-submit');
+  if (sub) {
+    sub.classList.toggle('income', mRecType === 'income');
+    sub.classList.toggle('expense', mRecType === 'expense');
+    sub.textContent = mRecType === 'income' ? t('rec_add_income') : t('rec_add_expense');
+  }
 }
 function openRecurringModal() {
   mSetRecType('income');
   ['mRecDesc','mRecAmt'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
   const day = document.getElementById('mRecDay'); if (day) day.value = '1';
+  const dur = document.getElementById('mRecDur'); if (dur) { dur.value = t('rec_indefinite'); dur.dataset.months = '0'; dur.readOnly = true; dur.placeholder = ''; }
   showModal('modalRecurring');
 }
 function addRecurringQuick() {
   const desc = validateString(document.getElementById('mRecDesc').value, 50);
   const amt = validateAmount(document.getElementById('mRecAmt').value);
   const day = Math.min(31, Math.max(1, parseInt(document.getElementById('mRecDay').value) || 1));
-  if (!desc || !amt) return toast('Açıklama ve tutar gerekli', 't-err');
-  S.recurring.push({ id: uid(), type: mRecType, desc, amount: amt, day });
+  const durEl = document.getElementById('mRecDur');
+  const months = Math.min(99, Math.max(0, parseInt(durEl && durEl.dataset.months, 10) || 0));
+  if (!desc || !amt) return toast(t('toast_desc_amount_required'), 't-err');
+  const now = new Date();
+  const startMonth = now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0');
+  S.recurring.push({ id: uid(), type: mRecType, desc, amount: amt, day, months, startMonth });
   save();
   renderAll();
-  closeModal();
-  toast('Tekrarlayan eklendi', 't-ok');
+  closeGenericModal('modalRecurring');
+  toast(t('toast_recurring_added'), 't-ok');
+}
+
+let mDebtType = 'Kredi Kartı';
+function mDebtSetType(el) {
+  mDebtType = el.dataset.type || 'Kredi Kartı';
+  document.querySelectorAll('#mDebtTypeChips .mdebt-type-btn').forEach(b => b.classList.toggle('active', b === el));
+}
+function openDebtAddModal() {
+  mDebtType = 'Kredi Kartı';
+  document.querySelectorAll('#mDebtTypeChips .mdebt-type-btn').forEach(b => b.classList.toggle('active', b.dataset.type === 'Kredi Kartı'));
+  ['mDebtName', 'mDebtAmt', 'mDebtDue', 'mDebtInst'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+  showModal('modalDebtAdd');
+}
+function addDebtQuick() {
+  const name = validateString(document.getElementById('mDebtName').value, 60);
+  const amount = validateAmount(document.getElementById('mDebtAmt').value);
+  const dueDate = validateString(document.getElementById('mDebtDue').value, 12);
+  const installments = Math.min(99, Math.max(0, Math.trunc(Number(document.getElementById('mDebtInst').value) || 0)));
+  if (!name || !amount) return toast(t('toast_title_amount_required'), 't-err');
+  S.debts.push({ id: uid(), name, amount, dueDate, type: mDebtType, paid: false, installments, paidCount: 0, ts: Date.now() });
+  save();
+  notify(mDebtType === 'Alacak' ? 'income' : 'expense', mDebtType === 'Alacak' ? 'Alacak eklendi' : 'Borç eklendi', '₺' + amount.toLocaleString('tr-TR') + ' · ' + name);
+  renderAll();
+  closeGenericModal('modalDebtAdd');
+  toast(t('toast_debt_added'), 't-ok');
+}
+
+function openSubAddModal() {
+  ['mSubName', 'mSubAmt', 'mSubDay'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+  showModal('modalSubAdd');
+}
+function addSubscriptionQuick() {
+  const name = validateString(document.getElementById('mSubName').value, 60);
+  const amount = validateAmount(document.getElementById('mSubAmt').value);
+  const day = Math.min(31, Math.max(1, parseInt(document.getElementById('mSubDay').value) || 1));
+  if (!name || !amount) return toast(t('toast_service_amount_required'), 't-err');
+  S.subscriptions.push({ id: uid(), name, amount, day, ts: Date.now() });
+  save();
+  renderAll();
+  closeGenericModal('modalSubAdd');
+  toast(t('toast_sub_added'), 't-ok');
+}
+
+function openGoalAddModal() {
+  ['mGoalName', 'mGoalTarget'].forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+  const cur = document.getElementById('mGoalCurrent'); if (cur) cur.value = '0';
+  showModal('modalGoalAdd');
+}
+function addGoalQuick() {
+  const name = validateString(document.getElementById('mGoalName').value, 50);
+  const target = validateAmount(document.getElementById('mGoalTarget').value);
+  const current = Math.max(0, parseInputAmt(document.getElementById('mGoalCurrent').value) || 0);
+  if (!name || !target) return toast(t('toast_name_target_required'), 't-err');
+  S.goals.push({ id: uid(), name, target, current, date: '' });
+  save();
+  notify('goals', 'Hedef eklendi', name + ' · ₺' + target.toLocaleString('tr-TR'));
+  renderAll();
+  closeGenericModal('modalGoalAdd');
+  toast(t('toast_goal_added'), 't-ok');
 }
 
 let allTxType = 'all';
@@ -104,28 +174,28 @@ function openAllTx() {
   allTxType = 'all'; allTxRange = 'all';
   const fromEl = document.getElementById('allTxFrom'), toEl = document.getElementById('allTxTo');
   if (fromEl) fromEl.value = ''; if (toEl) toEl.value = '';
-  document.querySelectorAll('#allTxFilters .dtf-btn[data-f]').forEach(b => b.classList.toggle('active', b.dataset.f === 'all'));
-  document.querySelectorAll('#allTxFilters .dtf-btn[data-r]').forEach(b => b.classList.toggle('active', b.dataset.r === 'all'));
+  document.querySelectorAll('#allTxFilters .atx-seg[data-f]').forEach(b => b.classList.toggle('active', b.dataset.f === 'all'));
+  document.querySelectorAll('#allTxFilters .atx-seg[data-r]').forEach(b => b.classList.toggle('active', b.dataset.r === 'all'));
   renderAllTxList();
   showModal('modalAllTx');
 }
 function setAllTxFilter(f) {
   allTxType = f;
-  document.querySelectorAll('#allTxFilters .dtf-btn[data-f]').forEach(b => b.classList.toggle('active', b.dataset.f === f));
+  document.querySelectorAll('#allTxFilters .atx-seg[data-f]').forEach(b => b.classList.toggle('active', b.dataset.f === f));
   renderAllTxList();
 }
 function setAllTxRange(r) {
   allTxRange = r;
   const fromEl = document.getElementById('allTxFrom'), toEl = document.getElementById('allTxTo');
   if (fromEl) fromEl.value = ''; if (toEl) toEl.value = '';
-  document.querySelectorAll('#allTxFilters .dtf-btn[data-r]').forEach(b => b.classList.toggle('active', b.dataset.r === r));
+  document.querySelectorAll('#allTxFilters .atx-seg[data-r]').forEach(b => b.classList.toggle('active', b.dataset.r === r));
   renderAllTxList();
 }
 function setAllTxCustomDate() {
   const fromEl = document.getElementById('allTxFrom'), toEl = document.getElementById('allTxTo');
   if (fromEl && fromEl.value || toEl && toEl.value) {
     allTxRange = 'custom';
-    document.querySelectorAll('#allTxFilters .dtf-btn[data-r]').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('#allTxFilters .atx-seg[data-r]').forEach(b => b.classList.remove('active'));
   }
   renderAllTxList();
 }
@@ -154,8 +224,15 @@ function renderAllTxList() {
 
 function onStickyInput(el) {
   S.stickyNote = (el.value || '').slice(0, 2000);
+  const cnt = document.getElementById('mnoteCount');
+  if (cnt) cnt.textContent = S.stickyNote.length + '/2000';
+  const saved = document.getElementById('mnoteSaved');
+  if (saved) saved.classList.remove('show');
   clearTimeout(window._snTimer);
-  window._snTimer = setTimeout(() => { try { save(); } catch (e) {} }, 600);
+  window._snTimer = setTimeout(() => {
+    try { save(); } catch (e) {}
+    if (saved) { saved.classList.add('show'); clearTimeout(window._snSavedTimer); window._snSavedTimer = setTimeout(() => saved.classList.remove('show'), 1400); }
+  }, 600);
 }
 
 function renderAll() {
@@ -184,6 +261,8 @@ function renderAll() {
     '<div class="acct-row"><span>Aktif hedef</span><strong>'+((S.goals&&S.goals.length)||0)+'</strong></div>';
   const _sn = document.getElementById('stickyNote');
   if (_sn && document.activeElement !== _sn) _sn.value = S.stickyNote || '';
+  const _snCnt = document.getElementById('mnoteCount');
+  if (_snCnt) _snCnt.textContent = (S.stickyNote || '').length + '/2000';
   try { if (typeof isMobileView === 'function' && isMobileView() && typeof renderCategoryDonut === 'function') renderCategoryDonut('panelCategoryDonut'); } catch (e) {}
   setText('kpiExpense', fmt(monthExp));
   setText('kpiWeekIncome', fmt(weekInc));
@@ -242,7 +321,7 @@ function renderRpRecentTx() {
       <div class="rp-mini-tx-icon ${t.type}">${t.type === 'income' ? '↗' : '↘'}</div>
       <div class="rp-mini-tx-body">
         <div class="rp-mini-tx-name">${safeDesc}</div>
-        <div class="rp-mini-tx-date">${new Date(t.date).toLocaleDateString('tr-TR', {day:'2-digit',month:'short'})}</div>
+        <div class="rp-mini-tx-date">${new Date(t.date).toLocaleDateString(localeCode(), {day:'2-digit',month:'short'})}</div>
       </div>
       <div class="rp-mini-tx-amt ${t.type}">${sign}${fmt(t.amount)}</div>
     </div>`;
@@ -330,13 +409,13 @@ function addToWatchlist() {
   const type = document.getElementById('wlType').value;
   const symbol = document.getElementById('wlSymbol').value.toUpperCase();
   if (!symbol) return;
-  if (S.watchlist.some(w => w.type === type && w.symbol === symbol)) return toast('Zaten listede', 't-info');
-  if (S.watchlist.length >= 18) return toast('En fazla 18 takip ekleyebilirsin', 't-err');
+  if (S.watchlist.some(w => w.type === type && w.symbol === symbol)) return toast(t('toast_already_listed'), 't-info');
+  if (S.watchlist.length >= 18) return toast(t('toast_max_18_watch'), 't-err');
   S.watchlist.push({ type, symbol });
   save();
   renderTicker();
   renderWatchlistCurrent();
-  toast('Takibe eklendi', 't-ok');
+  toast(t('toast_added_to_watch'), 't-ok');
 }
 
 function removeFromWatchlist(idx) {
@@ -443,7 +522,7 @@ function refreshApp() {
   if (currentUser) {
     // Manuel re-render + manuel canlı veri çekme
     renderAll();
-    toast('Yenilendi', 't-ok'); // anında geri bildirim — market verisini beklemez
+    toast(t('common_renewed'), 't-ok'); // anında geri bildirim — market verisini beklemez
     if (typeof startLiveMarkets === 'function') {
       // Marketleri arka planda zorla yenile
       Promise.allSettled([fetchForex(), fetchCrypto(), fetchBIST()]).then(() => {
@@ -462,7 +541,7 @@ function refreshApp() {
 /* ─── Panel basligi tarihi + tutar sansuru ─── */
 function renderPanelDate() {
   var el = document.getElementById('panelDate');
-  if (el) el.textContent = new Date().toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', weekday: 'long' });
+  if (el) el.textContent = new Date().toLocaleDateString(localeCode(), { day: 'numeric', month: 'long', weekday: 'long' });
 }
 var _censorOn = false;
 function _maskNum(s) { return String(s).replace(/[0-9]/g, '\u2022'); }

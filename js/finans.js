@@ -13,7 +13,7 @@ function addTx() {
   const date = validateDate(document.getElementById('txDate').value || todayStr());
   const note = validateString(document.getElementById('txNote').value, 200);
 
-  if (!desc || !amt) return toast('Açıklama ve tutar gerekli', 't-err');
+  if (!desc || !amt) return toast(t('toast_desc_amount_required'), 't-err');
 
   S.transactions.push({
     id: uid(), type: currentTxType, desc, amount: amt,
@@ -36,52 +36,6 @@ function addTx() {
 
 let qmQaType = 'income';
 
-/* ── Hızlı işlem: tutamacı tutup aşağı çekince kapat ── */
-(function () {
-  var handle, box, dragging = false, startY = 0, curY = 0, moved = false;
-  function onMove(e) {
-    if (!dragging) return;
-    var dy = e.clientY - startY;
-    if (!moved && Math.abs(dy) > 6) moved = true;
-    curY = Math.max(0, dy * (dy > 0 ? 1 : 0.25));
-    if (moved) { e.preventDefault(); box.style.transition = 'none'; box.style.transform = 'translateY(' + curY + 'px)'; }
-  }
-  function onUp() {
-    if (!dragging) return;
-    dragging = false;
-    document.removeEventListener('pointermove', onMove);
-    document.removeEventListener('pointerup', onUp);
-    document.removeEventListener('pointercancel', onUp);
-    box.style.transition = 'transform 0.28s cubic-bezier(0.4, 0, 0.2, 1)';
-    if (curY > 90) { closeQuickAddMobile(); }
-    else { box.style.transform = ''; }
-    moved = false;
-  }
-  handle = document.getElementById('qmqaHandle');
-  box = handle && handle.closest('.modal-box');
-  if (handle && box) {
-    handle.addEventListener('pointerdown', function (e) {
-      dragging = true; startY = e.clientY; curY = 0; moved = false;
-      document.addEventListener('pointermove', onMove, { passive: false });
-      document.addEventListener('pointerup', onUp);
-      document.addEventListener('pointercancel', onUp);
-    });
-  }
-})();
-function closeQuickAddMobile() {
-  const m = document.getElementById('modalQuickAdd');
-  const box = m && m.querySelector('.modal-box');
-  if (!m || !box || !m.classList.contains('show')) return;
-  box.style.transition = 'transform 0.32s cubic-bezier(0.4, 0, 0.2, 1)';
-  box.style.transform = 'translateY(100%)';
-  m.style.transition = 'opacity 0.3s ease';
-  m.style.opacity = '0';
-  setTimeout(() => {
-    m.classList.remove('show');
-    box.style.transition = ''; box.style.transform = '';
-    m.style.transition = ''; m.style.opacity = '';
-  }, 300);
-}
 function qmQaSetType(type) {
   qmQaType = type;
   const bI = document.getElementById('qmqaTypeIncome'), bE = document.getElementById('qmqaTypeExpense');
@@ -100,7 +54,7 @@ function qmQaSetCat(el) {
 }
 function quickAddMobile() {
   const amt = validateAmount(document.getElementById('qmqaAmt').value);
-  if (!amt) return toast('Tutar gerekli', 't-err');
+  if (!amt) return toast(t('toast_amount_required'), 't-err');
   const catEl = document.querySelector('#qmqaCats .qm-qa-chip.active');
   const cat = (catEl && catEl.dataset.cat) || 'Diğer';
   const desc = validateString(document.getElementById('qmqaDesc').value, 50) || cat;
@@ -124,14 +78,14 @@ function quickAddMobile() {
   const defCat = document.querySelector('#qmqaCats .qm-qa-chip[data-cat="Diğer"]'); if (defCat) defCat.classList.add('active');
   renderAll();
   try { haptic('success'); } catch (e) {}
-  closeQuickAddMobile();
+  closeGenericModal('modalQuickAdd');
 }
 
 function quickAdd(type) {
   const amt = validateAmount(document.getElementById('qAmt').value);
   const cat = document.getElementById('qCat')?.value || 'Diğer';
   const desc = validateString(document.getElementById('qDesc').value, 50) || cat;
-  if (!amt) return toast('Tutar gerekli', 't-err');
+  if (!amt) return toast(t('toast_amount_required'), 't-err');
   const dateVal = validateDate(document.getElementById('qDate')?.value || todayStr());
   S.transactions.push({
     id: uid(), type, desc, amount: amt, category: cat,
@@ -142,7 +96,7 @@ function quickAdd(type) {
     type === 'income' ? 'Hızlı Gelir eklendi' : 'Hızlı Gider eklendi',
     '₺' + amt.toLocaleString('tr-TR') + ' · ' + desc
   );
-  toast('Eklendi', 't-ok');
+  toast(t('common_added'), 't-ok');
   document.getElementById('qAmt').value = '';
   updateNumWordHint(document.getElementById('qAmt'));
   document.getElementById('qDesc').value = '';
@@ -153,11 +107,19 @@ function quickAdd(type) {
 
 function deleteTx(id) {
   const t = S.transactions.find(x => x.id === id);
-  S.transactions = S.transactions.filter(t => t.id !== id);
-  save();
-  if (t) notify(t.type, t.type === 'income' ? 'Gelir silindi' : 'Gider silindi',
-                '₺' + Number(t.amount).toLocaleString('tr-TR') + ' · ' + (t.desc || ''));
-  renderAll();
+  showConfirm({
+    title: t('confirm_del_tx_title'),
+    msg: t('confirm_del_tx_msg'),
+    danger: true,
+    onOk: () => {
+      S.transactions = S.transactions.filter(x => x.id !== id);
+      save();
+      if (t) notify(t.type, t.type === 'income' ? 'Gelir silindi' : 'Gider silindi',
+                    '₺' + Number(t.amount).toLocaleString('tr-TR') + ' · ' + (t.desc || ''));
+      renderAll();
+      toast(t('common_deleted'), 't-ok');
+    }
+  });
 }
 
 function setTxFilter(f, btn) {
@@ -181,16 +143,16 @@ function renderDashRecent() {
 function txItemHTML(t) {
   const safeDesc = sanitize(t.desc);
   const safeCat = sanitize(t.category);
-  const dateStr = new Date(t.date).toLocaleDateString('tr-TR');
+  const dateStr = new Date(t.date).toLocaleDateString(localeCode());
   const safeId = t.id.replace(/"/g, '&quot;');
-  const sign = t.type === 'income' ? '+' : '-';
   return `<div class="tx-item ${t.type}">
     <div class="tx-icon ${t.type}">${t.type === 'income' ? '↗' : '↘'}</div>
     <div class="tx-body">
       <div class="tx-name">${safeDesc}</div>
-      <div class="tx-meta">${dateStr} · ${safeCat}</div>
+      <div class="tx-cat">${safeCat}</div>
+      <div class="tx-amt ${t.type}">${fmt(t.amount)}</div>
     </div>
-    <div class="tx-amt ${t.type}">${sign}${fmt(t.amount)}</div>
+    <div class="tx-date">${dateStr}</div>
     <button class="tx-edit" onclick="showEditTx('${safeId}')" title="Düzenle">✎</button>
     <button class="tx-del" onclick="deleteTx('${safeId}')" title="Sil">✕</button>
   </div>`;
@@ -217,7 +179,7 @@ function renderTxList() {
     if (d >= _yd)  return 'Dün';
     if (d >= _wk)  return 'Bu hafta';
     if (d >= _mo)  return 'Bu ay';
-    return new Date(d + 'T12:00:00').toLocaleDateString('tr-TR', { year: 'numeric', month: 'long' });
+    return new Date(d + 'T12:00:00').toLocaleDateString(localeCode(), { year: 'numeric', month: 'long' });
   };
 
   let html = '', lastG = null;
@@ -242,11 +204,11 @@ function addRecurring() {
   const desc = validateString(document.getElementById('recDesc').value, 50);
   const amt = validateAmount(document.getElementById('recAmt').value);
   const day = Math.min(31, Math.max(1, parseInt(document.getElementById('recDay').value) || 1));
-  if (!desc || !amt) return toast('Açıklama ve tutar gerekli', 't-err');
+  if (!desc || !amt) return toast(t('toast_desc_amount_required'), 't-err');
 
   S.recurring.push({ id: uid(), type: currentRecType, desc, amount: amt, day });
   save();
-  toast('Tekrarlayan eklendi', 't-ok');
+  toast(t('toast_recurring_added'), 't-ok');
   document.getElementById('recDesc').value = '';
   document.getElementById('recAmt').value = '';
   const _rd = document.getElementById('recDay'); if (_rd) _rd.value = '';
@@ -254,9 +216,17 @@ function addRecurring() {
 }
 
 function deleteRecurring(id) {
-  S.recurring = S.recurring.filter(r => r.id !== id);
-  save();
-  renderAll();
+  showConfirm({
+    title: t('confirm_del_rec_title'),
+    msg: t('confirm_del_rec_msg'),
+    danger: true,
+    onOk: () => {
+      S.recurring = S.recurring.filter(r => r.id !== id);
+      save();
+      renderAll();
+      toast(t('toast_recurring_deleted'), 't-ok');
+    }
+  });
 }
 
 
@@ -274,7 +244,7 @@ function setEditTxType(type) {
 
 function showEditTx(id) {
   const t = S.transactions.find(x => x.id === id);
-  if (!t) return toast('İşlem bulunamadı', 't-err');
+  if (!t) return toast(t('toast_tx_not_found'), 't-err');
   _editTxType = t.type;
   document.getElementById('editTxId').value = t.id;
   document.getElementById('editTxDesc').value = t.desc;
@@ -289,7 +259,7 @@ function showEditTx(id) {
 function saveEditTx() {
   const id = document.getElementById('editTxId').value;
   const idx = S.transactions.findIndex(x => x.id === id);
-  if (idx === -1) return toast('İşlem bulunamadı', 't-err');
+  if (idx === -1) return toast(t('toast_tx_not_found'), 't-err');
 
   const desc = validateString(document.getElementById('editTxDesc').value, 50);
   const amt  = validateAmount(document.getElementById('editTxAmt').value);
@@ -297,12 +267,12 @@ function saveEditTx() {
   const date = validateDate(document.getElementById('editTxDate').value || todayStr());
   const note = validateString(document.getElementById('editTxNote').value, 200);
 
-  if (!desc || !amt) return toast('Açıklama ve tutar gerekli', 't-err');
+  if (!desc || !amt) return toast(t('toast_desc_amount_required'), 't-err');
 
   S.transactions[idx] = { ...S.transactions[idx], type: _editTxType, desc, amount: amt, category: cat, date, note };
   save();
   closeModal();
-  toast('İşlem güncellendi', 't-ok');
+  toast(t('toast_tx_updated'), 't-ok');
   renderAll();
 }
 
@@ -324,6 +294,11 @@ function applyRecurringForMonth() {
 
   // — Tekrarlayan işlemler —
   for (const r of S.recurring) {
+    if (r.months > 0 && r.startMonth) {
+      const [sy, sm] = r.startMonth.split('-').map(Number);
+      const monthsPassed = (year - sy) * 12 + (now.getMonth() + 1 - sm);
+      if (monthsPassed >= r.months) continue;
+    }
     const _rLastDay = new Date(year, now.getMonth() + 1, 0).getDate();
     const _rChargeDay = Math.min(r.day, _rLastDay);
     if (_rChargeDay > today) continue;
@@ -391,12 +366,12 @@ function renderRecurring() {
     return `<div class="planner-item">
       <div>
         <div class="planner-item-title">${safeDesc}</div>
-        <div class="planner-item-meta">Her ayın ${r.day}. günü · ${r.type === 'income' ? 'Gelir' : 'Gider'}</div>
+        <div class="planner-item-meta">Her ayın ${r.day}. günü · ${r.type === 'income' ? 'Gelir' : 'Gider'}${r.months > 0 ? ' · ' + r.months + ' ay' : ''}</div>
       </div>
       <div>
         <div class="planner-item-amount" style="color:${color}">${sign}${fmt(r.amount)}</div>
         <div class="planner-item-actions">
-          <button class="btn btn-sm btn-danger" onclick="deleteRecurring('${safeId}')">Sil</button>
+          <button class="mrec-del" onclick="deleteRecurring('${safeId}')" aria-label="Sil">✕</button>
         </div>
       </div>
     </div>`;
@@ -410,15 +385,17 @@ function addDebt() {
   const amount = validateAmount(document.getElementById('debtAmt').value);
   const dueDate = validateString(document.getElementById('debtDue').value, 12);
   const type = validateString(document.getElementById('debtType').value, 30) || 'Borç';
-  if (!name || !amount) return toast('Başlık ve tutar gerekli', 't-err');
-  S.debts.push({ id: uid(), name, amount, dueDate, type, paid: false, ts: Date.now() });
+  const installments = Math.min(99, Math.max(0, Math.trunc(Number(document.getElementById('debtInst').value) || 0)));
+  if (!name || !amount) return toast(t('toast_title_amount_required'), 't-err');
+  S.debts.push({ id: uid(), name, amount, dueDate, type, paid: false, installments, paidCount: 0, ts: Date.now() });
   save();
   notify(type === 'Alacak' ? 'income' : 'expense', type === 'Alacak' ? 'Alacak eklendi' : 'Borç eklendi', '₺' + amount.toLocaleString('tr-TR') + ' · ' + name);
-  toast('Borç eklendi', 't-ok');
+  toast(t('toast_debt_added'), 't-ok');
   document.getElementById('debtName').value = '';
   document.getElementById('debtAmt').value = '';
   updateNumWordHint(document.getElementById('debtAmt'));
   document.getElementById('debtDue').value = '';
+  document.getElementById('debtInst').value = '';
   renderAll();
 }
 
@@ -430,11 +407,29 @@ function toggleDebtPaid(id) {
   renderAll();
 }
 
+function advanceDebtInstallment(id) {
+  const d = S.debts.find(x => x.id === id);
+  if (!d || !d.installments) return;
+  if (d.paidCount < d.installments) d.paidCount++;
+  if (d.paidCount >= d.installments) d.paid = true;
+  save();
+  renderAll();
+}
+
+function undoDebtInstallment(id) {
+  const d = S.debts.find(x => x.id === id);
+  if (!d || !d.installments) return;
+  if (d.paidCount > 0) d.paidCount--;
+  d.paid = false;
+  save();
+  renderAll();
+}
+
 function deleteDebt(id) {
   S.debts = S.debts.filter(d => d.id !== id);
   save();
   renderAll();
-  toast('Silindi', 't-ok');
+  toast(t('common_deleted'), 't-ok');
 }
 
 function renderDebts() {
@@ -445,25 +440,50 @@ function renderDebts() {
     c.innerHTML = '<div class="empty-state">Borç yok</div>';
     return;
   }
-  c.innerHTML = debts.map(d => {
+  const todayKey = new Date().toISOString().split('T')[0];
+  c.innerHTML = '<div class="debt-list">' + debts.map(d => {
     const safeName = sanitize(d.name);
     const safeType = sanitize(d.type);
     const safeId = d.id.replace(/"/g, '&quot;');
-    const due = d.dueDate ? new Date(d.dueDate).toLocaleDateString('tr-TR') : 'Tarih yok';
-    return `<div class="planner-item" style="opacity:${d.paid ? '.65' : '1'}">
-      <div>
-        <div class="planner-item-title">${safeName}</div>
-        <div class="planner-item-meta">${safeType} · Son ödeme: ${due}${d.paid ? ' · Ödendi' : ''}</div>
-      </div>
-      <div>
-        <div class="planner-item-amount" style="color:${d.paid ? 'var(--text-muted)' : 'var(--expense)'}">${fmt(d.amount)}</div>
+    const due = d.dueDate ? new Date(d.dueDate).toLocaleDateString(localeCode()) : t('common_no_date');
+    const isInstallment = d.installments > 0;
+    const overdue = !d.paid && d.dueDate && d.dueDate < todayKey;
+
+    if (isInstallment) {
+      const pct = Math.min(100, Math.round((d.paidCount / d.installments) * 100));
+      const remaining = Math.max(0, d.installments - d.paidCount) * d.amount;
+      const done = d.paidCount >= d.installments;
+      return `<div class="planner-item debt-item${done ? ' debt-done' : ''}">
+        <div class="debt-item-top">
+          <div>
+            <div class="planner-item-title">${safeName}</div>
+            <div class="planner-item-meta">${safeType} · ${d.paidCount}/${d.installments} taksit${overdue ? ' · <span class="debt-overdue">Gecikti</span>' : done ? ' · Tamamlandı' : ' · Son ödeme: ' + due}</div>
+          </div>
+          <div class="planner-item-amount" style="color:${done ? 'var(--text-muted)' : overdue ? 'var(--warning)' : 'var(--expense)'}">${done ? fmt(d.amount * d.installments) : fmt(remaining)}</div>
+        </div>
+        <div class="debt-progress-track"><div class="debt-progress-fill" style="width:${pct}%"></div></div>
         <div class="planner-item-actions">
-          <button class="btn btn-sm" onclick="toggleDebtPaid('${safeId}')">${d.paid ? 'Geri aç' : 'Ödendi'}</button>
+          ${!done ? `<button class="btn btn-sm btn-gold" onclick="advanceDebtInstallment('${safeId}')">Taksit öde</button>` : ''}
+          ${d.paidCount > 0 ? `<button class="btn btn-sm" onclick="undoDebtInstallment('${safeId}')">Geri al</button>` : ''}
           <button class="btn btn-sm btn-danger" onclick="deleteDebt('${safeId}')">Sil</button>
         </div>
+      </div>`;
+    }
+
+    return `<div class="planner-item debt-item" style="opacity:${d.paid ? '.65' : '1'}">
+      <div class="debt-item-top">
+        <div>
+          <div class="planner-item-title">${safeName}</div>
+          <div class="planner-item-meta">${safeType} · ${overdue ? '<span class="debt-overdue">Gecikti</span> · ' : ''}Son ödeme: ${due}${d.paid ? ' · Ödendi' : ''}</div>
+        </div>
+        <div class="planner-item-amount" style="color:${d.paid ? 'var(--text-muted)' : overdue ? 'var(--warning)' : 'var(--expense)'}">${fmt(d.amount)}</div>
+      </div>
+      <div class="planner-item-actions">
+        <button class="btn btn-sm" onclick="toggleDebtPaid('${safeId}')">${d.paid ? 'Geri aç' : 'Ödendi'}</button>
+        <button class="btn btn-sm btn-danger" onclick="deleteDebt('${safeId}')">Sil</button>
       </div>
     </div>`;
-  }).join('');
+  }).join('') + '</div>';
 }
 
 /* ═══ 14. SUBSCRIPTIONS ═══ */
@@ -490,6 +510,64 @@ function toggleDayPicker(e, inputId, popId) {
   pop.classList.add('open');
 }
 function toggleSubDayPicker(e) { toggleDayPicker(e, 'subDay', 'subDayPop'); }
+function mRecDurInputClick(e) {
+  const inp = document.getElementById('mRecDur');
+  if (inp && inp.readOnly) toggleMonthDurPicker(e);
+}
+function toggleMonthDurPicker(e) {
+  if (e) e.stopPropagation();
+  const pop = document.getElementById('mRecDurPop');
+  if (!pop) return;
+  document.querySelectorAll('.subday-pop.open').forEach(p => { if (p !== pop) p.classList.remove('open'); });
+  if (pop.classList.contains('open')) { pop.classList.remove('open'); return; }
+  _renderRecDurGrid(pop);
+  pop.classList.add('open');
+}
+function _renderRecDurGrid(pop) {
+  pop.innerHTML = '';
+  const isEn = (typeof S !== 'undefined' && S.language === 'en');
+  const indefiniteLabel = t('rec_indefinite');
+  const opts = [[indefiniteLabel, 0]];
+  for (let m = 1; m <= 12; m++) opts.push([isEn ? (m + (m === 1 ? ' month' : ' months')) : (m + ' ay'), m]);
+  opts.forEach(([label, val]) => {
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.textContent = label;
+    b.style.gridColumn = label === indefiniteLabel ? '1 / -1' : '';
+    b.addEventListener('click', (ev) => {
+      ev.stopPropagation();
+      const inp = document.getElementById('mRecDur');
+      if (inp) { inp.readOnly = true; inp.value = label; inp.dataset.months = val; }
+      pop.classList.remove('open');
+    });
+    pop.appendChild(b);
+  });
+  const custom = document.createElement('button');
+  custom.type = 'button';
+  custom.textContent = t('rec_custom_duration');
+  custom.style.gridColumn = '1 / -1';
+  custom.addEventListener('click', (ev) => {
+    ev.stopPropagation();
+    pop.classList.remove('open');
+    const inp = document.getElementById('mRecDur');
+    if (inp) {
+      inp.readOnly = false;
+      inp.value = '';
+      inp.placeholder = t('rec_month_count_placeholder');
+      inp.dataset.months = 0;
+      inp.focus();
+    }
+  });
+  pop.appendChild(custom);
+}
+document.addEventListener('input', (e) => {
+  if (e.target && e.target.id === 'mRecDur' && !e.target.readOnly) {
+    let v = e.target.value.replace(/[^0-9]/g, '');
+    if (v && parseInt(v, 10) > 99) v = '99';
+    e.target.value = v;
+    e.target.dataset.months = v ? parseInt(v, 10) : 0;
+  }
+});
 document.addEventListener('click', (e) => {
   if (!e.target.closest('.subday-wrap')) document.querySelectorAll('.subday-pop.open').forEach(p => p.classList.remove('open'));
 });
@@ -510,10 +588,10 @@ function addSubscription() {
   const name = validateString(document.getElementById('subName').value, 60);
   const amount = validateAmount(document.getElementById('subAmt').value);
   const day = Math.min(31, Math.max(1, parseInt(document.getElementById('subDay').value) || 1));
-  if (!name || !amount) return toast('Servis ve tutar gerekli', 't-err');
+  if (!name || !amount) return toast(t('toast_service_amount_required'), 't-err');
   S.subscriptions.push({ id: uid(), name, amount, day, ts: Date.now() });
   save();
-  toast('Abonelik eklendi', 't-ok');
+  toast(t('toast_sub_added'), 't-ok');
   document.getElementById('subName').value = '';
   document.getElementById('subAmt').value = '';
   updateNumWordHint(document.getElementById('subAmt'));
@@ -525,7 +603,7 @@ function deleteSubscription(id) {
   S.subscriptions = S.subscriptions.filter(s => s.id !== id);
   save();
   renderAll();
-  toast('Silindi', 't-ok');
+  toast(t('common_deleted'), 't-ok');
 }
 
 function renderSubscriptions() {
@@ -561,7 +639,7 @@ function addGoal() {
   const target = validateAmount(document.getElementById('goalTarget').value);
   const current = Math.max(0, parseInputAmt(document.getElementById('goalCurrent').value) || 0);
   const date = validateString(document.getElementById('goalDate').value, 12);
-  if (!name || !target) return toast('İsim ve hedef tutarı gerekli', 't-err');
+  if (!name || !target) return toast(t('toast_name_target_required'), 't-err');
   S.goals.push({ id: uid(), name, target, current, date });
   save();
   notify('goals', 'Hedef eklendi', name + ' · ₺' + target.toLocaleString('tr-TR'));
@@ -571,7 +649,7 @@ function addGoal() {
   updateNumWordHint(document.getElementById('goalTarget'));
   document.getElementById('goalCurrent').value = '0';
   updateNumWordHint(document.getElementById('goalCurrent'));
-  toast('Hedef eklendi', 't-ok');
+  toast(t('toast_goal_added'), 't-ok');
   renderAll();
 }
 
@@ -584,19 +662,19 @@ function addToGoal(id) {
     g.current = (g.current || 0) + v;
     save();
     renderAll();
-    if (g.current >= g.target) toast(' Hedefe ulaştın!', 't-ok');
-    else toast('Eklendi', 't-ok');
+    if (g.current >= g.target) toast(t('toast_goal_reached'), 't-ok');
+    else toast(t('common_added'), 't-ok');
   }
 }
 
 function deleteGoal(id) {
   showConfirm({
-    title: 'Hedefi sil',
-    msg: 'Bu hedef kalıcı olarak silinecek. Emin misin?',
+    title: t('confirm_del_goal_title'),
+    msg: t('confirm_del_goal_msg'),
     danger: true,
     onOk: () => {
       S.goals = S.goals.filter(g => g.id !== id);
-      save(); renderAll(); toast('Silindi', 't-ok');
+      save(); renderAll(); toast(t('common_deleted'), 't-ok');
     }
   });
 }
@@ -658,19 +736,19 @@ function renderDashboardGoals() {
 
 function addNote() {
   const t = validateString(document.getElementById('noteTitle').value, 200);
-  if (!t) return toast('Not başlığı girin', 't-err');
+  if (!t) return toast(t('toast_note_title_required'), 't-err');
   S.notes.push({ id: uid(), title: t, date: todayStr() });
   save();
   document.getElementById('noteTitle').value = '';
   renderNotes();
-  toast('Not eklendi', 't-ok');
+  toast(t('toast_note_added'), 't-ok');
 }
 
 function deleteNote(id) {
   S.notes = S.notes.filter(n => n.id !== id);
   save();
   renderNotes();
-  toast('Silindi', 't-ok');
+  toast(t('common_deleted'), 't-ok');
 }
 
 function renderNotes() {
@@ -713,5 +791,5 @@ function saveBaseBalance() {
   saveNow(); // kritik: debounce yok, anında Firestore'a yaz (yenileme ile kaybolmasın)
   renderAll();
   closeModal();
-  toast('Mevcut bakiye güncellendi', 't-ok');
+  toast(t('toast_balance_updated'), 't-ok');
 }

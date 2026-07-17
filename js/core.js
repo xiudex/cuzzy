@@ -333,7 +333,9 @@ function normalizeState(raw) {
       type: r?.type === 'income' ? 'income' : 'expense',
       desc: validateString(r?.desc, 50) || 'Tekrarlayan',
       amount: Math.max(0, toFiniteNumber(r?.amount, 0)),
-      day: Math.min(28, Math.max(1, Math.trunc(toFiniteNumber(r?.day, 1))))
+      day: Math.min(28, Math.max(1, Math.trunc(toFiniteNumber(r?.day, 1)))),
+      months: Math.min(99, Math.max(0, Math.trunc(toFiniteNumber(r?.months, 0)))),
+      startMonth: /^\d{4}-\d{2}$/.test(r?.startMonth) ? r.startMonth : ''
     })).filter(r => r.amount > 0),
     goals: (Array.isArray(src.goals) ? src.goals : []).map(g => ({
       id: validateString(String(g?.id || uid()), 64) || uid(),
@@ -354,15 +356,20 @@ function normalizeState(raw) {
       buyPrice: Math.max(0, toFiniteNumber(i?.buyPrice, 0)),
       amount: Math.max(0, toFiniteNumber(i?.amount, 0))
     })).filter(i => i.amount > 0),
-    debts: (Array.isArray(src.debts) ? src.debts : []).map(d => ({
-      id: validateString(String(d?.id || uid()), 64) || uid(),
-      name: validateString(d?.name, 60) || 'Borç',
-      amount: Math.max(0, toFiniteNumber(d?.amount, 0)),
-      dueDate: validateString(d?.dueDate, 12),
-      type: validateString(d?.type, 30) || 'Borç',
-      paid: d?.paid === true,
-      ts: toFiniteNumber(d?.ts, Date.now())
-    })).filter(d => d.amount > 0),
+    debts: (Array.isArray(src.debts) ? src.debts : []).map(d => {
+      const installments = Math.min(99, Math.max(0, Math.trunc(toFiniteNumber(d?.installments, 0))));
+      return {
+        id: validateString(String(d?.id || uid()), 64) || uid(),
+        name: validateString(d?.name, 60) || 'Borç',
+        amount: Math.max(0, toFiniteNumber(d?.amount, 0)),
+        dueDate: validateString(d?.dueDate, 12),
+        type: validateString(d?.type, 30) || 'Borç',
+        paid: d?.paid === true,
+        installments,
+        paidCount: Math.min(installments, Math.max(0, Math.trunc(toFiniteNumber(d?.paidCount, 0)))),
+        ts: toFiniteNumber(d?.ts, Date.now())
+      };
+    }).filter(d => d.amount > 0),
     subscriptions: (Array.isArray(src.subscriptions) ? src.subscriptions : []).map(s => ({
       id: validateString(String(s?.id || uid()), 64) || uid(),
       name: validateString(s?.name, 60) || 'Abonelik',
@@ -480,7 +487,7 @@ function toast(msg, type = 't-info') {
   el.className = 'toast ' + type;   // önce sıfırla (show kalkar)
   void el.offsetWidth;              // reflow -> her seferinde yeniden insin
   el.classList.add('show');
-  toastTimer = setTimeout(() => el.classList.remove('show'), 3000);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 1800);
   if (type === 't-ok') haptic('success');
   else if (type === 't-err') haptic('warning');
   else haptic('tap');
@@ -631,7 +638,69 @@ function _isHidableTrigger(el) {
   return el.matches('button, .btn');
 }
 
+function _lockBodyScroll() {
+  document.body.classList.add('modal-open');
+}
+function _unlockBodyScrollIfNoneOpen() {
+  if (document.querySelector('.modal-bg.show')) return;
+  document.body.classList.remove('modal-open');
+}
+
 var _instantShow = false;
+
+/* ── Mobil pop-up'lar (tam ekran Ayarlar hariç): X yok, üstteki çubuktan
+   tutup aşağı çekince kapanır, hepsi aynı mantık — modal başına ayrı kod yok. ── */
+function closeGenericModal(id) {
+  const m = document.getElementById(id || (document.querySelector('.modal-bg.show') || {}).id);
+  const box = m && m.querySelector('.modal-box');
+  if (!m || !box || !m.classList.contains('show')) return;
+  const trig = m._hiddenTrigger;
+  box.style.transition = 'transform 0.32s cubic-bezier(0.4, 0, 0.2, 1)';
+  box.style.transform = 'translateY(100%)';
+  m.style.transition = 'opacity 0.3s ease';
+  m.style.opacity = '0';
+  setTimeout(() => {
+    m.classList.remove('show');
+    box.style.transition = ''; box.style.transform = '';
+    m.style.transition = ''; m.style.opacity = '';
+    if (trig) { trig.style.visibility = ''; m._hiddenTrigger = null; }
+    _unlockBodyScrollIfNoneOpen();
+  }, 300);
+}
+(function () {
+  var dragging = false, startY = 0, curY = 0, moved = false, activeBox = null, activeId = null;
+  function onMove(e) {
+    if (!dragging) return;
+    var dy = e.clientY - startY;
+    if (!moved && Math.abs(dy) > 6) moved = true;
+    curY = Math.max(0, dy * (dy > 0 ? 1 : 0.25));
+    if (moved) { e.preventDefault(); activeBox.style.transition = 'none'; activeBox.style.transform = 'translateY(' + curY + 'px)'; }
+  }
+  function onUp() {
+    if (!dragging) return;
+    dragging = false;
+    document.removeEventListener('pointermove', onMove);
+    document.removeEventListener('pointerup', onUp);
+    document.removeEventListener('pointercancel', onUp);
+    activeBox.style.transition = 'transform 0.28s cubic-bezier(0.4, 0, 0.2, 1)';
+    if (curY > 90) { closeGenericModal(activeId); } else { activeBox.style.transform = ''; }
+    moved = false;
+  }
+  document.addEventListener('pointerdown', function (e) {
+    if (typeof isMobileView === 'function' && !isMobileView()) return;
+    var box = e.target.closest('.modal-box:not(.set-modal):not(.no-sheet)');
+    if (!box) return;
+    var rect = box.getBoundingClientRect();
+    if (e.clientY - rect.top > 30) return;
+    var bg = box.closest('.modal-bg');
+    if (!bg) return;
+    dragging = true; startY = e.clientY; curY = 0; moved = false;
+    activeBox = box; activeId = bg.id;
+    document.addEventListener('pointermove', onMove, { passive: false });
+    document.addEventListener('pointerup', onUp);
+    document.addEventListener('pointercancel', onUp);
+  });
+})();
 function springOpenModal(m) {
   const box = m.querySelector('.modal-box');
   if (_instantShow) { _instantShow = false; m.style.transition = 'none'; m.classList.add('show'); m.style.opacity = '1'; if (box) { box.style.transition = 'none'; box.style.transform = 'none'; box.style.opacity = '1'; } void m.offsetWidth; m.style.transition = ''; if (box) box.style.transition = ''; return; }
@@ -694,7 +763,7 @@ function _hideModalInstant(m) {
   if (box) { box.style.transition = 'none'; box.style.transform = ''; box.style.opacity = ''; box.style.transformOrigin = ''; box.style.borderRadius = ''; }
   if (trig) { trig.style.transition = ''; trig.style.opacity = ''; trig.style.transform = ''; trig.style.visibility = ''; m._hiddenTrigger = null; }
   void m.offsetWidth; m.style.transition = ''; if (box) box.style.transition = '';
-  if (!document.querySelector('.modal-bg.show')) document.body.classList.remove('modal-open');
+  _unlockBodyScrollIfNoneOpen();
 }
 function _hideNotifInstant() {
   var panel = document.getElementById('notifPanel');
@@ -711,13 +780,13 @@ function showModal(id) {
   var _openM = document.querySelectorAll('.modal-bg.show');
   if (_openM.length) { var _mz = 10000; _openM.forEach(function (o) { var z = parseInt(getComputedStyle(o).zIndex, 10) || 10000; if (z > _mz) _mz = z; }); m.style.zIndex = (_mz + 10); } else { m.style.zIndex = ''; }
   springOpenModal(m);
-  document.body.classList.add('modal-open');
+  _lockBodyScroll();
   if (id === 'modalWatchlist') { try { populateWatchlistSymbols(); renderWatchlistCurrent(); } catch (e) {} }
   if (id === 'modalProfile') { try { renderProfileModal(); } catch (e) {} }
 }
 
 function closeModal(id) {
-  setTimeout(() => { if (!document.querySelector('.modal-bg.show')) document.body.classList.remove('modal-open'); }, 420);
+  setTimeout(_unlockBodyScrollIfNoneOpen, 420);
   if (id && typeof id === 'string') { _closeModalAnim(document.getElementById(id)); return; }
   const open = Array.prototype.slice.call(document.querySelectorAll('.modal-bg.show'));
   if (open.length <= 1) { open.forEach(_closeModalAnim); return; }
