@@ -4,19 +4,110 @@ button, .btn, [role="button"], .topnav-item, .nav-drawer-item, .nav-burger, .not
 input, textarea, select, [contenteditable="true"] { user-select: text !important; -webkit-user-select: text !important; }
 .welcome-screen {
   position: fixed; inset: 0; z-index: 10500;
-  display: flex; flex-direction: column; align-items: center;
-  padding: 16vh 24px calc(40px + env(safe-area-inset-bottom, 0px));
   background: #f5f5f7;
-  opacity: 1; transition: opacity 0.4s ease, visibility 0.4s;
+  opacity: 1; transition: opacity 0.4s ease, visibility 0.4s, background 0.5s ease;
 }
 .welcome-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+.welcome-screen.preview-royal { background: #14122b; }
+.welcome-screen.preview-black { background: #0d0d0f; }
+.welcome-screen.preview-royal .welcome-title, .welcome-screen.preview-royal .welcome-step-title:not(.welcome-shimmer-title),
+.welcome-screen.preview-black .welcome-title, .welcome-screen.preview-black .welcome-step-title:not(.welcome-shimmer-title) { color: #f0eefc; transition: color 0.5s ease; }
+.welcome-screen.preview-royal .welcome-step-sub, .welcome-screen.preview-royal .welcome-theme-desc,
+.welcome-screen.preview-black .welcome-step-sub, .welcome-screen.preview-black .welcome-theme-desc { color: #a79cd6; transition: color 0.5s ease; }
+.welcome-screen.preview-royal .welcome-subcaption, .welcome-screen.preview-royal .welcome-skip-link,
+.welcome-screen.preview-black .welcome-subcaption, .welcome-screen.preview-black .welcome-skip-link { color: #f0eefc; }
+.welcome-screen.preview-royal .welcome-lang-trigger, .welcome-screen.preview-black .welcome-lang-trigger {
+  background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.16); color: #d8d2f7; transition: background 0.5s ease, border-color 0.5s ease, color 0.5s ease;
+}
+.welcome-screen.preview-royal .welcome-continue-btn { background: #9b8cff; box-shadow: 0 6px 20px rgba(155,140,255,0.35); transition: background 0.5s ease, box-shadow 0.5s ease; }
+.welcome-screen.preview-black .welcome-continue-btn { background: #0A84FF; box-shadow: 0 6px 20px rgba(10,132,255,0.35); transition: background 0.5s ease, box-shadow 0.5s ease; }
+
+.welcome-sweep {
+  position: absolute; inset: 0; pointer-events: none; z-index: 1;
+  background: linear-gradient(0deg, var(--sweep-c, rgba(155,140,255,0.35)) 0%, transparent 55%);
+  transform: translateY(100%); opacity: 0;
+}
+.welcome-sweep.play { animation: welcomeSweepUp 0.7s cubic-bezier(0.22, 1, 0.36, 1); }
+@keyframes welcomeSweepUp { 0% { transform: translateY(100%); opacity: 0.9; } 100% { transform: translateY(-30%); opacity: 0; } }
+.welcome-step {
+  display: flex; flex-direction: column; align-items: center; height: 100%;
+  padding: 16vh 24px calc(40px + env(safe-area-inset-bottom, 0px));
+  animation: welcomeStepIn 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes welcomeStepIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
 .welcome-top { text-align: center; }
-.welcome-title { font-size: clamp(2rem, 8vw, 3.1rem); font-weight: 800; letter-spacing: -0.02em; color: #1d1d1f; margin: 0 0 18px; line-height: 1.1; text-align: center; }
-.welcome-letter { display: inline-block; opacity: 0; animation: welcomeLetterFade 0.75s ease forwards; }
+.welcome-step-title { font-size: clamp(1.5rem, 6vw, 2rem); font-weight: 800; color: #1d1d1f; margin: 0 0 10px; }
+.welcome-step-sub { font-size: 0.95rem; color: #6e6e73; margin: 0 auto 24px; max-width: 320px; line-height: 1.5; text-align: center; }
+.welcome-shimmer-title {
+  background: linear-gradient(90deg, var(--shimmer-c1, #9b8cff) 0%, var(--shimmer-c2, #d4af5a) 50%, var(--shimmer-c1, #9b8cff) 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;
+  animation: welcomeShimmer 2.8s linear infinite;
+  transition: background-image 0.3s ease;
+}
+@keyframes welcomeShimmer { 0% { background-position: 200% center; } 100% { background-position: -200% center; } }
+.welcome-theme-pick { margin-top: 8px; gap: 10px; }
+.welcome-theme-pick .theme-card { flex: 1 1 84px; min-width: 84px; height: 66px; padding: 0; border-radius: 14px; }
+.welcome-theme-desc { min-height: 1.3em; margin-top: 16px; font-size: 0.86rem; color: #6e6e73; text-align: center; max-width: 300px; transition: opacity 0.2s ease; }
+
+.welcome-loading {
+  position: fixed; inset: 0; z-index: 10600;
+  display: flex; align-items: center; justify-content: center;
+  background: #f5f5f7; opacity: 0; visibility: hidden; pointer-events: none;
+  transition: opacity 0.3s ease, visibility 0.3s;
+}
+.welcome-loading.show { opacity: 1; visibility: visible; pointer-events: auto; }
+.welcome-loading-text { font-size: 1.15rem; font-weight: 700; color: #1d1d1f; display: flex; gap: 2px; }
+.welcome-loading-text span { display: inline-block; animation: welcomeWave 1.1s ease-in-out infinite; }
+@keyframes welcomeWave { 0%, 60%, 100% { transform: translateY(0); opacity: 0.55; } 30% { transform: translateY(-7px); opacity: 1; } }
+.welcome-dots { display: none; gap: 11px; }
+.welcome-dots span { width: 13px; height: 13px; border-radius: 50%; background: #007AFF; animation: welcomeDotBounce 0.9s ease-in-out infinite; }
+.welcome-dots span:nth-child(1) { animation-delay: 0s; }
+.welcome-dots span:nth-child(2) { animation-delay: 0.15s; }
+.welcome-dots span:nth-child(3) { animation-delay: 0.3s; }
+@keyframes welcomeDotBounce { 0%, 60%, 100% { transform: translateY(0); opacity: 0.5; } 30% { transform: translateY(-14px); opacity: 1; } }
+.welcome-kvkk-readlink {
+  display: inline-block; margin: 4px 0 22px; padding: 0; border: none; background: none;
+  font-size: 0.95rem; font-weight: 700; color: #007AFF; text-decoration: underline; text-underline-offset: 3px;
+  font-family: inherit; cursor: pointer;
+}
+.welcome-kvkk-readlink:active { opacity: 0.7; }
+.welcome-kvkk-check { display: flex; align-items: center; gap: 9px; font-size: 0.9rem; font-weight: 600; color: #1d1d1f; cursor: pointer; }
+.welcome-kvkk-check input { width: 18px; height: 18px; accent-color: #007AFF; cursor: pointer; }
+.welcome-kvkk-popup {
+  position: fixed; inset: 0; z-index: 10700;
+  display: flex; flex-direction: column;
+  background: #fff;
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transition: opacity 0.3s ease, visibility 0.3s;
+}
+.welcome-kvkk-popup.show { opacity: 1; visibility: visible; pointer-events: auto; }
+.welcome-kvkk-popup-card {
+  position: relative; width: 100%; height: 100%; max-width: 640px; margin: 0 auto;
+  display: flex; flex-direction: column; overflow: hidden;
+  padding: calc(20px + env(safe-area-inset-top, 0px)) 22px 24px;
+}
+.welcome-kvkk-popup-close {
+  position: absolute; top: calc(16px + env(safe-area-inset-top, 0px)); right: 16px; width: 34px; height: 34px; border-radius: 50%;
+  border: none; background: rgba(0,0,0,0.06); color: #6e6e73; font-size: 1rem; cursor: pointer; z-index: 1;
+}
+.welcome-kvkk-popup-title { font-size: 1.4rem; font-weight: 800; color: #1d1d1f; margin: 4px 40px 18px 0; flex-shrink: 0; }
+.welcome-kvkk-popup-text { font-size: 0.94rem; line-height: 1.75; color: #3a3a3d; text-align: left; overflow-y: auto; flex: 1; padding-right: 4px; }
+.welcome-continue-btn:disabled { opacity: 0.4; cursor: not-allowed; box-shadow: none; }
+.welcome-continue-btn:disabled:hover { transform: none; }
+.welcome-title {
+  font-size: clamp(2rem, 8vw, 3.1rem); font-weight: 800; letter-spacing: -0.02em; margin: 0 0 18px; line-height: 1.1; text-align: center;
+  color: #1d1d1f;
+}
+.welcome-fall { opacity: 0; transform: translateY(-18px); animation: welcomeFallDown 0.55s cubic-bezier(0.22, 1, 0.36, 1) both; }
+@keyframes welcomeFallDown { to { opacity: 1; transform: translateY(0); } }
 .welcome-letter.space { width: 0.32em; }
 .welcome-letter.accent { color: #007AFF; }
 @keyframes welcomeLetterFade { to { opacity: 1; } }
-.welcome-lang-wrap { position: relative; display: inline-flex; justify-content: center; opacity: 0; transition: opacity 0.7s ease; }
+.welcome-subcaption { font-size: 0.88rem; font-weight: 500; color: #1d1d1f; margin: -8px 0 20px; text-align: center; }
+.welcome-subcaption.welcome-fall { animation-name: welcomeSubcaptionFallDown; }
+@keyframes welcomeSubcaptionFallDown { to { opacity: 0.7; transform: translateY(0); } }
+.welcome-lang-wrap { position: relative; display: inline-flex; justify-content: center; }
 .welcome-lang-wrap.shown { opacity: 1; }
 .welcome-lang-trigger {
   display: inline-flex; align-items: center; gap: 5px;
@@ -55,8 +146,16 @@ input, textarea, select, [contenteditable="true"] { user-select: text !important
   transition: opacity 0.7s ease, transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s ease;
 }
 .welcome-continue-btn.shown { opacity: 1; }
+.welcome-continue-btn.shown:disabled { opacity: 0.4; }
 .welcome-continue-btn:hover { transform: translateY(-2px); }
 .welcome-continue-btn:active { transform: scale(0.97); }
+.welcome-skip-link {
+  display: block; width: 100%; margin-top: 14px; padding: 6px;
+  background: none; border: none; cursor: pointer;
+  color: #1d1d1f; opacity: 0.7; font-size: 0.88rem; font-weight: 500; font-family: inherit;
+  transition: opacity 0.15s ease;
+}
+.welcome-skip-link:hover { opacity: 1; }
 
 .modal-bg { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.38); backdrop-filter: none; -webkit-backdrop-filter: none; z-index: 10000; display: none; align-items: center; justify-content: center; padding: 20px; opacity: 0; transition: opacity 0.3s ease; }
 .modal-bg.show { display: flex; opacity: 1; }
@@ -683,6 +782,18 @@ body.modal-open { overflow: hidden; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}
+
+/* ══════ ANİMASYON HIZI (Ayarlar → Görünüm) ══════
+   "Orta" varsayılan olup her bileşenin kendi süresini kullanır, ekstra kural gerekmez. */
+html.anim-off *, html.anim-off *::before, html.anim-off *::after {
+  animation-duration: 0.01ms !important; animation-delay: 0s !important; transition-duration: 0.01ms !important;
+}
+html.anim-fast *, html.anim-fast *::before, html.anim-fast *::after {
+  animation-duration: 0.12s !important; transition-duration: 0.12s !important;
+}
+html.anim-slow *, html.anim-slow *::before, html.anim-slow *::after {
+  animation-duration: 0.7s !important; transition-duration: 0.7s !important;
 }
 
 /* ══════ 29. UTIL ══════ */

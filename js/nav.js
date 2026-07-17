@@ -476,6 +476,25 @@ const I18N = {
     set_other_needed: 'Diğer gerekenler', verify_your_email: 'E-postanı doğrula', rate_update_v383: 'v3.8.3 güncellemesini değerlendir',
     inv_total_expense: 'Toplam gider', sub_renews_on: 'Her ayın {day}. günü yenilenir',
     welcome_hello: 'Hoşgeldin ', welcome_continue: 'Devam et',
+    anim_speed_label: 'Animasyon hızı', anim_speed_sub: 'Arayüzdeki geçiş ve animasyon hızını ayarla.',
+    anim_speed_fast: 'Çok hızlı', anim_speed_normal: 'Orta', anim_speed_slow: 'Çok yavaş', anim_speed_off: 'Kapalı',
+    welcome_pick_theme: 'Bir tema seç',
+    welcome_verify_ask: 'E-postanı doğrulamak ister misin?', welcome_verify_sub: 'Hesabının güvenliği için önerilir.',
+    welcome_verify_pending: 'Doğrulama bağlantısı gönderildi', welcome_verify_pending_sub: 'E-postanı kontrol et — doğruladıktan sonra burası otomatik güncellenecek.',
+    welcome_verify_done: 'E-posta doğrulandı!', welcome_verify_btn: 'Doğrula', welcome_finish: 'Bitir',
+    rec_desc_ph: 'Örn: Kira', rec_day_note: 'Seçtiğin günde her ay tutar otomatik işlenir (gelir ya da gider).',
+    sub_monthly: 'Aylık (₺)', sub_day_note: 'Seçtiğin günde her ay tutar otomatik gider olarak yazılır.',
+    goal_add_title: ' Yeni hedef', goal_target_full: 'Hedef tutar (₺)', goal_current_short: 'Mevcut (₺)', goal_date_optional: 'Hedef tarihi (opsiyonel)',
+    theme_desc_royal: 'Mor ve altın tonlarında zengin, sofistike bir görünüm.',
+    theme_desc_light: 'Ferah, sade ve gündüz kullanımına uygun aydınlık bir tema.',
+    theme_desc_black: 'Göz yormayan, tamamen koyu ve sade bir görünüm.',
+    welcome_theme_applying: 'Tema ayarlanıyor...', welcome_not_now: 'Şimdi değil',
+    welcome_mobile_version: 'Mobil 2.0',
+    welcome_kvkk_title: 'Gizlilik ve Kullanım Koşulları',
+    welcome_kvkk_intro: 'Devam etmeden önce lütfen gizlilik politikamızı ve kullanım koşullarımızı incele.',
+    welcome_kvkk_read: 'Metni oku →',
+    welcome_kvkk_text: 'Bu metin, 6698 sayılı Kişisel Verilerin Korunması Kanunu ("KVKK") kapsamında, Cüzzy ("Uygulama") üzerinden işlenen kişisel verilerinize ilişkin olarak sizi bilgilendirmek amacıyla hazırlanmıştır. Uygulamayı kullanarak bu metinde açıklanan veri işleme faaliyetlerini okuduğunuzu ve anladığınızı kabul edersiniz.<br><br><strong>1. Veri Sorumlusu</strong><br>Kişisel verileriniz, veri sorumlusu sıfatıyla [Veri Sorumlusu Unvanı / Ad Soyad] tarafından işlenmektedir.<br><br>İletişim: [E-posta adresi] · [Açık adres] · [varsa KEP adresi]<br><br><strong>2. İşlenen Kişisel Veriler</strong><br>Kimlik ve iletişim verisi: Hesap oluştururken sağladığınız e-posta adresiniz ve görünen adınız.<br><br>Finansal veriler: Uygulamaya girdiğiniz gelir/gider işlemleri, kategoriler, bütçe ve tasarruf hedefleri, tekrarlayan ödemeler, abonelikler, borç kayıtları ile yatırım/portföy bilgileriniz.<br><br>Banka ekstresi verileri: İsteğe bağlı olarak yüklediğiniz ekstre dosyalarından yalnızca işlem tarihi, işlem tutarı ve kişisel veri içermeyen genel bir işlem türü etiketi (örneğin "Giden FAST", "Maaş", "Alışveriş") alınır. İşlem açıklamaları, üçüncü kişilere ait IBAN, isim gibi veriler içerebileceğinden alınmaz ve saklanmaz.<br><br>Teknik veriler: Oturum yönetimi ve güvenlik amacıyla kimlik doğrulama sağlayıcısı tarafından işlenen oturum, cihaz ve bağlantı bilgileri.<br><br><strong>3. Banka Ekstrelerinin İşlenmesi</strong><br>Yüklediğiniz banka ekstresi dosyaları (PDF/metin) yalnızca kendi tarayıcınızda, yani kendi cihazınızda çözümlenir. Ham ekstre dosyası hiçbir şekilde sunucularımıza gönderilmez, tarafımızca saklanmaz ve bu işleme dair herhangi bir kayıt (log) tutulmaz.<br><br>İşlem açıklamaları bilinçli olarak alınmaz; bunun yerine yalnızca tarih, tutar ve kişisel veri içermeyen bir işlem türü etiketi hesabınıza kaydedilir. Böylece ekstrede yer alabilecek üçüncü kişilere ait isim, IBAN, telefon veya referans numarası gibi veriler hiçbir zaman saklanmaz.<br><br>Aynı ekstrenin yanlışlıkla iki kez yüklenmesini önlemek için, işleme ait geri döndürülemez teknik bir parmak izi (tek yönlü bir özet değeri) saklanabilir; bu değer okunabilir kişisel veri içermez ve içinden açıklama, isim veya IBAN geri elde edilemez.<br><br><strong>4. Kişisel Verilerin İşlenme Amaçları</strong><br>Kişisel verileriniz; hesabınızın oluşturulması ve yönetilmesi, kişisel finans takibi hizmetinin sunulması, verilerinizin cihazlarınız arasında senkronize edilmesi, hizmet güvenliğinin sağlanması, yasal yükümlülüklerin yerine getirilmesi ve hizmetin iyileştirilmesi amaçlarıyla işlenir.<br><br><strong>5. İşlemenin Hukuki Sebepleri</strong><br>Kişisel verileriniz KVKK m.5 uyarınca; sizinle kurulan hizmet ilişkisinin (sözleşmenin) ifası için gerekli olması, hizmet güvenliği gibi meşru menfaatlerimiz, hukuki yükümlülüklerimizin yerine getirilmesi ve gerekli hallerde açık rızanız hukuki sebeplerine dayanılarak işlenir.<br><br><strong>6. Kişisel Verilerin Aktarılması</strong><br>Verileriniz, hizmetin sunulabilmesi için kullandığımız altyapı sağlayıcılarıyla paylaşılabilir. Kimlik doğrulama ve veri saklama için Google Firebase (Firebase Authentication, Cloud Firestore) hizmetleri kullanılmaktadır.<br><br>Yatırım takibi özelliğinde, seçtiğiniz borsa sembollerinin güncel fiyatları üçüncü taraf finansal veri kaynaklarından sorgulanır; bu sorgularda kimliğinizi belirleyen herhangi bir bilgi paylaşılmaz.<br><br>Uygulamada reklam gösterilmesi halinde, reklam sağlayıcıları kendi gizlilik politikaları çerçevesinde teknik verileri işleyebilir.<br><br><strong>7. Yurt Dışına Aktarım</strong><br>Kullanılan bulut altyapı sağlayıcılarının (Google Firebase) sunucuları yurt dışında bulunabilir. Bu nedenle kişisel verileriniz, KVKK m.9 kapsamında gerekli şartların sağlanması ve gerekli hallerde açık rızanıza dayanılarak yurt dışına aktarılabilir.<br><br><strong>8. Saklama Süresi</strong><br>Kişisel verileriniz, hesabınız aktif olduğu sürece ve ilgili mevzuatta öngörülen süreler boyunca saklanır. Hesabınızı veya verilerinizi sildiğinizde, ilgili kayıtlar makul süre içinde sistemlerden silinir.<br><br><strong>9. Veri Güvenliği</strong><br>Verileriniz, yetkilendirme kuralları aracılığıyla yalnızca kendi hesabınızdan erişilebilecek şekilde yapılandırılmıştır. Tüm veri iletişimi şifreli bağlantı (HTTPS) üzerinden gerçekleştirilir ve yetkisiz erişimi önlemek için makul teknik ve idari tedbirler uygulanır.<br><br><strong>10. Çerezler ve Yerel Depolama</strong><br>Oturumunuzun sürdürülmesi ve tercihlerinizin (tema, görünüm vb.) hatırlanması için tarayıcınızın yerel depolama alanı ve kimlik doğrulama çerezleri kullanılır. Bu veriler hizmetin çalışması için gereklidir.<br><br><strong>11. Reşit Olmayanlar</strong><br>Uygulama 18 yaşından küçük kullanıcılara yönelik değildir. Bir kullanıcının 18 yaşından küçük olduğunun tespiti halinde ilgili hesap ve veriler silinebilir.<br><br><strong>12. Veri Sahibi Olarak Haklarınız (KVKK m.11)</strong><br>KVKK m.11 uyarınca aşağıdaki haklara sahipsiniz:<br><br>• Kişisel verilerinizin işlenip işlenmediğini öğrenme,<br>• İşlenmişse buna ilişkin bilgi talep etme,<br>• İşlenme amacını ve amaca uygun kullanılıp kullanılmadığını öğrenme,<br>• Yurt içinde veya yurt dışında verilerin aktarıldığı üçüncü kişileri bilme,<br>• Eksik veya yanlış işlenmiş verilerin düzeltilmesini isteme,<br>• Verilerinizin silinmesini veya yok edilmesini isteme,<br>• Düzeltme, silme veya yok etme işlemlerinin aktarıldığı üçüncü kişilere bildirilmesini isteme,<br>• İşlenen verilerin analizi sonucu aleyhinize bir sonuç çıkmasına itiraz etme,<br>• Hukuka aykırı işleme nedeniyle zarara uğramanız halinde zararın giderilmesini talep etme.<br><br><strong>13. Başvuru Yöntemi</strong><br>Yukarıdaki haklarınıza ilişkin taleplerinizi [E-posta adresi] üzerinden veya [Açık adres] adresine yazılı olarak iletebilirsiniz. Talepleriniz, KVKK\'da öngörülen süreler içinde sonuçlandırılır. Verilerinizin önemli bir kısmına Uygulama içindeki "Ayarlar → Veri" bölümünden doğrudan erişebilir, bunları dışa aktarabilir veya silebilirsiniz.<br><br><strong>14. Değişiklikler</strong><br>Bu metin zaman zaman güncellenebilir. Önemli bir değişiklik olması halinde, Uygulamayı kullanmaya devam etmeden önce güncel metni yeniden onaylamanız istenebilir.',
+    welcome_kvkk_agree: 'Okudum, anladım',
     repair_notice_title: 'Onarım Tamamlandı',
     repair_notice_body: 'PIN sıfırlama sistemi <strong>artık aktif</strong>.<br><br>PIN\'inizi unuttuğunuzda kilit ekranındaki <em>"PIN\'i unuttum"</em> bağlantısından e-postanıza 6 haneli <strong>PIN Sıfırlama</strong> kodu gönderebilirsiniz. Ardından PIN\'inizi sıfırlayabilir veya tamamen kaldırabilirsiniz.',
     common_continue_arrow: 'Devam →',
@@ -679,6 +698,25 @@ const I18N = {
     set_other_needed: 'Other things to do', verify_your_email: 'Verify your email', rate_update_v383: 'Rate the v3.8.3 update',
     inv_total_expense: 'Total expense', sub_renews_on: 'Renews on the {day} of each month',
     welcome_hello: 'Welcome ', welcome_continue: 'Continue',
+    anim_speed_label: 'Animation speed', anim_speed_sub: 'Adjust the speed of transitions and animations in the interface.',
+    anim_speed_fast: 'Very fast', anim_speed_normal: 'Normal', anim_speed_slow: 'Very slow', anim_speed_off: 'Off',
+    welcome_pick_theme: 'Pick a theme',
+    welcome_verify_ask: 'Want to verify your email?', welcome_verify_sub: "It's recommended for your account's security.",
+    welcome_verify_pending: 'Verification link sent', welcome_verify_pending_sub: "Check your email — this will update automatically once you've verified.",
+    welcome_verify_done: 'Email verified!', welcome_verify_btn: 'Verify', welcome_finish: 'Finish',
+    rec_desc_ph: 'Ex: Rent', rec_day_note: 'The amount will be processed automatically each month on the day you pick (income or expense).',
+    sub_monthly: 'Monthly (₺)', sub_day_note: 'The amount will be recorded automatically as an expense each month on the day you pick.',
+    goal_add_title: ' New goal', goal_target_full: 'Target amount (₺)', goal_current_short: 'Current (₺)', goal_date_optional: 'Target date (optional)',
+    theme_desc_royal: 'A rich, sophisticated look in purple and gold tones.',
+    theme_desc_light: 'A clean, airy theme suited for daytime use.',
+    theme_desc_black: "A fully dark, minimal look that's easy on the eyes.",
+    welcome_theme_applying: 'Applying theme...', welcome_not_now: 'Not now',
+    welcome_mobile_version: 'Mobile 2.0',
+    welcome_kvkk_title: 'Privacy & Terms of Use',
+    welcome_kvkk_intro: 'Before continuing, please review our privacy policy and terms of use.',
+    welcome_kvkk_read: 'Read the text →',
+    welcome_kvkk_text: 'This notice has been prepared to inform you about the personal data processed through Cüzzy (the "App") under Law No. 6698 on the Protection of Personal Data ("KVKK"). By using the App, you accept that you have read and understood the data processing activities described in this text.<br><br><strong>1. Data Controller</strong><br>Your personal data is processed by [Data Controller Name] as the data controller.<br><br>Contact: [Email address] · [Registered address] · [Registered electronic mail address, if any]<br><br><strong>2. Personal Data Processed</strong><br>Identity and contact data: The email address and display name you provide when creating an account.<br><br>Financial data: The income/expense transactions, categories, budget and savings goals, recurring payments, subscriptions, debt records, and investment/portfolio information you enter into the App.<br><br>Bank statement data: From statement files you optionally upload, only the transaction date, transaction amount, and a general transaction-type label that contains no personal data (e.g. "Outgoing FAST", "Salary", "Shopping") are extracted. Transaction descriptions are not collected or stored, as they may contain third-party data such as IBANs or names.<br><br>Technical data: Session, device, and connection information processed by the authentication provider for session management and security purposes.<br><br><strong>3. Processing of Bank Statements</strong><br>The bank statement files (PDF/text) you upload are parsed entirely within your own browser, i.e. on your own device. The raw statement file is never sent to our servers, is not stored by us, and no log is kept of this processing.<br><br>Transaction descriptions are deliberately not collected; only the date, amount, and a transaction-type label free of personal data are saved to your account. This means data belonging to third parties that may appear in a statement — such as names, IBANs, phone numbers, or reference numbers — is never stored.<br><br>To prevent the same statement from being accidentally uploaded twice, an irreversible technical fingerprint of the transaction (a one-way hash value) may be stored; this value contains no readable personal data, and no description, name, or IBAN can be recovered from it.<br><br><strong>4. Purposes of Processing Personal Data</strong><br>Your personal data is processed for the purposes of creating and managing your account, providing the personal finance tracking service, synchronizing your data across your devices, ensuring service security, fulfilling legal obligations, and improving the service.<br><br><strong>5. Legal Grounds for Processing</strong><br>Under Article 5 of the KVKK, your personal data is processed on the grounds that it is necessary for the performance of the service relationship (contract) established with you, our legitimate interests such as service security, the fulfillment of our legal obligations, and, where required, your explicit consent.<br><br><strong>6. Transfer of Personal Data</strong><br>Your data may be shared with the infrastructure providers we use to deliver the service. Google Firebase (Firebase Authentication, Cloud Firestore) is used for authentication and data storage.<br><br>In the investment-tracking feature, current prices for the exchange symbols you select are queried from third-party financial data sources; no information identifying you is shared in these queries.<br><br>If ads are shown within the App, ad providers may process technical data under their own privacy policies.<br><br><strong>7. Transfer Abroad</strong><br>The servers of the cloud infrastructure providers used (Google Firebase) may be located outside Turkey. Accordingly, your personal data may be transferred abroad where the conditions required under Article 9 of the KVKK are met, and, where necessary, based on your explicit consent.<br><br><strong>8. Retention Period</strong><br>Your personal data is retained for as long as your account remains active and for the periods stipulated under applicable legislation. When you delete your account or your data, the relevant records are deleted from our systems within a reasonable time.<br><br><strong>9. Data Security</strong><br>Your data is configured to be accessible only from your own account through authorization rules. All data communication takes place over an encrypted connection (HTTPS), and reasonable technical and administrative measures are applied to prevent unauthorized access.<br><br><strong>10. Cookies and Local Storage</strong><br>Your browser\'s local storage and authentication cookies are used to maintain your session and remember your preferences (theme, appearance, etc.). This data is necessary for the service to function.<br><br><strong>11. Minors</strong><br>The App is not directed at users under the age of 18. If a user is determined to be under 18, the relevant account and data may be deleted.<br><br><strong>12. Your Rights as a Data Subject (KVKK Art. 11)</strong><br>Under Article 11 of the KVKK, you have the right to:<br><br>• Learn whether your personal data is being processed,<br>• Request information if it has been processed,<br>• Learn the purpose of processing and whether it is used in accordance with that purpose,<br>• Know the third parties to whom your data is transferred, domestically or abroad,<br>• Request correction of incomplete or inaccurate data,<br>• Request the deletion or destruction of your data,<br>• Request that correction, deletion, or destruction be notified to third parties to whom the data has been transferred,<br>• Object to a result that arises to your detriment as a result of analysis of the processed data,<br>• Request compensation for damages arising from unlawful processing.<br><br><strong>13. How to Apply</strong><br>You may submit requests regarding the rights above via [Email address] or in writing to [Registered address]. Your requests will be concluded within the periods stipulated by the KVKK. You can directly access, export, or delete a significant portion of your data from the "Settings → Data" section within the App.<br><br><strong>14. Changes</strong><br>This notice may be updated from time to time. In the event of a material change, you may be asked to re-approve the current text before continuing to use the App.',
+    welcome_kvkk_agree: "I've read and understood",
     repair_notice_title: 'Repair Complete',
     repair_notice_body: 'The PIN reset system is <strong>now active</strong>.<br><br>If you forget your PIN, use the <em>"Forgot PIN"</em> link on the lock screen to send a 6-digit <strong>PIN Reset</strong> code to your email. You can then reset your PIN or remove it entirely.',
     common_continue_arrow: 'Continue →',
@@ -716,6 +754,18 @@ function applyI18n() {
   });
 }
 
+function applyAnimSpeed() {
+  document.documentElement.classList.remove('anim-off', 'anim-fast', 'anim-slow');
+  if (S.animSpeed && S.animSpeed !== 'normal') document.documentElement.classList.add('anim-' + S.animSpeed);
+  const sel = document.getElementById('animSpeedSelect');
+  if (sel) sel.value = S.animSpeed || 'normal';
+}
+function setAnimSpeed(val) {
+  S.animSpeed = ['fast', 'normal', 'slow', 'off'].includes(val) ? val : 'normal';
+  save();
+  applyAnimSpeed();
+}
+
 function setLanguage(lang) {
   S.language = (lang === 'en') ? 'en' : 'tr';
   save();
@@ -726,39 +776,73 @@ function setLanguage(lang) {
 
 function playWelcomeAnimations() {
   const titleEl = document.getElementById('welcomeTitle');
+  const subcaption = document.getElementById('welcomeSubcaption');
   const langWrap = document.getElementById('welcomeLangWrap');
   const btn = document.getElementById('welcomeContinueBtn');
   if (!titleEl) return;
 
+  const curLang = (S.language === 'en') ? 'en' : 'tr';
+  document.querySelectorAll('.welcome-lang-opt').forEach(b => b.classList.toggle('active', b.dataset.lang === curLang));
+
   const helloWord = (t('welcome_hello') || 'Hoşgeldin').trim();
-  const versionWord = '2.0';
-  const STEP = 0.08; // saniye, harfler arası gecikme
+  titleEl.textContent = helloWord;
 
-  function buildLetters() {
-    let html = '';
-    let i = 0;
-    for (const ch of helloWord) {
-      html += `<span class="welcome-letter" style="animation-delay:${(i * STEP).toFixed(3)}s">${ch}</span>`;
-      i++;
-    }
-    html += `<span class="welcome-letter space" style="animation-delay:${(i * STEP).toFixed(3)}s">&nbsp;</span>`;
-    i++;
-    for (const ch of versionWord) {
-      html += `<span class="welcome-letter accent" style="animation-delay:${(i * STEP).toFixed(3)}s">${ch}</span>`;
-      i++;
-    }
-    titleEl.innerHTML = html;
-    return i * STEP;
-  }
+  // Yukarıdan-aşağı düşme animasyonlarını (title/subcaption/lang seçici) yeniden tetikle
+  [titleEl, subcaption, langWrap].forEach(el => {
+    if (!el) return;
+    el.style.animation = 'none';
+    void el.offsetWidth;
+    el.style.animation = '';
+  });
 
-  if (langWrap) langWrap.classList.remove('shown');
   if (btn) btn.classList.remove('shown');
-
-  const totalDelay = buildLetters();
-  setTimeout(() => { if (langWrap) langWrap.classList.add('shown'); }, totalDelay * 1000);
-  setTimeout(() => { if (btn) btn.classList.add('shown'); }, (totalDelay + 0.12) * 1000);
+  setTimeout(() => { if (btn) btn.classList.add('shown'); }, 700);
 }
 document.addEventListener('DOMContentLoaded', () => { try { playWelcomeAnimations(); } catch (e) {} });
+
+const WELCOME_THEME_DESC = {
+  royal: 'theme_desc_royal', light: 'theme_desc_light', black: 'theme_desc_black'
+};
+const WELCOME_THEME_SHIMMER = {
+  royal: ['#9b8cff', '#d4af5a'], light: ['#007AFF', '#5ac8fa'], black: ['#0A84FF', '#64d2ff']
+};
+const WELCOME_SWEEP_COLOR = {
+  royal: 'rgba(155,140,255,0.4)', light: 'rgba(0,122,255,0.25)', black: 'rgba(10,132,255,0.35)'
+};
+function welcomeSelectTheme(theme) {
+  try { setTheme(theme); } catch (e) {}
+  try { saveImmediate(); } catch (e) {}
+  document.querySelectorAll('#welcomeStep2 .theme-card').forEach(c => c.classList.toggle('active', c.dataset.themeSet === theme));
+  const desc = document.getElementById('welcomeThemeDesc');
+  if (desc) desc.textContent = t(WELCOME_THEME_DESC[theme] || 'theme_desc_royal');
+  const shimmerTitle = document.getElementById('welcomeThemeTitle');
+  const colors = WELCOME_THEME_SHIMMER[theme] || WELCOME_THEME_SHIMMER.royal;
+  if (shimmerTitle) { shimmerTitle.style.setProperty('--shimmer-c1', colors[0]); shimmerTitle.style.setProperty('--shimmer-c2', colors[1]); }
+
+  const screen = document.getElementById('welcomeScreen');
+  if (screen) {
+    screen.classList.remove('preview-royal', 'preview-black');
+    if (theme === 'royal' || theme === 'black') screen.classList.add('preview-' + theme);
+  }
+  const sweep = document.getElementById('welcomeSweep');
+  if (sweep) {
+    sweep.style.setProperty('--sweep-c', WELCOME_SWEEP_COLOR[theme] || WELCOME_SWEEP_COLOR.royal);
+    sweep.classList.remove('play'); void sweep.offsetWidth; sweep.classList.add('play');
+  }
+  welcomeShowLoading();
+}
+function welcomeShowLoading() {
+  const overlay = document.getElementById('welcomeLoading');
+  const textEl = document.getElementById('welcomeLoadingText');
+  const dots = document.getElementById('welcomeDots');
+  if (!overlay || !textEl) return;
+  if (dots) dots.style.display = 'none';
+  const msg = t('welcome_theme_applying');
+  textEl.innerHTML = [...msg].map((ch, i) => `<span style="animation-delay:${(i * 0.04).toFixed(2)}s">${ch === ' ' ? '&nbsp;' : ch}</span>`).join('');
+  overlay.classList.add('show');
+  const dur = 800 + Math.random() * 2200; // 0.8sn - 3sn arası tamamen rastgele
+  setTimeout(() => overlay.classList.remove('show'), dur);
+}
 
 function toggleWelcomeLangPicker() {
   const pop = document.getElementById('welcomeLangPop');
@@ -775,9 +859,88 @@ function selectWelcomeLang(lang) {
   if (trig) trig.classList.remove('open');
   try { playWelcomeAnimations(); } catch (e) {}
 }
+function welcomeGoToStep(n) {
+  for (let i = 1; i <= 4; i++) {
+    const el = document.getElementById('welcomeStep' + i);
+    if (el) el.style.display = (i === n) ? '' : 'none';
+  }
+  if (n === 4) {
+    const verified = (typeof currentUser !== 'undefined' && currentUser && currentUser.emailVerified);
+    if (verified) { dismissWelcome(); return; }
+    const ask = document.getElementById('welcomeVerifyAsk');
+    const pending = document.getElementById('welcomeVerifyPending');
+    const done = document.getElementById('welcomeVerifyDone');
+    const btn = document.getElementById('welcomeVerifyBtn');
+    const skip = document.getElementById('welcomeSkipBtn');
+    if (ask) ask.style.display = '';
+    if (pending) pending.style.display = 'none';
+    if (done) done.style.display = 'none';
+    if (btn) { btn.style.display = ''; btn.textContent = t('welcome_verify_btn'); btn.onclick = welcomeSendVerify; }
+    if (skip) skip.style.display = '';
+  }
+}
+function welcomeAdvanceFromHello() {
+  welcomeShowDots();
+  const dur = 500 + Math.random() * 1500; // 0.5sn - 2sn arası tamamen rastgele
+  setTimeout(() => {
+    const overlay = document.getElementById('welcomeLoading');
+    if (overlay) overlay.classList.remove('show');
+    welcomeGoToStep(2);
+  }, dur);
+}
+function welcomeShowDots() {
+  const overlay = document.getElementById('welcomeLoading');
+  const textEl = document.getElementById('welcomeLoadingText');
+  const dots = document.getElementById('welcomeDots');
+  if (!overlay) return;
+  if (textEl) textEl.innerHTML = '';
+  if (dots) dots.style.display = 'flex';
+  overlay.classList.add('show');
+}
+function welcomeKvkkToggle(checked) {
+  const btn = document.getElementById('welcomeKvkkBtn');
+  if (btn) btn.disabled = !checked;
+}
+function welcomeShowKvkkPopup() {
+  const p = document.getElementById('welcomeKvkkPopup');
+  if (p) p.classList.add('show');
+}
+function welcomeHideKvkkPopup() {
+  const p = document.getElementById('welcomeKvkkPopup');
+  if (p) p.classList.remove('show');
+}
+let _welcomeVerifyPoll = null;
+function welcomeSendVerify() {
+  try { if (typeof resendEmailVerification === 'function') resendEmailVerification(); } catch (e) {}
+  const ask = document.getElementById('welcomeVerifyAsk');
+  const pending = document.getElementById('welcomeVerifyPending');
+  if (ask) ask.style.display = 'none';
+  if (pending) pending.style.display = '';
+  const btn = document.getElementById('welcomeVerifyBtn');
+  if (btn) btn.style.display = 'none';
+  clearInterval(_welcomeVerifyPoll);
+  _welcomeVerifyPoll = setInterval(() => {
+    try {
+      if (typeof currentUser === 'undefined' || !currentUser) return;
+      currentUser.reload().then(() => {
+        if (currentUser.emailVerified) {
+          clearInterval(_welcomeVerifyPoll);
+          const done = document.getElementById('welcomeVerifyDone');
+          const skip = document.getElementById('welcomeSkipBtn');
+          if (pending) pending.style.display = 'none';
+          if (done) done.style.display = '';
+          if (btn) { btn.style.display = ''; btn.textContent = t('welcome_finish'); btn.onclick = dismissWelcome; }
+          if (skip) skip.style.display = 'none';
+        }
+      }).catch(() => {});
+    } catch (e) {}
+  }, 4000);
+}
+
 function dismissWelcome() {
   const w = document.getElementById('welcomeScreen');
   if (w) w.classList.add('hidden');
+  clearInterval(_welcomeVerifyPoll);
   // Test aşamasındayız: kalıcı "bir daha gösterme" bayrağı henüz açılmadı.
   // Tanıtım tek seferlik olacağı zaman şu satırı aç:
   // try { S.welcomeV2Seen = true; save(); } catch (e) {}
@@ -790,6 +953,7 @@ function applySettings() {
   document.documentElement.setAttribute('data-wallpaper', S.wallpaper);
   document.documentElement.setAttribute('lang', S.language);
   try { applyI18n(); } catch (e) {}
+  try { applyAnimSpeed(); } catch (e) {}
 
   const greetEl = document.getElementById('greetName');
   const setNameEl = document.getElementById('setName');

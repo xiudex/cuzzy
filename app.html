@@ -56,22 +56,95 @@
      HOŞGELDİN 2.0 — tam ekran tek seferlik karşılama
      ═══════════════════════════════════════════════════════════════════ -->
 <div class="welcome-screen" id="welcomeScreen">
-  <div class="welcome-top">
-    <h1 class="welcome-title" id="welcomeTitle"></h1>
-    <div class="welcome-lang-wrap" id="welcomeLangWrap">
-      <button type="button" class="welcome-lang-trigger" id="welcomeGlobeBtn" onclick="toggleWelcomeLangPicker()" aria-label="Dil seç">
-        <span class="welcome-globe-ic">🌐</span>
-        <svg class="welcome-globe-chev" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
-      </button>
-      <div class="welcome-lang-pop" id="welcomeLangPop">
-        <button type="button" class="welcome-lang-opt active" data-lang="tr" onclick="selectWelcomeLang('tr')">Türkçe</button>
-        <button type="button" class="welcome-lang-opt" data-lang="en" onclick="selectWelcomeLang('en')">English</button>
+  <div class="welcome-sweep" id="welcomeSweep"></div>
+
+  <!-- ADIM 1: Hoşgeldin + dil -->
+  <div class="welcome-step" id="welcomeStep1">
+    <div class="welcome-top">
+      <h1 class="welcome-title welcome-fall" id="welcomeTitle" style="animation-delay:0.1s"></h1>
+      <div class="welcome-subcaption welcome-fall" id="welcomeSubcaption" data-i18n="welcome_mobile_version" style="animation-delay:0.3s">Mobil 2.0</div>
+      <div class="welcome-lang-wrap welcome-fall" id="welcomeLangWrap" style="animation-delay:0.5s">
+        <button type="button" class="welcome-lang-trigger" id="welcomeGlobeBtn" onclick="toggleWelcomeLangPicker()" aria-label="Dil seç">
+          <span class="welcome-globe-ic">🌐</span>
+          <svg class="welcome-globe-chev" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+        <div class="welcome-lang-pop" id="welcomeLangPop">
+          <button type="button" class="welcome-lang-opt active" data-lang="tr" onclick="selectWelcomeLang('tr')">Türkçe</button>
+          <button type="button" class="welcome-lang-opt" data-lang="en" onclick="selectWelcomeLang('en')">English</button>
+        </div>
       </div>
     </div>
+    <div class="welcome-bottom">
+      <button type="button" class="welcome-continue-btn" id="welcomeContinueBtn" onclick="welcomeAdvanceFromHello()" data-i18n="welcome_continue">Devam et</button>
+    </div>
   </div>
-  <div class="welcome-bottom">
-    <button type="button" class="welcome-continue-btn" id="welcomeContinueBtn" onclick="dismissWelcome()" data-i18n="welcome_continue">Devam et</button>
+
+  <!-- ADIM 2: Tema seç -->
+  <!-- ADIM 2: KVKK / Gizlilik onayı -->
+  <div class="welcome-step" id="welcomeStep2" style="display:none">
+    <div class="welcome-top" style="width:100%;max-width:420px">
+      <h2 class="welcome-step-title" data-i18n="welcome_kvkk_title">Gizlilik ve Kullanım Koşulları</h2>
+      <p class="welcome-step-sub" data-i18n="welcome_kvkk_intro">Devam etmeden önce lütfen gizlilik politikamızı ve kullanım koşullarımızı incele.</p>
+      <button type="button" class="welcome-kvkk-readlink" onclick="welcomeShowKvkkPopup()" data-i18n="welcome_kvkk_read">Metni oku →</button>
+      <label class="welcome-kvkk-check">
+        <input type="checkbox" id="welcomeKvkkCheck" onchange="welcomeKvkkToggle(this.checked)">
+        <span data-i18n="welcome_kvkk_agree">Okudum, anladım</span>
+      </label>
+    </div>
+    <div class="welcome-bottom">
+      <button type="button" class="welcome-continue-btn shown" id="welcomeKvkkBtn" disabled onclick="welcomeGoToStep(3)" data-i18n="welcome_continue">Devam et</button>
+    </div>
   </div>
+
+  <div class="welcome-kvkk-popup" id="welcomeKvkkPopup" onclick="if(event.target===this)welcomeHideKvkkPopup()">
+    <div class="welcome-kvkk-popup-card">
+      <button type="button" class="welcome-kvkk-popup-close" onclick="welcomeHideKvkkPopup()" aria-label="Kapat">✕</button>
+      <div class="welcome-kvkk-popup-title" data-i18n="welcome_kvkk_title">Gizlilik ve Kullanım Koşulları</div>
+      <div class="welcome-kvkk-popup-text" data-i18n-html="welcome_kvkk_text">Cüzzy'yi kullanmaya devam ederek, kişisel verilerinin KVKK kapsamında işlenmesini ve Kullanım Koşulları'nı kabul etmiş olursun.</div>
+    </div>
+  </div>
+
+  <div class="welcome-step" id="welcomeStep3" style="display:none">
+    <div class="welcome-top">
+      <h2 class="welcome-step-title welcome-shimmer-title" id="welcomeThemeTitle" data-i18n="welcome_pick_theme">Bir tema seç</h2>
+      <div class="theme-pick welcome-theme-pick">
+        <button class="theme-card tc-royal active" data-theme-set="royal" onclick="welcomeSelectTheme('royal')" aria-label="Royal"><span class="tc-name">Royal</span></button>
+        <button class="theme-card tc-light" data-theme-set="light" onclick="welcomeSelectTheme('light')" aria-label="Beyaz"><span class="tc-name" data-i18n="theme_white">Beyaz</span></button>
+        <button class="theme-card tc-black" data-theme-set="black" onclick="welcomeSelectTheme('black')" aria-label="Siyah"><span class="tc-name" data-i18n="theme_black">Siyah</span></button>
+      </div>
+      <div class="welcome-theme-desc" id="welcomeThemeDesc"></div>
+    </div>
+    <div class="welcome-bottom">
+      <button type="button" class="welcome-continue-btn shown" onclick="welcomeGoToStep(4)" data-i18n="welcome_continue">Devam et</button>
+    </div>
+  </div>
+
+  <div class="welcome-loading" id="welcomeLoading">
+    <div class="welcome-loading-text" id="welcomeLoadingText"></div>
+    <div class="welcome-dots" id="welcomeDots"><span></span><span></span><span></span></div>
+  </div>
+
+  <!-- ADIM 4: E-posta doğrulama (yalnızca doğrulanmamışsa gösterilir) -->
+  <div class="welcome-step" id="welcomeStep4" style="display:none">
+    <div class="welcome-top">
+      <div id="welcomeVerifyAsk">
+        <h2 class="welcome-step-title" data-i18n="welcome_verify_ask">E-postanı doğrulamak ister misin?</h2>
+        <p class="welcome-step-sub" data-i18n="welcome_verify_sub">Hesabının güvenliği için önerilir.</p>
+      </div>
+      <div id="welcomeVerifyPending" style="display:none">
+        <h2 class="welcome-step-title" data-i18n="welcome_verify_pending">Doğrulama bağlantısı gönderildi</h2>
+        <p class="welcome-step-sub" data-i18n="welcome_verify_pending_sub">E-postanı kontrol et — doğruladıktan sonra burası otomatik güncellenecek.</p>
+      </div>
+      <div id="welcomeVerifyDone" style="display:none">
+        <h2 class="welcome-step-title" data-i18n="welcome_verify_done">E-posta doğrulandı!</h2>
+      </div>
+    </div>
+    <div class="welcome-bottom">
+      <button type="button" class="welcome-continue-btn shown" id="welcomeVerifyBtn" onclick="welcomeSendVerify()" style="margin-top:14px" data-i18n="welcome_verify_btn">Doğrula</button>
+      <button type="button" class="welcome-skip-link shown" id="welcomeSkipBtn" onclick="dismissWelcome()" data-i18n="welcome_not_now">Şimdi değil</button>
+    </div>
+  </div>
+
 </div>
 
 <!-- ═══════════════════════════════════════════════════════════════════
@@ -369,64 +442,64 @@
               <div class="card-title fin-ch"><span class="card-title-text" data-i18n="qm_recurring">Tekrarlayan gelir gider</span><button class="btn btn-sm fin-sec-btn" onclick="showModal('modalRecList')" data-i18n-prefix="common_active">Aktif<span class="fin-arr"> →</span></button><button type="button" class="btn btn-primary btn-sm fin-open-mob" data-i18n="common_add_btn" onclick="openFinSec('finans-tekrarlayan')">Ekle</button></div>
               <div class="form-grid">
                 <div class="type-toggle"><div class="toggle-slider"></div>
-                  <button class="t-btn active income" id="recTypeIncome" onclick="setRecType('income')">↗ Gelir</button>
-                  <button class="t-btn expense" id="recTypeExpense" onclick="setRecType('expense')">↘ Gider</button>
+                  <button class="t-btn active income" id="recTypeIncome" onclick="setRecType('income')" data-i18n="edittx_income">↗ Gelir</button>
+                  <button class="t-btn expense" id="recTypeExpense" onclick="setRecType('expense')" data-i18n="edittx_expense">↘ Gider</button>
                 </div>
-                <div class="field"><label>Açıklama</label><input id="recDesc" placeholder="Örn: Kira"></div>
+                <div class="field"><label data-i18n="common_desc">Açıklama</label><input id="recDesc" placeholder="Örn: Kira" data-i18n-placeholder="rec_desc_ph"></div>
                 <div class="form-row">
-                  <div class="field"><label>Tutar (₺)</label><input type="text" inputmode="numeric" id="recAmt"><div class="num-word-hint" id="h-recAmt"></div></div>
-                  <div class="field"><label>Her ayın</label>
+                  <div class="field"><label data-i18n="common_amount">Tutar (₺)</label><input type="text" inputmode="numeric" id="recAmt"><div class="num-word-hint" id="h-recAmt"></div></div>
+                  <div class="field"><label data-i18n="rec_day_of_month">Her ayın</label>
                     <div class="subday-wrap">
                       <input type="number" id="recDay" min="1" max="31" placeholder="1-31" inputmode="numeric" value="1">
                       <button type="button" class="subday-cal" onclick="toggleDayPicker(event,'recDay','recDayPop')" aria-label="Gün seç" title="Gün seç">▾</button>
                       <div class="subday-pop" id="recDayPop"></div>
                     </div>
-                    <div class="sub-day-note">Seçtiğin günde her ay tutar otomatik işlenir (gelir ya da gider).</div>
+                    <div class="sub-day-note" data-i18n="rec_day_note">Seçtiğin günde her ay tutar otomatik işlenir (gelir ya da gider).</div>
                   </div>
                 </div>
-                <button class="btn btn-primary btn-block" onclick="addRecurring()">Ekle</button>
+                <button class="btn btn-primary btn-block" onclick="addRecurring()" data-i18n="common_add_btn">Ekle</button>
               </div>
             </div>
 
             <div class="card fin-card" id="finans-borc">
               <div class="card-title fin-ch"><span class="card-title-text" data-i18n="qm_debt">Borç / taksit</span><button class="btn btn-sm fin-sec-btn" onclick="showModal('modalDebtList')" data-i18n-prefix="common_list">Liste<span class="fin-arr"> →</span></button><button type="button" class="btn btn-primary btn-sm fin-open-mob" data-i18n="common_add_btn" onclick="openFinSec('finans-borc')">Ekle</button></div>
               <div class="form-grid">
-                <div class="field"><label>Başlık</label><input id="debtName" placeholder="Örn: Kredi kartı"></div>
+                <div class="field"><label data-i18n="common_title_label">Başlık</label><input id="debtName" placeholder="Örn: Kredi kartı" data-i18n-placeholder="debt_name_ph"></div>
                 <div class="form-row">
-                  <div class="field"><label>Tutar (₺)</label><input type="text" inputmode="numeric" id="debtAmt"><div class="num-word-hint" id="h-debtAmt"></div></div>
-                  <div class="field"><label>Son ödeme</label><input type="date" id="debtDue"></div>
+                  <div class="field"><label data-i18n="common_amount">Tutar (₺)</label><input type="text" inputmode="numeric" id="debtAmt"><div class="num-word-hint" id="h-debtAmt"></div></div>
+                  <div class="field"><label data-i18n="debt_due_date">Son ödeme</label><input type="date" id="debtDue"></div>
                 </div>
                 <div class="form-row">
-                  <div class="field"><label>Tür</label>
+                  <div class="field"><label data-i18n="common_type">Tür</label>
                     <select id="debtType">
-                      <option>Kredi Kartı</option>
-                      <option>Taksit</option>
-                      <option>Kredi</option>
-                      <option>Borç</option>
+                      <option value="Kredi Kartı" data-i18n="debt_type_card">Kredi Kartı</option>
+                      <option value="Taksit" data-i18n="debt_type_installment">Taksit</option>
+                      <option value="Kredi" data-i18n="debt_type_loan">Kredi</option>
+                      <option value="Borç" data-i18n="debt_type_debt">Borç</option>
                     </select>
                   </div>
-                  <div class="field"><label>Taksit sayısı</label><input type="number" id="debtInst" min="0" max="99" inputmode="numeric" placeholder="Tek seferlik"></div>
+                  <div class="field"><label data-i18n="debt_installment_count">Taksit sayısı</label><input type="number" id="debtInst" min="0" max="99" inputmode="numeric" placeholder="Tek seferlik" data-i18n-placeholder="debt_one_time_ph"></div>
                 </div>
-                <button class="btn btn-primary btn-block" onclick="addDebt()">Ekle</button>
+                <button class="btn btn-primary btn-block" onclick="addDebt()" data-i18n="debt_add_btn">Ekle</button>
               </div>
             </div>
 
             <div class="card fin-card" id="finans-abonelik">
               <div class="card-title fin-ch"><span class="card-title-text" data-i18n="qm_sub">Abonelikler</span><button class="btn btn-sm fin-sec-btn" onclick="showModal('modalSubList')" data-i18n-prefix="common_list">Liste<span class="fin-arr"> →</span></button><button type="button" class="btn btn-primary btn-sm fin-open-mob" data-i18n="common_add_btn" onclick="openFinSec('finans-abonelik')">Ekle</button></div>
               <div class="form-grid">
-                <div class="field"><label>Servis</label><input id="subName" placeholder="Örn: Spotify"></div>
+                <div class="field"><label data-i18n="sub_service">Servis</label><input id="subName" placeholder="Örn: Spotify" data-i18n-placeholder="sub_name_ph"></div>
                 <div class="form-row">
-                  <div class="field"><label>Aylık (₺)</label><input type="text" inputmode="numeric" id="subAmt"><div class="num-word-hint" id="h-subAmt"></div></div>
-                  <div class="field"><label>Yenilenme günü</label>
+                  <div class="field"><label data-i18n="sub_monthly">Aylık (₺)</label><input type="text" inputmode="numeric" id="subAmt"><div class="num-word-hint" id="h-subAmt"></div></div>
+                  <div class="field"><label data-i18n="sub_renew_day">Yenilenme günü</label>
                     <div class="subday-wrap">
                       <input type="number" id="subDay" min="1" max="31" placeholder="1-31" inputmode="numeric">
                       <button type="button" class="subday-cal" onclick="toggleSubDayPicker(event)" aria-label="Gün seç" title="Gün seç">▾</button>
                       <div class="subday-pop" id="subDayPop"></div>
                     </div>
-                    <div class="sub-day-note">Seçtiğin günde her ay tutar otomatik gider olarak yazılır.</div>
+                    <div class="sub-day-note" data-i18n="sub_day_note">Seçtiğin günde her ay tutar otomatik gider olarak yazılır.</div>
                   </div>
                 </div>
-                <button class="btn btn-primary btn-block" onclick="addSubscription()">Ekle</button>
+                <button class="btn btn-primary btn-block" onclick="addSubscription()" data-i18n="sub_add_btn">Ekle</button>
               </div>
             </div>
 
@@ -691,6 +764,18 @@
                   </div>
                 </div>
                 <div class="set-row col"><div class="set-row-main"><div class="set-row-label" data-i18n="gorunum_wallpaper">Duvar kağıdı</div><div class="set-row-sub" data-i18n="common_coming_soon">Çok Yakında.</div></div></div>
+                <div class="set-row">
+                  <div class="set-row-main">
+                    <div class="set-row-label" data-i18n="anim_speed_label">Animasyon hızı</div>
+                    <div class="set-row-sub" data-i18n="anim_speed_sub">Arayüzdeki geçiş ve animasyon hızını ayarla.</div>
+                  </div>
+                  <select id="animSpeedSelect" onchange="setAnimSpeed(this.value)" style="padding:5px 8px;border-radius:9px;border:1px solid var(--glass-border);background:var(--glass);color:var(--text);font-size:0.78rem;cursor:pointer;max-width:118px">
+                    <option value="fast" data-i18n="anim_speed_fast">Çok hızlı</option>
+                    <option value="normal" data-i18n="anim_speed_normal">Orta</option>
+                    <option value="slow" data-i18n="anim_speed_slow">Çok yavaş</option>
+                    <option value="off" data-i18n="anim_speed_off">Kapalı</option>
+                  </select>
+                </div>
               </div>
               <div class="set-divider hide-mobile-set"></div>
               <div class="set-group hide-mobile-set">
@@ -1058,16 +1143,16 @@
 <div class="modal-bg" id="modalGoal" onclick="if(event.target===this)closeGenericModal('modalGoal')">
   <div class="modal-box">
     <button class="modal-close" onclick="closeGenericModal('modalGoal')">✕</button>
-    <div class="modal-title"> Yeni hedef</div>
-    <button type="button" class="btn btn-sm btn-ghost" style="margin-bottom:14px" onclick="closeGenericModal('modalGoal');openFinSec('finans-hedefler')">Görüntüle</button>
+    <div class="modal-title" data-i18n="goal_add_title"> Yeni hedef</div>
+    <button type="button" class="btn btn-sm btn-ghost" style="margin-bottom:14px" onclick="closeGenericModal('modalGoal');openFinSec('finans-hedefler')" data-i18n="common_view">Görüntüle</button>
     <div class="form-grid">
-      <div class="field"><label>Hedef adı</label><input id="goalName" placeholder="Örn: Araba"></div>
+      <div class="field"><label data-i18n="goal_name">Hedef adı</label><input id="goalName" placeholder="Örn: Araba" data-i18n-placeholder="goal_name_ph"></div>
       <div class="form-row">
-        <div class="field"><label>Hedef tutar (₺)</label><input type="text" inputmode="numeric" id="goalTarget"><div class="num-word-hint" id="h-goalTarget"></div></div>
-        <div class="field"><label>Mevcut (₺)</label><input type="text" inputmode="numeric" id="goalCurrent" value="0"><div class="num-word-hint" id="h-goalCurrent"></div></div>
+        <div class="field"><label data-i18n="goal_target_full">Hedef tutar (₺)</label><input type="text" inputmode="numeric" id="goalTarget"><div class="num-word-hint" id="h-goalTarget"></div></div>
+        <div class="field"><label data-i18n="goal_current_short">Mevcut (₺)</label><input type="text" inputmode="numeric" id="goalCurrent" value="0"><div class="num-word-hint" id="h-goalCurrent"></div></div>
       </div>
-      <div class="field"><label>Hedef tarihi (opsiyonel)</label><input type="date" id="goalDate"></div>
-      <button class="btn btn-primary btn-block" onclick="addGoal()">Ekle</button>
+      <div class="field"><label data-i18n="goal_date_optional">Hedef tarihi (opsiyonel)</label><input type="date" id="goalDate"></div>
+      <button class="btn btn-primary btn-block" onclick="addGoal()" data-i18n="goal_add_btn">Ekle</button>
     </div>
   </div>
 </div>

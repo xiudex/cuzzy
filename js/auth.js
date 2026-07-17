@@ -142,6 +142,25 @@ function save() {
       });
   }, 500);
 }
+function saveImmediate() {
+  if (!currentUser) return;
+  clearTimeout(saveTimer);
+  setSyncStatus('syncing');
+  ignoreNextSnapshot = true;
+  _savePending = true;
+  const payload = { ...normalizeState(S), email: currentUser.email };
+  db.collection('users').doc(currentUser.uid).set(payload)
+    .then(() => {
+      _savePending = false;
+      setSyncStatus('synced');
+      setTimeout(() => ignoreNextSnapshot = false, 1000);
+    })
+    .catch(err => {
+      console.error('Save error:', err);
+      setSyncStatus('error');
+      ignoreNextSnapshot = false;
+    });
+}
 
 /* Kritik veriler için ANINDA yazma (debounce yok). Bakiye gibi kayıp kabul edilemez değerlerde kullanılır. */
 function saveNow() {
