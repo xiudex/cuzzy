@@ -387,6 +387,101 @@ const I18N = {
     inv_positions: 'Pozisyonlar', inv_new: '+ Yeni yatırım', inv_none_added: 'Yatırım eklenmedi',
     inv_forex: 'Döviz', inv_crypto: 'Kripto', inv_search_placeholder: 'Sembol veya isim ara...',
     common_loading: 'Yükleniyor...', common_loading_short: 'Yükleniyor',
+    destek_title: 'Destek & İletişim', destek_intro: 'Bir hata mı buldun, önerimiz mi var? Bize ilet.',
+    destek_cat_bug: ' Hata', destek_cat_suggestion: ' Öneri', destek_cat_complaint: ' Şikayet',
+    destek_subject: 'Konu', destek_subject_ph: 'Kısaca konuyu belirt',
+    destek_message_ph: 'Detaylı açıkla, ne kadar net olursa o kadar hızlı çözebiliriz.',
+    destek_send: 'Gönder', destek_or_email: 'veya doğrudan yaz: ',
+    empty_no_goals: 'Henüz hedef yok', empty_no_tx_hint: 'Henüz işlem yok. Hızlı işlemden ekleyebilirsin.',
+    empty_none: 'Yok', empty_not_uploaded: 'Henüz yüklenmedi', empty_no_tx: 'İşlem yok',
+    empty_no_debt: 'Borç yok', empty_no_sub: 'Abonelik yok', empty_no_note: 'Not yok',
+    empty_no_filtered_tx: 'Bu filtreye uygun işlem yok.',
+    acct_total_income: 'Toplam gelir', acct_total_expense: 'Toplam gider', acct_net: 'Net',
+    acct_tx_count: 'İşlem sayısı', acct_month_net: 'Bu ay net', acct_active_goals: 'Aktif hedef', acct_tx_suffix: 'işlem',
+    cl_3_9_2_title: 'Mobil İyileştirmeler',
+    cl_3_9_2_body: '• Mobil iyileştirmeler ve çeşitli arayüz güncellemesi.',
+    cl_3_8_2_title: 'Güncelleme Notları ve Yenilikler',
+    cl_3_8_2_body: '• E-posta değiştirme aktif hale getirildi.<br>• PIN sistemi tamamen kaldırıldı.<br>• Zaman aşımı aktif hale getirildi.<br>• İçe/dışa aktarma özelliği eklendi.<br>• EFT kategorileri eklendi.<br>• Çeşitli arayüz iyileştirmeleri ve düzeltmeleri yapıldı.<br>• Güvenlik açıkları giderildi.',
+    cl_3_3_1_title: 'Hata Düzeltmeleri ve Yenilikler',
+    cl_3_3_1_body: '<br>• Çeşitli arayüz iyileştirmeleri ve düzeltmeler.<br>• Takip eklendi.<br>',
+    cl_3_1_1_title: 'Hata Düzeltmeleri ve Yenilikler',
+    cl_3_1_1_body: '• Çeşitli arayüz iyileştirmeleri ve düzeltmeler.<br>• Dışarı Aktar güvenli hale getirildi.',
+    cl_3_0_0_title: 'Arayüz Güncellemesi',
+    cl_3_0_0_body: '• Tüm menü baştan düzenlendi.<br>• Nabvar sadeleştirildi.<br>• Kullanım kolaylığı arttırıldı.<br>• Özelleştiirlebilir Panel eklendi.<br>• Yapışkan not eklendi.<br>• Bölümler arası geçiş daha akıcı hale getirildi.<br>• Performans ve optimizasyon arttırıldı.<br>• Yeni animasyonlar eklendi.<br>• Tema renkleri güncellendi.',
+    cl_2_40_16_title: 'Hata Düzeltmeleri ve yenilikler',
+    cl_2_40_16_body: '• Mobil uyumu düzenlendi.<br>• app menüsü düzenlendi.<br>• Bildirim hataları giderildi.<br>• Otomatik özetler eklendi.<br>• KVKK metni güncellendi.<br>• Text hataları giderildi.',
+    cl_2_35_15_title: 'Hata Düzeltmeleri ve yenilikler',
+    cl_2_35_15_body: '• Çoklu işlem özelliği eklendi.<br>• Ekstre okuma hataları giderildi.<br>• reklamlar tamamen kaldırıldı.',
+    cl_2_34_14_title: 'Hata Düzeltmeleri',
+    cl_2_34_14_body: '<br>Ekstre yükleme yenilendi ve aktif edildi.<br>Tanıtım turu yeniden aktif edildi.<br>Giriş yeniden düzenlendi.',
+    cl_2_31_11_title: 'Hata Düzeltmeleri',
+    cl_2_31_11_body: 'Reklam planı normalize hatası giderildi.<br>Her veri yenilemesinde reklam alanlarının yanlış açılması düzeltildi.<br>Performans iyileştiremeleri yapıldı.',
+    cl_2_31_9_title: 'Güncelleme Notları',
+    cl_2_31_9_body: 'Duvar kağıtları eklendi.<br>Renk Teması eklendi.<br>App içi şifre değiştirme eklendi.<br>aktif bildirimler eklendi.<br>Portföy kontrolü eklendi.<br>Tüm verileri silme işlemi eklendi.',
+    cl_2_26_9_title: 'Güncelleme Notları',
+    cl_2_26_9_body: 'Destek kısmı eklendi.<br>Renk sızması hataları giderildi.<br>Tanıtım turu geçici olarak kaldırıldı.',
+    cl_1_26_9_title: 'Güncelleme Notları',
+    cl_1_26_9_body: 'Hesabı tamamen silme işlemi eklendi.<br>Onay arayüzü düzenlendi.<br>Tüm ekleme ve silme işlemleri hataları giderildi.<br>',
+    cl_1_25_8_title: 'Güncelleme Notları',
+    cl_1_25_8_body: '3 kademeli reklam paketi eklendi<br>Reklam Panelleri eklendi.(Test aşamasında)<br>Güncelleme sonrası tek seferlik tanıtım turu eklendi.<br>Ayarlar\'a girişte çıkan gezinme hatası giderildi.<br>Ekstre yükleme geçici olarak devre dışı.',
+    cl_0_22_8_title: 'Güncelleme Notları',
+    cl_0_22_8_body: 'Tutar limiti milyara yükseltildi.<br>Ekstre yüklemede ₺ / TL / TRY sembolü sorunu giderildi.<br>Ondalık virgüllü tutarlarda binlik nokta formatı düzeltildi.<br>Yüksek rakamlarda form reddi hatası giderildi.',
+    cl_0_22_4_title: 'Güncelleme Notları',
+    cl_0_22_4_body: 'Bildirim paneli ve uygulama bildirimleri eklendi.<br>Tüm tutar alanlarında Türkçe rakam yazı ipucu eklendi.<br>Yazarken otomatik binlik nokta formatlaması eklendi.<br>Piyasa durum rozeti eklendi.<br>PIN sıfırlandıktan sonra kaybolma hatası giderildi',
+    cl_0_18_3_title: 'Güncelleme Notları',
+    cl_0_18_3_body: '2FA e-posta doğrulaması ile güvenli giriş eklendi.<br>Yeni PIN sistemi eklendi.<br>Mail e Doğrulama gönderilmeme sorunu çözüldü.<br>Mail e-posta gönderimi iyileştirildi.<br>Doğrulama kodu ekranı güncellendi.',
+    cl_0_14_2_title: 'Güncelleme Notları',
+    cl_0_14_2_body: 'Tekrarlayan işlemi eklendi.<br>Abonelik yönetimi eklendi.<br>Borç Takip sistemi eklendi.<br>Bütçe limiti ve uyarı sistemi eklendi.<br>Ekstre yükleme eklendi.<br>Gelir ve gider kategorilendirme sistemi düzeltildi.',
+    cl_0_9_1_title: 'Güncelleme Notları',
+    cl_0_9_1_body: 'Hedef ve tasarruf sistemi eklendi.<br>Canlı kur Sistemi eklendi.<br>Hızlı işlem ekleme paneli.<br>Grafik ile analiz eklendi.<br>Hata Düzeltmeleri yapıldı.',
+    cl_0_4_0_title: 'Güncelleme Notlar',
+    cl_0_4_0_body: 'Cüzzy yayına girdi.<br>Giriş &amp; kayıt sistemi.<br>Temel gelir ve gider yönetimi eklendi.<br>güvenli bulut senkronizasyonu eklendi.',
+    mobnotice_title: 'Mobil cihaz algılandı',
+    mobnotice_body: 'Cüzzy şu an masaüstü için tam optimize edilmiştir. Mobilde bazı özellikler (canlı piyasa, panel özelleştirme, tanıtım turu, çoklu grafik görünümü) sınırlıdır. Tam deneyim için bilgisayardan girebilir ya da cihazını yatay çevirebilirsin.',
+    common_understood: 'Anladım', common_ok: 'Tamam',
+    survey_title: 'Güncellemeyi Değerlendir', survey_worst: '1 · Çok kötü', survey_best: '10 · Mükemmel',
+    survey_feedback_label: 'Özgür fikrinizi belirtin (opsiyonel)', survey_feedback_ph: 'Bu konuda görüşünü yazabilirsin...',
+    common_back: '← Geri', common_next: 'İleri →',
+    survey_q_general: 'Cüzzy\'den genel memnuniyetini nasıl puanlarsın?',
+    survey_q_update: 'v3.8.2 güncellemesini (yeni özellikler) nasıl buldun?',
+    survey_q_recommend: 'Cüzzy\'yi bir arkadaşına tavsiye etme olasılığın nedir?',
+    survey_progress: 'Soru {n} / {total}',
+    sec_timelock: 'Zaman kilidi', sec_autologout_label: 'Hareketsizlikte oturumu kapat',
+    sec_autologout_sub: 'Seçilen süre boyunca işlem yapılmazsa güvenlik için otomatik çıkış yapılır.',
+    common_off: 'Kapalı', min_5: '5 dakika', min_15: '15 dakika', min_30: '30 dakika', min_45: '45 dakika', hour_1: '1 saat',
+    sec_account_security: 'Hesap güvenliği', sec_change_pw: 'Şifre değiştir', sec_change_pw_sub: 'Hesap parolanı güncelle.',
+    common_change: 'Değiştir', sec_change_email: 'E-postayı değiştir', sec_change_email_sub: 'Giriş e-postanı güncelle (doğrulama gerekir).',
+    sec_budget: 'Bütçe', sec_budget_sub: 'Limit ve uyarı eşiği.', common_set: 'Ayarla',
+    sec_delete_group: 'Hesabını veya verilerini sil', sec_delete_all: 'Tüm verileri sil', sec_delete_all_sub: 'Geri alınamaz. Önce JSON yedek al.',
+    common_delete_btn: 'Sil', sec_delete_account: 'Hesabı sil', sec_delete_account_sub: 'Hesabın ve tüm verilerin kalıcı olarak silinir.',
+    prof_account_info: 'Hesap bilgileri', prof_name: 'İsim', prof_email_sub: 'Güvenlik kısmından değiştirilir',
+    prof_session: 'Oturum', prof_logout: 'Oturumu kapat', prof_logout_sub: 'Verilerin bulutta saklanır, tekrar girişte devam edersin.',
+    common_logout: 'Çıkış',
+    gorunum_theme: 'Tema', gorunum_color_theme: 'Renk teması', theme_white: 'Beyaz', theme_black: 'Siyah',
+    gorunum_wallpaper: 'Duvar kağıdı', common_coming_soon: 'Çok Yakında.',
+    gorunum_advanced: 'Gelişmiş görünüm', gorunum_tour: 'Tanıtım turu', gorunum_tour_sub: 'Temel özellikleri adım adım gezdirir.',
+    common_start: 'Başlat',
+    inv_add_title: ' Yatırım ekle', inv_mode_live: 'Canlı piyasa', inv_mode_manual: 'Manuel',
+    inv_name: 'Yatırım adı', inv_name_ph: 'Örn: Uzun vade', common_type: 'Tür', inv_stock: ' BIST',
+    inv_symbol: 'Sembol', inv_qty: 'Adet', inv_buy_price: 'Alış fiyatı (birim)',
+    inv_gold: 'Altın', inv_fund: 'Fon', inv_savings: 'Birikim', inv_total_amount: 'Toplam tutar (₺)',
+    nav_panel: 'Panel', qm_close_hint: 'Kapatmak için boş bir alana dokunun', email_label: 'E-posta',
+    mtx_amount: 'Tutar ₺', mtx_add_row: 'Satır ekle', mtx_add_all: 'Tümünü ekle', common_cancel: 'İptal', mtx_desc_ph: 'Açıklama (ops.)',
+    debt_name_ph: 'Örn: Kredi kartı', debt_one_time_ph: 'Tek seferlik', sub_name_ph: 'Örn: Spotify', goal_name_ph: 'Örn: Araba',
+    export_group_title: 'Hesap taşıma — şifreli kod', export_export: 'Dışa aktar',
+    export_export_sub: 'Tüm verilerini parolayla şifreli bir koda çevirir. Kod bu hesaba özeldir.', common_open: 'Aç',
+    export_import: 'İçeri aktar', export_import_sub: 'Başka hesaptan aldığın kodu ve parolasını girerek verileri geri yükler.',
+    export_backup_report: 'Yedek & rapor', export_csv: 'CSV indir', common_download: 'İndir',
+    export_json: 'JSON yedek', export_pdf: 'PDF rapor',
+    set_other_needed: 'Diğer gerekenler', verify_your_email: 'E-postanı doğrula', rate_update_v383: 'v3.8.3 güncellemesini değerlendir',
+    inv_total_expense: 'Toplam gider', sub_renews_on: 'Her ayın {day}. günü yenilenir',
+    welcome_hello: 'Hoşgeldin ', welcome_continue: 'Devam et',
+    repair_notice_title: 'Onarım Tamamlandı',
+    repair_notice_body: 'PIN sıfırlama sistemi <strong>artık aktif</strong>.<br><br>PIN\'inizi unuttuğunuzda kilit ekranındaki <em>"PIN\'i unuttum"</em> bağlantısından e-postanıza 6 haneli <strong>PIN Sıfırlama</strong> kodu gönderebilirsiniz. Ardından PIN\'inizi sıfırlayabilir veya tamamen kaldırabilirsiniz.',
+    common_continue_arrow: 'Devam →',
+    features_notice_title: 'Güvenlik Özellikleri Aktif',
+    features_notice_body: '<strong>E-posta doğrulama:</strong> Yeni hesap oluştururken e-postanıza 6 haneli doğrulama kodu gönderilir.<br><br><strong>2 adımlı giriş:</strong> Her girişte şifrenizin yanı sıra e-postanıza güvenlik kodu gönderilir; şifreniz ele geçirilse bile hesabınız korunur.<br><br><strong>PIN sıfırlama:</strong> PIN\'inizi unuttuğunuzda e-posta yoluyla sıfırlayabilir veya kaldırabilirsiniz.',
+    features_notice_btn: 'Harika, Anladım '
   },
   en: {
     set_title: 'Settings', set_profil: 'Profile', set_gorunum: 'Appearance', set_guvenlik: 'Security & data',
@@ -495,6 +590,101 @@ const I18N = {
     inv_positions: 'Positions', inv_new: '+ New investment', inv_none_added: 'No investments added',
     inv_forex: 'Forex', inv_crypto: 'Crypto', inv_search_placeholder: 'Search symbol or name...',
     common_loading: 'Loading...', common_loading_short: 'Loading',
+    destek_title: 'Support & Contact', destek_intro: 'Found a bug, or have a suggestion? Let us know.',
+    destek_cat_bug: ' Bug', destek_cat_suggestion: ' Suggestion', destek_cat_complaint: ' Complaint',
+    destek_subject: 'Subject', destek_subject_ph: 'Briefly describe the subject',
+    destek_message_ph: "Explain in detail — the clearer it is, the faster we can fix it.",
+    destek_send: 'Send', destek_or_email: 'or write directly: ',
+    empty_no_goals: 'No goals yet', empty_no_tx_hint: 'No transactions yet. You can add one from Quick add.',
+    empty_none: 'None', empty_not_uploaded: 'Nothing uploaded yet', empty_no_tx: 'No transactions',
+    empty_no_debt: 'No debts', empty_no_sub: 'No subscriptions', empty_no_note: 'No notes',
+    empty_no_filtered_tx: 'No transactions match this filter.',
+    acct_total_income: 'Total income', acct_total_expense: 'Total expense', acct_net: 'Net',
+    acct_tx_count: 'Transaction count', acct_month_net: 'This month net', acct_active_goals: 'Active goals', acct_tx_suffix: 'transactions',
+    cl_3_9_2_title: 'Mobile Improvements',
+    cl_3_9_2_body: '• Mobile improvements and various UI updates.',
+    cl_3_8_2_title: 'Update Notes and New Features',
+    cl_3_8_2_body: '• Email change was activated.<br>• PIN system fully removed.<br>• Session timeout activated.<br>• Import/export feature added.<br>• Wire transfer categories added.<br>• Various UI improvements and fixes.<br>• Security vulnerabilities fixed.',
+    cl_3_3_1_title: 'Bug Fixes and New Features',
+    cl_3_3_1_body: '<br>• Various UI improvements and fixes.<br>• Tracking added.<br>',
+    cl_3_1_1_title: 'Bug Fixes and New Features',
+    cl_3_1_1_body: '• Various UI improvements and fixes.<br>• Export made secure.',
+    cl_3_0_0_title: 'Interface Update',
+    cl_3_0_0_body: '• Entire menu redesigned from scratch.<br>• Navbar simplified.<br>• Ease of use improved.<br>• Customizable Panel added.<br>• Sticky note added.<br>• Smoother transitions between sections.<br>• Performance and optimization improved.<br>• New animations added.<br>• Theme colors updated.',
+    cl_2_40_16_title: 'Bug Fixes and New Features',
+    cl_2_40_16_body: '• Mobile compatibility improved.<br>• App menu reorganized.<br>• Notification bugs fixed.<br>• Automatic summaries added.<br>• Privacy notice updated.<br>• Text bugs fixed.',
+    cl_2_35_15_title: 'Bug Fixes and New Features',
+    cl_2_35_15_body: '• Multi-transaction feature added.<br>• Statement reading bugs fixed.<br>• Ads completely removed.',
+    cl_2_34_14_title: 'Bug Fixes',
+    cl_2_34_14_body: '<br>Statement upload renewed and reactivated.<br>Onboarding tour reactivated.<br>Login redesigned.',
+    cl_2_31_11_title: 'Bug Fixes',
+    cl_2_31_11_body: 'Fixed an ad plan normalization bug.<br>Fixed ad slots opening incorrectly on every data refresh.<br>Performance improvements made.',
+    cl_2_31_9_title: 'Update Notes',
+    cl_2_31_9_body: 'Wallpapers added.<br>Color theme added.<br>In-app password change added.<br>Active notifications added.<br>Portfolio check added.<br>Delete all data feature added.',
+    cl_2_26_9_title: 'Update Notes',
+    cl_2_26_9_body: 'Support section added.<br>Color bleed bugs fixed.<br>Onboarding tour temporarily removed.',
+    cl_1_26_9_title: 'Update Notes',
+    cl_1_26_9_body: 'Fully delete account feature added.<br>Confirmation UI redesigned.<br>Fixed bugs across all add/delete operations.<br>',
+    cl_1_25_8_title: 'Update Notes',
+    cl_1_25_8_body: '3-tier ad plan added<br>Ad panels added. (In testing)<br>One-time onboarding tour after updates added.<br>Fixed a navigation bug when entering Settings.<br>Statement upload temporarily disabled.',
+    cl_0_22_8_title: 'Update Notes',
+    cl_0_22_8_body: 'Amount limit raised to one billion.<br>Fixed ₺ / TL / TRY symbol issue in statement uploads.<br>Fixed thousands-separator formatting for decimal amounts.<br>Fixed form rejection bug for large numbers.',
+    cl_0_22_4_title: 'Update Notes',
+    cl_0_22_4_body: 'Notification panel and in-app notifications added.<br>Added a number-to-words hint on all amount fields.<br>Added automatic thousands-separator formatting while typing.<br>Market status badge added.<br>Fixed a bug where data disappeared after PIN reset',
+    cl_0_18_3_title: 'Update Notes',
+    cl_0_18_3_body: 'Secure login with 2FA email verification added.<br>New PIN system added.<br>Fixed an issue where verification emails weren\'t sent.<br>Email delivery improved.<br>Verification code screen updated.',
+    cl_0_14_2_title: 'Update Notes',
+    cl_0_14_2_body: 'Recurring transactions added.<br>Subscription management added.<br>Debt tracking system added.<br>Budget limit and alert system added.<br>Statement upload added.<br>Income/expense categorization system fixed.',
+    cl_0_9_1_title: 'Update Notes',
+    cl_0_9_1_body: 'Goals and savings system added.<br>Live exchange rate system added.<br>Quick transaction panel.<br>Chart analysis added.<br>Bug fixes made.',
+    cl_0_4_0_title: 'Update Notes',
+    cl_0_4_0_body: 'Cüzzy launched.<br>Login &amp; signup system.<br>Basic income/expense management added.<br>Secure cloud sync added.',
+    mobnotice_title: 'Mobile device detected',
+    mobnotice_body: "Cüzzy is currently fully optimized for desktop. Some features are limited on mobile (live market, panel customization, onboarding tour, multi-chart view). For the full experience, use a computer or rotate your device to landscape.",
+    common_understood: 'Got it', common_ok: 'OK',
+    survey_title: 'Rate the Update', survey_worst: '1 · Very bad', survey_best: '10 · Excellent',
+    survey_feedback_label: 'Share your thoughts (optional)', survey_feedback_ph: 'You can write your thoughts on this...',
+    common_back: '← Back', common_next: 'Next →',
+    survey_q_general: 'How would you rate your overall satisfaction with Cüzzy?',
+    survey_q_update: 'What did you think of the v3.8.2 update (new features)?',
+    survey_q_recommend: 'How likely are you to recommend Cüzzy to a friend?',
+    survey_progress: 'Question {n} / {total}',
+    sec_timelock: 'Time lock', sec_autologout_label: 'Auto sign-out when inactive',
+    sec_autologout_sub: "If no action is taken during the selected time, you'll be automatically signed out for security.",
+    common_off: 'Off', min_5: '5 minutes', min_15: '15 minutes', min_30: '30 minutes', min_45: '45 minutes', hour_1: '1 hour',
+    sec_account_security: 'Account security', sec_change_pw: 'Change password', sec_change_pw_sub: 'Update your account password.',
+    common_change: 'Change', sec_change_email: 'Change email', sec_change_email_sub: 'Update your login email (verification required).',
+    sec_budget: 'Budget', sec_budget_sub: 'Limit and alert threshold.', common_set: 'Set',
+    sec_delete_group: 'Delete your account or data', sec_delete_all: 'Delete all data', sec_delete_all_sub: "Can't be undone. Back up as JSON first.",
+    common_delete_btn: 'Delete', sec_delete_account: 'Delete account', sec_delete_account_sub: 'Your account and all your data will be permanently deleted.',
+    prof_account_info: 'Account info', prof_name: 'Name', prof_email_sub: 'Changed from the Security section',
+    prof_session: 'Session', prof_logout: 'Sign out', prof_logout_sub: "Your data stays in the cloud — you'll pick up where you left off next time.",
+    common_logout: 'Sign out',
+    gorunum_theme: 'Theme', gorunum_color_theme: 'Color theme', theme_white: 'White', theme_black: 'Black',
+    gorunum_wallpaper: 'Wallpaper', common_coming_soon: 'Coming soon.',
+    gorunum_advanced: 'Advanced appearance', gorunum_tour: 'Onboarding tour', gorunum_tour_sub: 'Walks you through the core features step by step.',
+    common_start: 'Start',
+    inv_add_title: ' Add investment', inv_mode_live: 'Live market', inv_mode_manual: 'Manual',
+    inv_name: 'Investment name', inv_name_ph: 'Ex: Long term', common_type: 'Type', inv_stock: ' BIST',
+    inv_symbol: 'Symbol', inv_qty: 'Quantity', inv_buy_price: 'Buy price (unit)',
+    inv_gold: 'Gold', inv_fund: 'Fund', inv_savings: 'Savings', inv_total_amount: 'Total amount (₺)',
+    nav_panel: 'Panel', qm_close_hint: 'Tap an empty area to close', email_label: 'Email',
+    mtx_amount: 'Amount ₺', mtx_add_row: 'Add row', mtx_add_all: 'Add all', common_cancel: 'Cancel', mtx_desc_ph: 'Description (opt.)',
+    debt_name_ph: 'Ex: Credit card', debt_one_time_ph: 'One-time', sub_name_ph: 'Ex: Spotify', goal_name_ph: 'Ex: Car',
+    export_group_title: 'Account transfer — encrypted code', export_export: 'Export',
+    export_export_sub: 'Turns all your data into a password-encrypted code. The code is specific to this account.', common_open: 'Open',
+    export_import: 'Import', export_import_sub: 'Restores data using a code and password from another account.',
+    export_backup_report: 'Backup & report', export_csv: 'Download CSV', common_download: 'Download',
+    export_json: 'JSON backup', export_pdf: 'PDF report',
+    set_other_needed: 'Other things to do', verify_your_email: 'Verify your email', rate_update_v383: 'Rate the v3.8.3 update',
+    inv_total_expense: 'Total expense', sub_renews_on: 'Renews on the {day} of each month',
+    welcome_hello: 'Welcome ', welcome_continue: 'Continue',
+    repair_notice_title: 'Repair Complete',
+    repair_notice_body: 'The PIN reset system is <strong>now active</strong>.<br><br>If you forget your PIN, use the <em>"Forgot PIN"</em> link on the lock screen to send a 6-digit <strong>PIN Reset</strong> code to your email. You can then reset your PIN or remove it entirely.',
+    common_continue_arrow: 'Continue →',
+    features_notice_title: 'Security Features Active',
+    features_notice_body: '<strong>Email verification:</strong> A 6-digit verification code is sent to your email when creating a new account.<br><br><strong>2-step login:</strong> A security code is sent to your email alongside your password on every login; your account stays protected even if your password is compromised.<br><br><strong>PIN reset:</strong> If you forget your PIN, you can reset or remove it by email.',
+    features_notice_btn: 'Great, got it '
   }
 };
 
@@ -503,10 +693,17 @@ function t(key) {
   return (I18N[lang] && I18N[lang][key]) || (I18N.tr[key]) || key;
 }
 function localeCode() { return (typeof S !== 'undefined' && S.language === 'en') ? 'en-US' : 'tr-TR'; }
+const CAT_KEY_MAP = { 'Diğer': 'cat_other', 'Market': 'cat_market', 'Fatura': 'cat_bill', 'Kira': 'cat_rent', 'Ulaşım': 'cat_transport', 'Yemek': 'cat_food', 'Sağlık': 'cat_health', 'Eğlence': 'cat_entertainment', 'Eğitim': 'cat_education', 'Maaş': 'cat_salary', 'Yatırım': 'cat_investment', 'EFT - Para Gönderimi': 'cat_eft_send', 'EFT - Para Alımı': 'cat_eft_receive' };
+function catLabel(value) { const key = CAT_KEY_MAP[value]; return key ? t(key) : value; }
+const DEBT_TYPE_KEY_MAP = { 'Kredi Kartı': 'debt_type_card', 'Taksit': 'debt_type_installment', 'Kredi': 'debt_type_loan', 'Borç': 'debt_type_debt' };
+function debtTypeLabel(value) { const key = DEBT_TYPE_KEY_MAP[value]; return key ? t(key) : value; }
 
 function applyI18n() {
   document.querySelectorAll('[data-i18n]').forEach(el => {
     el.textContent = t(el.getAttribute('data-i18n'));
+  });
+  document.querySelectorAll('[data-i18n-html]').forEach(el => {
+    el.innerHTML = t(el.getAttribute('data-i18n-html'));
   });
   document.querySelectorAll('[data-i18n-prefix]').forEach(el => {
     const txt = t(el.getAttribute('data-i18n-prefix'));
@@ -525,6 +722,65 @@ function setLanguage(lang) {
   document.documentElement.setAttribute('lang', S.language);
   document.querySelectorAll('.lang-card').forEach(c => c.classList.toggle('active', c.dataset.langSet === S.language));
   applyI18n();
+}
+
+function playWelcomeAnimations() {
+  const titleEl = document.getElementById('welcomeTitle');
+  const langWrap = document.getElementById('welcomeLangWrap');
+  const btn = document.getElementById('welcomeContinueBtn');
+  if (!titleEl) return;
+
+  const helloWord = (t('welcome_hello') || 'Hoşgeldin').trim();
+  const versionWord = '2.0';
+  const STEP = 0.08; // saniye, harfler arası gecikme
+
+  function buildLetters() {
+    let html = '';
+    let i = 0;
+    for (const ch of helloWord) {
+      html += `<span class="welcome-letter" style="animation-delay:${(i * STEP).toFixed(3)}s">${ch}</span>`;
+      i++;
+    }
+    html += `<span class="welcome-letter space" style="animation-delay:${(i * STEP).toFixed(3)}s">&nbsp;</span>`;
+    i++;
+    for (const ch of versionWord) {
+      html += `<span class="welcome-letter accent" style="animation-delay:${(i * STEP).toFixed(3)}s">${ch}</span>`;
+      i++;
+    }
+    titleEl.innerHTML = html;
+    return i * STEP;
+  }
+
+  if (langWrap) langWrap.classList.remove('shown');
+  if (btn) btn.classList.remove('shown');
+
+  const totalDelay = buildLetters();
+  setTimeout(() => { if (langWrap) langWrap.classList.add('shown'); }, totalDelay * 1000);
+  setTimeout(() => { if (btn) btn.classList.add('shown'); }, (totalDelay + 0.12) * 1000);
+}
+document.addEventListener('DOMContentLoaded', () => { try { playWelcomeAnimations(); } catch (e) {} });
+
+function toggleWelcomeLangPicker() {
+  const pop = document.getElementById('welcomeLangPop');
+  const trig = document.getElementById('welcomeGlobeBtn');
+  if (pop) pop.classList.toggle('open');
+  if (trig) trig.classList.toggle('open');
+}
+function selectWelcomeLang(lang) {
+  document.querySelectorAll('.welcome-lang-opt').forEach(b => b.classList.toggle('active', b.dataset.lang === lang));
+  try { setLanguage(lang); } catch (e) { S.language = lang; try { applyI18n(); } catch (e2) {} }
+  const pop = document.getElementById('welcomeLangPop');
+  const trig = document.getElementById('welcomeGlobeBtn');
+  if (pop) pop.classList.remove('open');
+  if (trig) trig.classList.remove('open');
+  try { playWelcomeAnimations(); } catch (e) {}
+}
+function dismissWelcome() {
+  const w = document.getElementById('welcomeScreen');
+  if (w) w.classList.add('hidden');
+  // Test aşamasındayız: kalıcı "bir daha gösterme" bayrağı henüz açılmadı.
+  // Tanıtım tek seferlik olacağı zaman şu satırı aç:
+  // try { S.welcomeV2Seen = true; save(); } catch (e) {}
 }
 
 function applySettings() {

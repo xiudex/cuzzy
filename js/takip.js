@@ -50,12 +50,12 @@ function renderCategoryDonut(targetId) {
     cumulative += pct;
   });
   svg += '<text x="' + cx + '" y="' + (cy - 2) + '" text-anchor="middle" fill="var(--text)" font-size="15" font-weight="700">' + fmtShort(total) + '</text>';
-  svg += '<text x="' + cx + '" y="' + (cy + 14) + '" text-anchor="middle" fill="var(--text-muted)" font-size="9">Toplam gider</text>';
+  svg += '<text x="' + cx + '" y="' + (cy + 14) + '" text-anchor="middle" fill="var(--text-muted)" font-size="9">' + t('inv_total_expense') + '</text>';
   svg += '</svg>';
   let legend = '<div class="donut-legend">';
   slices.forEach(([cat, val], i) => {
     const pct = ((val / total) * 100).toFixed(1);
-    legend += '<div class="donut-legend-item"><span class="donut-legend-dot" style="background:' + palette[i % palette.length] + '"></span><span class="donut-legend-name">' + sanitize(cat) + '</span><span class="donut-legend-val">%' + pct + '</span></div>';
+    legend += '<div class="donut-legend-item"><span class="donut-legend-dot" style="background:' + palette[i % palette.length] + '"></span><span class="donut-legend-name">' + sanitize(catLabel(cat)) + '</span><span class="donut-legend-val">%' + pct + '</span></div>';
   });
   legend += '</div>';
   c.innerHTML = svg + legend;

@@ -45,7 +45,7 @@ function qmQaSetType(type) {
   if (sub) {
     sub.classList.toggle('income', type === 'income');
     sub.classList.toggle('expense', type === 'expense');
-    sub.textContent = type === 'income' ? '+ Gelir ekle' : '− Gider ekle';
+    sub.textContent = type === 'income' ? t('rec_add_income') : t('rec_add_expense');
   }
 }
 function qmQaSetCat(el) {
@@ -136,13 +136,13 @@ function renderDashRecent() {
   const recent = txs.slice(0, 8);
   dr.innerHTML = recent.length
     ? recent.map(txItemHTML).join('')
-    : '<div class="empty-state">Henüz işlem yok. Hızlı işlemden ekleyebilirsin.</div>';
+    : '<div class="empty-state">' + t('empty_no_tx_hint') + '</div>';
   if (typeof _censorOn !== 'undefined' && _censorOn) { try { applyCensor(); } catch (e) {} }
 }
 
 function txItemHTML(t) {
   const safeDesc = sanitize(t.desc);
-  const safeCat = sanitize(t.category);
+  const safeCat = sanitize(catLabel(t.category));
   const dateStr = new Date(t.date).toLocaleDateString(localeCode());
   const safeId = t.id.replace(/"/g, '&quot;');
   return `<div class="tx-item ${t.type}">
@@ -164,7 +164,7 @@ function renderTxList() {
   let txs = [...S.transactions];
   if (txFilter !== 'all') txs = txs.filter(t => t.type === txFilter);
   txs.sort((a, b) => b.ts - a.ts);
-  if (!txs.length) { list.innerHTML = '<div class="empty-state">İşlem yok</div>'; return; }
+  if (!txs.length) { list.innerHTML = '<div class="empty-state">' + t('empty_no_tx') + '</div>'; return; }
 
   const _td   = todayStr();
   const _ydObj = new Date(); _ydObj.setDate(_ydObj.getDate() - 1);
@@ -342,7 +342,7 @@ function renderRecurring() {
   const c = document.getElementById('recList');
   if (!c) return;
   if (!S.recurring.length) {
-    c.innerHTML = '<div class="empty-state">Yok</div>';
+    c.innerHTML = '<div class="empty-state">' + t('empty_none') + '</div>';
     return;
   }
   c.innerHTML = '<div class="planner-list">' + S.recurring.map(r => {
@@ -404,12 +404,12 @@ function renderDebts() {
   if (!c) return;
   const debts = [...S.debts].sort((a, b) => Number(a.paid) - Number(b.paid) || a.ts - b.ts);
   if (!debts.length) {
-    c.innerHTML = '<div class="empty-state">Borç yok</div>';
+    c.innerHTML = '<div class="empty-state">' + t('empty_no_debt') + '</div>';
     return;
   }
   c.innerHTML = debts.map(d => {
     const safeName = sanitize(d.name);
-    const safeType = sanitize(d.type);
+    const safeType = sanitize(debtTypeLabel(d.type));
     const safeId = d.id.replace(/"/g, '&quot;');
     const due = d.dueDate ? new Date(d.dueDate).toLocaleDateString(localeCode()) : t('common_no_date');
     return `<div class="planner-item" style="opacity:${d.paid ? '.65' : '1'}">
@@ -495,7 +495,7 @@ function renderSubscriptions() {
   if (!c) return;
   const subs = [...S.subscriptions].sort((a, b) => a.day - b.day);
   if (!subs.length) {
-    c.innerHTML = '<div class="empty-state">Abonelik yok</div>';
+    c.innerHTML = '<div class="empty-state">' + t('empty_no_sub') + '</div>';
     return;
   }
   c.innerHTML = subs.map(s => {
@@ -504,12 +504,12 @@ function renderSubscriptions() {
     return `<div class="planner-item">
       <div>
         <div class="planner-item-title">${safeName}</div>
-        <div class="planner-item-meta">Her ayın ${s.day}. günü yenilenir</div>
+        <div class="planner-item-meta">${t("sub_renews_on").replace("{day}", s.day)}</div>
       </div>
       <div>
         <div class="planner-item-amount" style="color:var(--warning)">${fmt(s.amount)}</div>
         <div class="planner-item-actions">
-          <button class="btn btn-sm btn-danger" onclick="deleteSubscription('${safeId}')">Sil</button>
+          <button class="btn btn-sm btn-danger" onclick="deleteSubscription('${safeId}')">${t("common_delete_btn")}</button>
         </div>
       </div>
     </div>`;
@@ -567,7 +567,7 @@ function renderGoals() {
   const c = document.getElementById('goalList');
   if (!c) return;
   if (!S.goals.length) {
-    c.innerHTML = '<div class="card"><div class="empty-state">Henüz hedef yok</div></div>';
+    c.innerHTML = '<div class="card"><div class="empty-state">' + t('empty_no_goals') + '</div></div>';
     return;
   }
   c.innerHTML = S.goals.map(g => {
@@ -600,7 +600,7 @@ function renderDashboardGoals() {
   const c = document.getElementById('dashGoals');
   if (!c) return;
   if (!S.goals.length) {
-    c.innerHTML = '<div class="empty-state">Henüz hedef yok</div>';
+    c.innerHTML = '<div class="empty-state">' + t('empty_no_goals') + '</div>';
     return;
   }
   const top3 = S.goals.slice(0, 3);
@@ -639,7 +639,7 @@ function renderNotes() {
   const c = document.getElementById('noteList');
   if (!c) return;
   if (!S.notes.length) {
-    c.innerHTML = '<div class="empty-state">Not yok</div>';
+    c.innerHTML = '<div class="empty-state">' + t('empty_no_note') + '</div>';
     return;
   }
   c.innerHTML = S.notes.map(n => {

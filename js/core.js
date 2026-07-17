@@ -480,6 +480,8 @@ function haptic(type) {
 }
 
 function toast(msg, type = 't-info') {
+  const w = document.getElementById('welcomeScreen');
+  if (w && !w.classList.contains('hidden')) return;
   const el = document.getElementById('toast');
   if (!el) return;
   clearTimeout(toastTimer);

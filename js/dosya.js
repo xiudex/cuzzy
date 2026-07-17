@@ -519,7 +519,7 @@ function renderUploadHistory() {
   const c = document.getElementById('uploadHistory');
   if (!c) return;
   if (!S.uploads.length) {
-    c.innerHTML = '<div class="empty-state">Henüz yüklenmedi</div>';
+    c.innerHTML = '<div class="empty-state">' + t('empty_not_uploaded') + '</div>';
     return;
   }
   c.innerHTML = S.uploads.slice(-10).reverse().map(u => `

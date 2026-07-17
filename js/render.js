@@ -74,8 +74,8 @@ function updateBudgetBanner() {
 }
 
 let mRecType = 'income';
-function mSetRecType(t) {
-  mRecType = t === 'expense' ? 'expense' : 'income';
+function mSetRecType(type) {
+  mRecType = type === 'expense' ? 'expense' : 'income';
   const inc = document.getElementById('mRecTypeIncome'), exp = document.getElementById('mRecTypeExpense');
   if (inc) inc.classList.toggle('active', mRecType === 'income');
   if (exp) exp.classList.toggle('active', mRecType === 'expense');
@@ -218,7 +218,7 @@ function renderAllTxList() {
     if (toV) txs = txs.filter(t => t.date <= toV);
   }
   txs.sort((a, b) => b.ts - a.ts);
-  c.innerHTML = txs.length ? txs.map(txItemHTML).join('') : '<div class="empty-state">Bu filtreye uygun işlem yok.</div>';
+  c.innerHTML = txs.length ? txs.map(txItemHTML).join('') : '<div class="empty-state">' + t('empty_no_filtered_tx') + '</div>';
   if (typeof _censorOn !== 'undefined' && _censorOn) { try { applyCensor(); } catch (e) {} }
 }
 
@@ -253,12 +253,12 @@ function renderAll() {
   setText('kpiIncome', fmt(monthInc));
   const _acct = document.getElementById('acctSummary');
   if (_acct) _acct.innerHTML =
-    '<div class="acct-row"><span>Toplam gelir</span><strong class="pos">'+fmt(totalInc)+'</strong></div>'+
-    '<div class="acct-row"><span>Toplam gider</span><strong class="neg">'+fmt(totalExp)+'</strong></div>'+
-    '<div class="acct-row"><span>Net</span><strong>'+fmt(balance)+'</strong></div>'+
-    '<div class="acct-row"><span>İşlem sayısı</span><strong>'+S.transactions.length+'</strong></div>'+
-    '<div class="acct-row"><span>Bu ay net</span><strong>'+fmt(monthInc - monthExp)+'</strong></div>'+
-    '<div class="acct-row"><span>Aktif hedef</span><strong>'+((S.goals&&S.goals.length)||0)+'</strong></div>';
+    '<div class="acct-row"><span>'+t('acct_total_income')+'</span><strong class="pos">'+fmt(totalInc)+'</strong></div>'+
+    '<div class="acct-row"><span>'+t('acct_total_expense')+'</span><strong class="neg">'+fmt(totalExp)+'</strong></div>'+
+    '<div class="acct-row"><span>'+t('acct_net')+'</span><strong>'+fmt(balance)+'</strong></div>'+
+    '<div class="acct-row"><span>'+t('acct_tx_count')+'</span><strong>'+S.transactions.length+'</strong></div>'+
+    '<div class="acct-row"><span>'+t('acct_month_net')+'</span><strong>'+fmt(monthInc - monthExp)+'</strong></div>'+
+    '<div class="acct-row"><span>'+t('acct_active_goals')+'</span><strong>'+((S.goals&&S.goals.length)||0)+'</strong></div>';
   const _sn = document.getElementById('stickyNote');
   if (_sn && document.activeElement !== _sn) _sn.value = S.stickyNote || '';
   const _snCnt = document.getElementById('mnoteCount');
@@ -270,7 +270,7 @@ function renderAll() {
   setText('kpiBalance', fmt(monthInc - monthExp));
   const _curBal = S.baseBalanceSet ? ((S.baseBalance || 0) + balance) : 0;
   setText('kpiCurrentBalance', fmt(_curBal));
-  setText('kpiCurBalTrend', S.transactions.length + ' işlem');
+  setText('kpiCurBalTrend', S.transactions.length + ' ' + t('acct_tx_suffix'));
   setText('kpiIncomeTotal', fmt(totalInc));
   setText('kpiExpenseTotal', fmt(totalExp));
   setText('kpiSavingRate', monthInc > 0 ? `%${savingRate}` : '—');

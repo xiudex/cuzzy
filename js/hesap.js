@@ -213,9 +213,9 @@ async function sendSupportEmail() {
 
 /* ═══ MEMNUNİYET ANKETİ ═══ */
 const SURVEY_QUESTIONS = [
-  { id: 'genel',      text: 'Cüzzy\'den genel memnuniyetini nasıl puanlarsın?' },
-  { id: 'guncelleme', text: 'v3.8.2 güncellemesini (yeni özellikler) nasıl buldun?' },
-  { id: 'tavsiye',    text: 'Cüzzy\'yi bir arkadaşına tavsiye etme olasılığın nedir?' }
+  { id: 'genel',      get text() { return t('survey_q_general'); } },
+  { id: 'guncelleme', get text() { return t('survey_q_update'); } },
+  { id: 'tavsiye',    get text() { return t('survey_q_recommend'); } }
 ];
 let _surveyIdx = 0;
 let _surveyAnswers = {};
@@ -240,7 +240,7 @@ function renderSurveyStep() {
   const total = SURVEY_QUESTIONS.length;
   const prog = document.getElementById('surveyProgress');
   const qtext = document.getElementById('surveyQText');
-  if (prog) prog.textContent = `Soru ${_surveyIdx + 1} / ${total}`;
+  if (prog) prog.textContent = t('survey_progress').replace('{n}', _surveyIdx + 1).replace('{total}', total);
   if (qtext) qtext.textContent = q.text;
 
   const rc = document.getElementById('surveyRating');
@@ -550,20 +550,21 @@ function acceptKvkk() {
 const MULTI_CATS = ['Diğer', 'Market', 'Fatura', 'Kira', 'Ulaşım', 'Yemek', 'Sağlık', 'Eğlence', 'Eğitim', 'Maaş', 'Yatırım', 'EFT - Para Gönderimi', 'EFT - Para Alımı'];
 let _multiRowSeq = 0;
 
+const MULTI_CAT_KEYS = { 'Diğer': 'cat_other', 'Market': 'cat_market', 'Fatura': 'cat_bill', 'Kira': 'cat_rent', 'Ulaşım': 'cat_transport', 'Yemek': 'cat_food', 'Sağlık': 'cat_health', 'Eğlence': 'cat_entertainment', 'Eğitim': 'cat_education', 'Maaş': 'cat_salary', 'Yatırım': 'cat_investment', 'EFT - Para Gönderimi': 'cat_eft_send', 'EFT - Para Alımı': 'cat_eft_receive' };
 function _multiRowHTML(rid) {
-  const opts = MULTI_CATS.map(c => `<option value="${c}">${c}</option>`).join('');
+  const opts = MULTI_CATS.map(c => `<option value="${c}">${t(MULTI_CAT_KEYS[c])}</option>`).join('');
   return `<div class="multi-row" id="mrow-${rid}" data-type="expense">
     <div class="mrow-main">
       <div class="mr-type-toggle">
-        <button type="button" class="mr-type-btn income" onclick="mrSetType('${rid}','income')">+ Gelir</button>
-        <button type="button" class="mr-type-btn expense active" onclick="mrSetType('${rid}','expense')">− Gider</button>
+        <button type="button" class="mr-type-btn income" onclick="mrSetType('${rid}','income')">${t('common_income_btn')}</button>
+        <button type="button" class="mr-type-btn expense active" onclick="mrSetType('${rid}','expense')">${t('common_expense_btn')}</button>
       </div>
       <input class="mr-amt" inputmode="decimal" placeholder="0,00">
       <button type="button" class="mr-expand" id="mr-exp-${rid}" onclick="mrToggleExpand('${rid}')" aria-label="Detayları göster"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></button>
       <button type="button" class="mr-del" onclick="removeMultiRow('${rid}')" title="Satırı sil">✕</button>
     </div>
     <div class="mrow-extra" id="mrow-extra-${rid}">
-      <input class="mr-desc" placeholder="Açıklama (ops.)">
+      <input class="mr-desc" placeholder="${t('mtx_desc_ph')}">
       <select class="mr-cat">${opts}</select>
       <input class="mr-date" type="date" value="${todayStr()}">
     </div>
