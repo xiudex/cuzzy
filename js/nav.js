@@ -476,8 +476,13 @@ const I18N = {
     set_other_needed: 'Diğer gerekenler', verify_your_email: 'E-postanı doğrula', rate_update_v383: 'v3.8.3 güncellemesini değerlendir',
     inv_total_expense: 'Toplam gider', sub_renews_on: 'Her ayın {day}. günü yenilenir',
     welcome_hello: 'Hoşgeldin ', welcome_continue: 'Devam et',
+    welcome_changelog_title: 'Güncelleme Notları',
+    welcome_cl_1: 'Mobil arayüzü düzenlendi.', welcome_cl_2: 'Yeni tema renkleri eklendi.',
+    welcome_cl_3: 'Özelleştirilebilir animasyonlar eklendi.', welcome_cl_4: 'Performans iyileştirmeleri yapıldı.',
+    welcome_cl_5: 'İngilizce dili eklendi.',
     anim_speed_label: 'Animasyon hızı', anim_speed_sub: 'Arayüzdeki geçiş ve animasyon hızını ayarla.',
     anim_speed_fast: 'Çok hızlı', anim_speed_normal: 'Orta', anim_speed_slow: 'Çok yavaş', anim_speed_off: 'Kapalı',
+    anim_speed_choose: 'Animasyon hızını seç',
     welcome_pick_theme: 'Bir tema seç',
     welcome_verify_ask: 'E-postanı doğrulamak ister misin?', welcome_verify_sub: 'Hesabının güvenliği için önerilir.',
     welcome_verify_pending: 'Doğrulama bağlantısı gönderildi', welcome_verify_pending_sub: 'E-postanı kontrol et — doğruladıktan sonra burası otomatik güncellenecek.',
@@ -698,8 +703,13 @@ const I18N = {
     set_other_needed: 'Other things to do', verify_your_email: 'Verify your email', rate_update_v383: 'Rate the v3.8.3 update',
     inv_total_expense: 'Total expense', sub_renews_on: 'Renews on the {day} of each month',
     welcome_hello: 'Welcome ', welcome_continue: 'Continue',
+    welcome_changelog_title: 'Update Notes',
+    welcome_cl_1: 'Mobile interface redesigned.', welcome_cl_2: 'New theme colors added.',
+    welcome_cl_3: 'Customizable animations added.', welcome_cl_4: 'Performance improvements made.',
+    welcome_cl_5: 'English language added.',
     anim_speed_label: 'Animation speed', anim_speed_sub: 'Adjust the speed of transitions and animations in the interface.',
     anim_speed_fast: 'Very fast', anim_speed_normal: 'Normal', anim_speed_slow: 'Very slow', anim_speed_off: 'Off',
+    anim_speed_choose: 'Choose animation speed',
     welcome_pick_theme: 'Pick a theme',
     welcome_verify_ask: 'Want to verify your email?', welcome_verify_sub: "It's recommended for your account's security.",
     welcome_verify_pending: 'Verification link sent', welcome_verify_pending_sub: "Check your email — this will update automatically once you've verified.",
@@ -775,30 +785,17 @@ function setLanguage(lang) {
 }
 
 function playWelcomeAnimations() {
-  const titleEl = document.getElementById('welcomeTitle');
-  const subcaption = document.getElementById('welcomeSubcaption');
-  const langWrap = document.getElementById('welcomeLangWrap');
-  const btn = document.getElementById('welcomeContinueBtn');
-  if (!titleEl) return;
-
   const curLang = (S.language === 'en') ? 'en' : 'tr';
   document.querySelectorAll('.welcome-lang-opt').forEach(b => b.classList.toggle('active', b.dataset.lang === curLang));
-
-  const helloWord = (t('welcome_hello') || 'Hoşgeldin').trim();
-  titleEl.textContent = helloWord;
-
-  // Yukarıdan-aşağı düşme animasyonlarını (title/subcaption/lang seçici) yeniden tetikle
-  [titleEl, subcaption, langWrap].forEach(el => {
-    if (!el) return;
-    el.style.animation = 'none';
-    void el.offsetWidth;
-    el.style.animation = '';
-  });
-
-  if (btn) btn.classList.remove('shown');
-  setTimeout(() => { if (btn) btn.classList.add('shown'); }, 700);
 }
-document.addEventListener('DOMContentLoaded', () => { try { playWelcomeAnimations(); } catch (e) {} });
+document.addEventListener('DOMContentLoaded', () => {
+  try { playWelcomeAnimations(); } catch (e) {}
+  try { welcomeBuildSpeedTitleWave(); } catch (e) {}
+  try {
+    const cur = S.animSpeed || 'normal';
+    document.querySelectorAll('.welcome-speed-opt').forEach(b => b.classList.toggle('active', b.dataset.speed === cur));
+  } catch (e) {}
+});
 
 const WELCOME_THEME_DESC = {
   royal: 'theme_desc_royal', light: 'theme_desc_light', black: 'theme_desc_black'
@@ -806,42 +803,35 @@ const WELCOME_THEME_DESC = {
 const WELCOME_THEME_SHIMMER = {
   royal: ['#9b8cff', '#d4af5a'], light: ['#007AFF', '#5ac8fa'], black: ['#0A84FF', '#64d2ff']
 };
-const WELCOME_SWEEP_COLOR = {
-  royal: 'rgba(155,140,255,0.4)', light: 'rgba(0,122,255,0.25)', black: 'rgba(10,132,255,0.35)'
-};
 function welcomeSelectTheme(theme) {
+  S.themeReset4 = true; S.themeReset5 = true; // kullanıcı gerçek seçimini yaptı, applySettings() artık zorla ezmesin
   try { setTheme(theme); } catch (e) {}
   try { saveImmediate(); } catch (e) {}
-  document.querySelectorAll('#welcomeStep2 .theme-card').forEach(c => c.classList.toggle('active', c.dataset.themeSet === theme));
+  document.querySelectorAll('#welcomeStep3 .theme-card').forEach(c => c.classList.toggle('active', c.dataset.themeSet === theme));
   const desc = document.getElementById('welcomeThemeDesc');
   if (desc) desc.textContent = t(WELCOME_THEME_DESC[theme] || 'theme_desc_royal');
   const shimmerTitle = document.getElementById('welcomeThemeTitle');
   const colors = WELCOME_THEME_SHIMMER[theme] || WELCOME_THEME_SHIMMER.royal;
   if (shimmerTitle) { shimmerTitle.style.setProperty('--shimmer-c1', colors[0]); shimmerTitle.style.setProperty('--shimmer-c2', colors[1]); }
 
-  const screen = document.getElementById('welcomeScreen');
-  if (screen) {
-    screen.classList.remove('preview-royal', 'preview-black');
-    if (theme === 'royal' || theme === 'black') screen.classList.add('preview-' + theme);
-  }
-  const sweep = document.getElementById('welcomeSweep');
-  if (sweep) {
-    sweep.style.setProperty('--sweep-c', WELCOME_SWEEP_COLOR[theme] || WELCOME_SWEEP_COLOR.royal);
-    sweep.classList.remove('play'); void sweep.offsetWidth; sweep.classList.add('play');
-  }
-  welcomeShowLoading();
+  welcomeShowLoading(() => {
+    // Yükleme bitti — renk geçişi tam bu anda başlasın
+    const screen = document.getElementById('welcomeScreen');
+    if (screen) {
+      screen.classList.remove('preview-royal', 'preview-black');
+      if (theme === 'royal' || theme === 'black') screen.classList.add('preview-' + theme);
+    }
+  });
 }
-function welcomeShowLoading() {
+function welcomeShowLoading(onDone) {
   const overlay = document.getElementById('welcomeLoading');
   const textEl = document.getElementById('welcomeLoadingText');
-  const dots = document.getElementById('welcomeDots');
-  if (!overlay || !textEl) return;
-  if (dots) dots.style.display = 'none';
+  if (!overlay || !textEl) { if (onDone) onDone(); return; }
   const msg = t('welcome_theme_applying');
   textEl.innerHTML = [...msg].map((ch, i) => `<span style="animation-delay:${(i * 0.04).toFixed(2)}s">${ch === ' ' ? '&nbsp;' : ch}</span>`).join('');
   overlay.classList.add('show');
-  const dur = 800 + Math.random() * 2200; // 0.8sn - 3sn arası tamamen rastgele
-  setTimeout(() => overlay.classList.remove('show'), dur);
+  const dur = 600 + Math.random() * 900; // 0.6sn - 1.5sn arası, max 1.5sn
+  setTimeout(() => { overlay.classList.remove('show'); if (onDone) onDone(); }, dur);
 }
 
 function toggleWelcomeLangPicker() {
@@ -858,6 +848,7 @@ function selectWelcomeLang(lang) {
   if (pop) pop.classList.remove('open');
   if (trig) trig.classList.remove('open');
   try { playWelcomeAnimations(); } catch (e) {}
+  try { welcomeBuildSpeedTitleWave(); } catch (e) {}
 }
 function welcomeGoToStep(n) {
   for (let i = 1; i <= 4; i++) {
@@ -880,22 +871,32 @@ function welcomeGoToStep(n) {
   }
 }
 function welcomeAdvanceFromHello() {
-  welcomeShowDots();
-  const dur = 500 + Math.random() * 1500; // 0.5sn - 2sn arası tamamen rastgele
-  setTimeout(() => {
-    const overlay = document.getElementById('welcomeLoading');
-    if (overlay) overlay.classList.remove('show');
-    welcomeGoToStep(2);
-  }, dur);
+  welcomeGoToStep(2);
 }
-function welcomeShowDots() {
-  const overlay = document.getElementById('welcomeLoading');
-  const textEl = document.getElementById('welcomeLoadingText');
-  const dots = document.getElementById('welcomeDots');
-  if (!overlay) return;
-  if (textEl) textEl.innerHTML = '';
-  if (dots) dots.style.display = 'flex';
-  overlay.classList.add('show');
+function welcomeBuildSpeedTitleWave() {
+  const title = document.getElementById('welcomeSpeedTitle');
+  if (!title) return;
+  const text = t('anim_speed_choose') || 'Animasyon hızını seç';
+  const speed = S.animSpeed || 'normal';
+  const durations = { fast: 0.3, normal: 0.65, slow: 2.2 };
+  if (speed === 'off') {
+    title.textContent = text;
+    return;
+  }
+  const dur = durations[speed] !== undefined ? durations[speed] : 0.95;
+  let html = '';
+  let i = 0;
+  for (const ch of text) {
+    const disp = ch === ' ' ? '&nbsp;' : ch;
+    html += `<span style="display:inline-block;animation:welcomeSpeedTitleWave ${dur}s ease-in-out ${(i * 0.045).toFixed(3)}s infinite">${disp}</span>`;
+    i++;
+  }
+  title.innerHTML = html;
+}
+function welcomeSelectAnimSpeed(speed) {
+  try { setAnimSpeed(speed); } catch (e) {}
+  document.querySelectorAll('.welcome-speed-opt').forEach(b => b.classList.toggle('active', b.dataset.speed === speed));
+  welcomeBuildSpeedTitleWave();
 }
 function welcomeKvkkToggle(checked) {
   const btn = document.getElementById('welcomeKvkkBtn');

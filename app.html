@@ -56,16 +56,15 @@
      HOŞGELDİN 2.0 — tam ekran tek seferlik karşılama
      ═══════════════════════════════════════════════════════════════════ -->
 <div class="welcome-screen" id="welcomeScreen">
-  <div class="welcome-sweep" id="welcomeSweep"></div>
 
   <!-- ADIM 1: Hoşgeldin + dil -->
   <div class="welcome-step" id="welcomeStep1">
     <div class="welcome-top">
-      <h1 class="welcome-title welcome-fall" id="welcomeTitle" style="animation-delay:0.1s"></h1>
-      <div class="welcome-subcaption welcome-fall" id="welcomeSubcaption" data-i18n="welcome_mobile_version" style="animation-delay:0.3s">Mobil 2.0</div>
-      <div class="welcome-lang-wrap welcome-fall" id="welcomeLangWrap" style="animation-delay:0.5s">
+      <h1 class="welcome-title" data-i18n="welcome_changelog_title">Güncelleme Notları</h1>
+      <div class="welcome-subcaption" id="welcomeSubcaption" data-i18n="welcome_mobile_version">Mobil 2.0</div>
+      <div class="welcome-lang-wrap" id="welcomeLangWrap">
         <button type="button" class="welcome-lang-trigger" id="welcomeGlobeBtn" onclick="toggleWelcomeLangPicker()" aria-label="Dil seç">
-          <span class="welcome-globe-ic">🌐</span>
+          <svg class="welcome-globe-ic" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
           <svg class="welcome-globe-chev" viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
         </button>
         <div class="welcome-lang-pop" id="welcomeLangPop">
@@ -74,6 +73,13 @@
         </div>
       </div>
     </div>
+    <ul class="welcome-changelog">
+      <li data-i18n="welcome_cl_1">Mobil arayüzü düzenlendi.</li>
+      <li data-i18n="welcome_cl_2">Yeni tema renkleri eklendi.</li>
+      <li data-i18n="welcome_cl_3">Özelleştirilebilir animasyonlar eklendi.</li>
+      <li data-i18n="welcome_cl_4">Performans iyileştirmeleri yapıldı.</li>
+      <li data-i18n="welcome_cl_5">İngilizce dili eklendi.</li>
+    </ul>
     <div class="welcome-bottom">
       <button type="button" class="welcome-continue-btn" id="welcomeContinueBtn" onclick="welcomeAdvanceFromHello()" data-i18n="welcome_continue">Devam et</button>
     </div>
@@ -105,7 +111,7 @@
   </div>
 
   <div class="welcome-step" id="welcomeStep3" style="display:none">
-    <div class="welcome-top">
+    <div class="welcome-half welcome-half-theme">
       <h2 class="welcome-step-title welcome-shimmer-title" id="welcomeThemeTitle" data-i18n="welcome_pick_theme">Bir tema seç</h2>
       <div class="theme-pick welcome-theme-pick">
         <button class="theme-card tc-royal active" data-theme-set="royal" onclick="welcomeSelectTheme('royal')" aria-label="Royal"><span class="tc-name">Royal</span></button>
@@ -114,6 +120,16 @@
       </div>
       <div class="welcome-theme-desc" id="welcomeThemeDesc"></div>
     </div>
+    <div class="welcome-half-divider"></div>
+    <div class="welcome-half welcome-half-speed">
+      <h2 class="welcome-step-title" id="welcomeSpeedTitle">Animasyon hızını seç</h2>
+      <div class="welcome-speed-pick">
+        <button type="button" class="welcome-speed-opt" data-speed="fast" onclick="welcomeSelectAnimSpeed('fast')" data-i18n="anim_speed_fast">Çok hızlı</button>
+        <button type="button" class="welcome-speed-opt active" data-speed="normal" onclick="welcomeSelectAnimSpeed('normal')" data-i18n="anim_speed_normal">Orta</button>
+        <button type="button" class="welcome-speed-opt" data-speed="slow" onclick="welcomeSelectAnimSpeed('slow')" data-i18n="anim_speed_slow">Çok yavaş</button>
+        <button type="button" class="welcome-speed-opt" data-speed="off" onclick="welcomeSelectAnimSpeed('off')" data-i18n="anim_speed_off">Kapalı</button>
+      </div>
+    </div>
     <div class="welcome-bottom">
       <button type="button" class="welcome-continue-btn shown" onclick="welcomeGoToStep(4)" data-i18n="welcome_continue">Devam et</button>
     </div>
@@ -121,7 +137,6 @@
 
   <div class="welcome-loading" id="welcomeLoading">
     <div class="welcome-loading-text" id="welcomeLoadingText"></div>
-    <div class="welcome-dots" id="welcomeDots"><span></span><span></span><span></span></div>
   </div>
 
   <!-- ADIM 4: E-posta doğrulama (yalnızca doğrulanmamışsa gösterilir) -->
